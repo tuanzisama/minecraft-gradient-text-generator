@@ -6,7 +6,6 @@
     "moduleResolution": "node",
     "removeComments": false,
     "strict": true,
-    "noEmit": true,
     "jsx": "preserve",
     "sourceMap": false,
     "resolveJsonModule": true,
