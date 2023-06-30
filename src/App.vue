@@ -1,8 +1,6 @@
 <template>
   <div class="cg-container">
-    <header class="cg-header">
-      <p>Minecraft 渐变颜色生成器</p>
-    </header>
+    <mcg-header />
     <main class="cg-main">
       <color-list v-model="gradientColorList" />
       <div class="cg-content">
@@ -64,28 +62,15 @@
         </Card>
       </div>
     </main>
-    <footer class="cg-footer">
-      "Minecraft" 是 Mojang Synergies AB 的商标
-      <Divider type="vertical" />
-      <a href="https://github.com/tuanzisama" target="_blank">
-        <Icon type="logo-github" />
-        @tuanzisama
-      </a>
-      <Divider type="vertical" />
-      <a
-        href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=_z8lAFy5g4oHy5j68j1Yx-FK6spjSDKd&authKey=oYJwq0XWxSZ9uWnN1VW1om1HD2bwnCD%2BXXrVEk5ciPy9V%2Byp8ywAre89%2F6z52ksC&noverify=0&group_code=202653244"
-        target="_blank"
-      >
-        <Icon type="md-color-wand" />
-        元界MC - 社交×互动×游戏
-      </a>
-    </footer>
+    <mcg-footer />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed, h, reactive, ref, VNode } from "vue";
 import ColorList from "./components/ColorList.vue";
+import McgHeader from "./components/McgHeader.vue";
+import McgFooter from "./components/McgFooter.vue";
 import { VNode as VNodeComp } from "./utils/vnode";
 import { Message } from "view-ui-plus";
 import { genColorGradients } from "./utils/util";
@@ -162,14 +147,6 @@ const onCopyClickHandler = () => {
   height: 100%;
   max-width: 1024px;
   margin: 0 auto;
-  .cg-header {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    font-weight: 700;
-  }
   .cg-main {
     display: flex;
     .cg-content {
@@ -225,11 +202,6 @@ const onCopyClickHandler = () => {
         line-height: 20px;
       }
     }
-  }
-  .cg-footer {
-    font-size: 12px;
-    text-align: center;
-    margin: 30px 0;
   }
 }
 
