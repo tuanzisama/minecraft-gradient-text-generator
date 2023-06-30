@@ -197,6 +197,7 @@ interface ColorListProps {
       }
       .color-picker {
         margin-left: 20px;
+        pointer-events: none;
       }
     }
   }
