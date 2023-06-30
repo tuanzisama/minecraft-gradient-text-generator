@@ -9,11 +9,11 @@
       </div>
     </Poptip>
     <div class="color-item is-add">
-      <div class="color-item--cube add">
+      <div class="color-item--cube add" @click="onAddColorHandler()">
         <Icon type="md-add" />
         <span>新增</span>
         <div class="color-picker">
-          <ColorPicker size="large" recommend @on-change="onColorPickerChangeHandler" transfer-class-name="color-container__color-picker-popover" transfer />
+          <ColorPicker ref="colorPickerAddRef" size="large" recommend @on-change="onColorPickerChangeHandler" transfer-class-name="color-container__color-picker-popover" transfer />
         </div>
       </div>
     </div>
@@ -38,14 +38,15 @@
 </template>
 
 <script lang="ts" setup>
+import { computed, onMounted, ref } from "vue";
 import { Message } from "view-ui-plus";
-import { computed } from "vue";
 import draggable from "vuedraggable";
 
 const props = withDefaults(defineProps<ColorListProps>(), {
   modelValue: () => [],
 });
 const emit = defineEmits(["update:modelValue"]);
+const colorPickerAddRef = ref();
 
 const privateValue = computed({
   get: () => props.modelValue,
@@ -54,6 +55,10 @@ const privateValue = computed({
 
 const onDeleteColorHandler = (index: number) => {
   props.modelValue.splice(index, 1);
+};
+
+const onAddColorHandler = () => {
+  colorPickerAddRef.value?.toggleVisible();
 };
 
 const onDeleteAllHandler = () => {
