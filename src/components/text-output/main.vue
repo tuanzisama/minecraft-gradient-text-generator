@@ -72,7 +72,7 @@ const onCopyClickHandler = () => {
   }
   navigator.clipboard
     .writeText(resultText.value)
-    .then(() => MessagePlugin.success({ content: "复制成功啦", placement: "bottom" }))
+    .then(() => MessagePlugin.success({ content: "复制成功 (ノ￣▽￣)", placement: "bottom" }))
     .catch((err) => {
       MessagePlugin.error({ content: "复制失败，请尝试更新您的浏览器", placement: "bottom" });
       console.error(err);

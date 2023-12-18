@@ -54,7 +54,7 @@
   top: calc(#{$val} + env(safe-area-inset-top));
 }
 
-@mixin custom-scrollbar($size: 8px, $radius: 8px, $bgColor: rgba(238, 236, 236, 0.3)) {
+@mixin custom-scrollbar($size: 8px, $radius: 8px, $bgColor: #cdd0d6) {
   &::-webkit-scrollbar {
     background-color: transparent;
     width: $size;

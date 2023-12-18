@@ -18,8 +18,3 @@ const colorList: ColorItem[] = [
 ];
 
 export default colorList;
-
-export interface ColorItem {
-  label?: string;
-  color: HexColorString;
-}

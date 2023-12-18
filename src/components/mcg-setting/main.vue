@@ -1,13 +1,13 @@
 <template>
   <t-drawer
     v-model:visible="privateValue"
-    header="设置"
+    header="偏好设置"
     size="600px"
     :close-on-overlay-click="false"
     :close-on-esc-keydown="false"
     @confirm="onConfirmHandler"
   >
-    <t-form class="setting-form" :data="formData">
+    <t-form class="setting-form" :data="formData" label-width="120px">
       <t-form-item label="字符模式" name="charMode">
         <t-radio-group v-model="formData.charMode">
           <t-radio value="&">&</t-radio>
@@ -22,6 +22,14 @@
         <t-switch v-model="formData.clearSpaceCharacter" />
         <p class="setting-item-summary">移除空格/换行/制表符</p>
       </t-form-item>
+      <t-divider>TDesign</t-divider>
+      <t-form-item label="清空渐变色列表">
+        <t-popconfirm content="确认清空吗" @confirm="onResetClickHandler">
+          <t-button theme="danger" :disabled="colorStore.cacheColorList.length === 0">
+            清空 {{ colorStore.cacheColorList.length }} 个渐变色
+          </t-button>
+        </t-popconfirm>
+      </t-form-item>
     </t-form>
   </t-drawer>
 </template>
@@ -29,6 +37,7 @@
 <script lang="ts" setup>
 import { computed, reactive, watch } from "vue";
 import { AppStoreState, useAppStore } from "../../plugins/store/modules/app";
+import { useColorStore } from "../../plugins/store/modules/color";
 import { MessagePlugin } from "tdesign-vue-next";
 
 const props = withDefaults(defineProps<McgSettingProps>(), {
@@ -36,6 +45,7 @@ const props = withDefaults(defineProps<McgSettingProps>(), {
 });
 const emit = defineEmits<McgSettingEmit>();
 const appStore = useAppStore();
+const colorStore = useColorStore();
 const formData = reactive<AppStoreState["setting"]>({
   charMode: "&",
   compatibleMode: false,
@@ -61,7 +71,13 @@ const privateValue = computed({
 const onConfirmHandler = () => {
   appStore.saveSetting(formData);
   privateValue.value = false;
-  MessagePlugin.success({ content: "保存成功", placement: "bottom" });
+  MessagePlugin.success({ content: "已保存", placement: "bottom" });
+};
+
+const onResetClickHandler = () => {
+  colorStore.resetCacheColorList();
+  privateValue.value = false;
+  MessagePlugin.success({ content: "已清空", placement: "bottom" });
 };
 </script>
 

@@ -5,7 +5,7 @@
       <div class="color-input">
         <hex-input v-model="privateValue" @on-change="onHexInputChangeHandler" />
       </div>
-      <color-quickslot @on-change="onColorQuickSlotChangeHandler" />
+      <color-quickslot :list="colorList" @on-change="onColorQuickSlotChangeHandler" />
     </div>
     <slot />
   </div>
@@ -15,6 +15,7 @@
 import iro from "@jaames/iro";
 import HexInput from "./hex-input.vue";
 import { computed, onMounted, ref } from "vue";
+import colorList from "./colors";
 
 const boxPickerRef = ref<HTMLDivElement>();
 const boxPickerInstance = ref();
@@ -52,13 +53,12 @@ const initializeBoxPicker = () => {
 
 const onHexInputChangeHandler = (val: HexColorString) => {
   setColor(val);
-  console.info("onHexInputChangeHandler", val);
   privateValue.value = val;
 };
 
-const onColorQuickSlotChangeHandler = (val: HexColorString) => {
-  setColor(val);
-  privateValue.value = val;
+const onColorQuickSlotChangeHandler = (item: ColorItem) => {
+  setColor(item.color as HexColorString);
+  privateValue.value = item.color as HexColorString;
 };
 
 const setColor = (color: HexColorString) => {

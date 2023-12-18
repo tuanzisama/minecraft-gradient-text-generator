@@ -1,6 +1,6 @@
 <template>
   <div class="colorbar-box">
-    <div class="colorbar" ref="colorbarRef" :style="{ background: colorStore.getGradientCss }"></div>
+    <div class="colorbar" ref="colorbarRef" :style="{ background: colorStore.selectColorGradientCss }"></div>
   </div>
 </template>
 <script lang="ts" setup>

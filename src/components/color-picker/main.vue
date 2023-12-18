@@ -21,10 +21,15 @@
       </picker>
     </div>
     <div class="color-picker-footer">
-      <t-space class="color-setting" size="10px">
-        <slot name="setting"> </slot>
-      </t-space>
+      <div class="color-setting" size="10px">
+        <color-quickslot
+          :list="colorStore.getCacheList"
+          @on-select="onColorQuickSlotSelectHandler"
+          @on-rightclick="onColorQuickSlotRightClickHandler"
+        />
+      </div>
       <t-space class="list-setting" size="10px">
+        <t-button variant="dashed" @click="onSaveColorsClickHandler">保存</t-button>
         <t-button @click="onAddColorClickHandler">新增</t-button>
         <t-popconfirm content="确认重置吗" @confirm="onResetClickHandler">
           <t-button theme="danger">重置</t-button>
@@ -41,6 +46,7 @@ import picker, { PickerExpose } from "./picker.vue";
 import { useColorStore } from "../../plugins/store/modules/color";
 import HexInput from "./hex-input.vue";
 import draggable from "vuedraggable";
+import { DialogPlugin, MessagePlugin } from "tdesign-vue-next";
 
 const pickerRef = ref<PickerExpose>();
 const colorStore = useColorStore();
@@ -55,7 +61,7 @@ const onColorCellClickHandler = (item: HexColorString, index: number) => {
 };
 
 const onColorCellDeleteHandler = (item: HexColorString, index: number) => {
-  colorStore.pullColorListAt(index);
+  colorStore.pullSelectColorListAt(index);
 };
 
 const onAddColorClickHandler = () => {
@@ -64,6 +70,29 @@ const onAddColorClickHandler = () => {
 
 const onResetClickHandler = () => {
   colorStore.resetSelectColorList();
+};
+
+const onSaveColorsClickHandler = () => {
+  colorStore.setColorsToCacheList();
+  MessagePlugin.success({ content: "已加入色彩列表", placement: "bottom" });
+};
+
+const onColorQuickSlotSelectHandler = (item: GradientColorItem) => {
+  colorStore.setCacheColorList(item.colors);
+  colorStore.selectedIndex = 0;
+  MessagePlugin.success({ content: "已应用此渐变色", placement: "bottom" });
+};
+
+const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientColorItem, index: number) => {
+  event.preventDefault();
+  const dialogNode = DialogPlugin.confirm({
+    header: "是否删除此渐变色？",
+    onConfirm: () => {
+      colorStore.pullCacheColorListAt(index);
+      MessagePlugin.success({ content: "已删除此渐变色", placement: "bottom" });
+      dialogNode.hide();
+    },
+  });
 };
 </script>
 
@@ -80,6 +109,21 @@ const onResetClickHandler = () => {
   }
   .color-picker-footer {
     display: flex;
+    .color-setting {
+      width: 0;
+      flex: 1;
+      margin-right: 20px;
+      .color-cube-box {
+        flex-wrap: nowrap;
+        overflow-y: auto;
+        padding: 4px;
+        justify-content: flex-start;
+        @include custom-scrollbar();
+        &:deep(.color-cube) {
+          margin-bottom: 0 !important;
+        }
+      }
+    }
     .list-setting {
       margin-left: auto;
       flex-shrink: 0;
