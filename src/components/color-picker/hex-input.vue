@@ -20,11 +20,11 @@ const props = withDefaults(defineProps<HexInputProps>(), {});
 const emit = defineEmits<HexInputEmit>();
 
 const privateValue = computed({
-  get: () => props.modelValue?.replace(/#/g, "") as string,
+  get: () => props.modelValue?.replace(/#|&/g, "") as string,
   set: (val) => emit("update:modelValue", `#${val}`),
 });
 
-const hexColorRegExp = /$#?[a-fA-F0-9]{6}/;
+const hexColorRegExp = /^&?#?[a-fA-F0-9]{6}$/;
 
 const onInputPasteHandler = ({ e, pasteValue }: { e: ClipboardEvent; pasteValue: string }) => {
   if (pasteValue === "") {
@@ -38,7 +38,7 @@ const onInputPasteHandler = ({ e, pasteValue }: { e: ClipboardEvent; pasteValue:
     return;
   }
 
-  privateValue.value = pasteValue.replace(/#/g, "") as HexColorString;
+  privateValue.value = pasteValue.replace(/#|&/g, "") as HexColorString;
 };
 
 const onInputChangeHandler = (_val: string | number) => {
