@@ -22,7 +22,7 @@
         <t-switch v-model="formData.clearSpaceCharacter" />
         <p class="setting-item-summary">移除空格/换行/制表符</p>
       </t-form-item>
-      <t-divider>TDesign</t-divider>
+      <t-divider>其它</t-divider>
       <t-form-item label="清空渐变色列表">
         <t-popconfirm content="确认清空吗" @confirm="onResetClickHandler">
           <t-button theme="danger" :disabled="colorStore.cacheColorList.length === 0">
