@@ -13,7 +13,7 @@
               @click="onColorCellClickHandler(element, index)"
             >
               <div class="color-cell__cube"></div>
-              <hex-input v-model="colorStore.selectColorList[index]" style="width: 150px" />
+              <hex-input v-model="colorStore.selectColorList[index]" style="width: 150px" @on-change="onHexInputChangeHandler" />
               <span class="color-cell__delete" @click.stop="onColorCellDeleteHandler(element, index)">×</span>
             </li>
           </template>
@@ -54,6 +54,10 @@ const colorStore = useColorStore();
 onMounted(() => {
   colorStore.resetSelectColorList();
 });
+
+const onHexInputChangeHandler = (item: HexColorString) => {
+  pickerRef.value?.setColor(item);
+};
 
 const onColorCellClickHandler = (item: HexColorString, index: number) => {
   colorStore.selectedIndex = index;
