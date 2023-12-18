@@ -24,7 +24,7 @@ const privateValue = computed({
   set: (val) => emit("update:modelValue", `#${val}`),
 });
 
-const hexColorRegExp = /#?[a-fA-F0-9]{6}/;
+const hexColorRegExp = /$#?[a-fA-F0-9]{6}/;
 
 const onInputPasteHandler = ({ e, pasteValue }: { e: ClipboardEvent; pasteValue: string }) => {
   if (pasteValue === "") {
