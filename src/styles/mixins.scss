@@ -1,0 +1,133 @@
+@mixin fill-parent() {
+  width: 100%;
+  height: 100%;
+}
+
+@mixin flex-vcenter($isColumn: false) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @if $isColumn {
+    flex-direction: column;
+  } @else {
+    flex-direction: row;
+  }
+}
+
+@mixin flex-center() {
+  display: flex;
+  align-items: center;
+}
+
+@mixin absolute-vcenter() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin img-cover {
+  @include fill-parent();
+  object-fit: cover;
+}
+
+@mixin img-contain {
+  @include fill-parent();
+  object-fit: contain;
+}
+
+@mixin x-margin-top($val: 0px) {
+  margin-top: #{$val * 2};
+  margin-top: calc(#{$val} + constant(safe-area-inset-top));
+  margin-top: calc(#{$val} + env(safe-area-inset-top));
+}
+
+@mixin x-top($val: 0px) {
+  top: #{$val * 2};
+  top: calc(#{$val} + constant(safe-area-inset-top));
+  top: calc(#{$val} + env(safe-area-inset-top));
+}
+
+@mixin custom-scrollbar($size: 8px, $radius: 8px, $bgColor: rgba(238, 236, 236, 0.3)) {
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $bgColor;
+    border-radius: $radius;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: darken($bgColor, 5%);
+  }
+
+  &::-webkit-scrollbar-button {
+    height: 0;
+    width: 0;
+  }
+
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-arrow-color {
+    background-color: transparent;
+  }
+}
+
+@mixin text-typo($color: var(--tzr-primary-color)) {
+  position: relative;
+  margin-bottom: 7px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: var(--text-typo-offset, 0px);
+    height: 2px;
+    background-color: rgb(224, 224, 224);
+    width: 100%;
+    left: 0px;
+  }
+
+  &::after {
+    content: "";
+    transition: all 0.5s;
+    position: absolute;
+    bottom: var(--text-typo-offset, 0px);
+    height: 2px;
+    width: 100%;
+    left: 0px;
+  }
+
+  &:hover {
+    &::after {
+      animation: typo 0.5s reverse;
+      animation-fill-mode: both;
+      opacity: 1;
+      visibility: visible;
+      background-color: $color;
+    }
+  }
+
+  @keyframes typo {
+    from {
+      width: 100%;
+      left: 0px;
+    }
+
+    to {
+      width: 0%;
+      left: 10%;
+    }
+  }
+}

@@ -1,8 +1,12 @@
 import { createApp } from "vue";
-import ViewUIPlus from "view-ui-plus";
-import App from "./App.vue";
-import "view-ui-plus/dist/styles/viewuiplus.css";
-import "reset.css";
-import "./assets/styles/main.less";
+import store from "./plugins/store";
 
-createApp(App).use(ViewUIPlus).mount("#app");
+import "reset.css";
+import "./styles/global.scss";
+import "tdesign-vue-next/es/style/index.css";
+
+import App from "./App.vue";
+
+const app = createApp(App);
+app.use(store);
+app.mount("#app");
