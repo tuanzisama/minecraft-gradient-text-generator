@@ -113,6 +113,7 @@ const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientCo
   }
   .color-picker-footer {
     display: flex;
+    align-items: center;
     .color-setting {
       width: 0;
       flex: 1;
