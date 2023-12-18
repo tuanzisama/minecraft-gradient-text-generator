@@ -49,7 +49,7 @@ export const useColorStore = defineStore("color", {
     setCacheColorList(colors: HexColorString[]) {
       this.cacheColorList.push(colors);
     },
-    setColorsToCacheList(colors?: HexColorString[]): boolean {
+    setColorsToCacheList(colors?: HexColorString[]) {
       this.cacheColorList.push([...(colors ?? this.selectColorList)]);
     },
   },
