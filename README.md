@@ -1,3 +1,3 @@
-# minecraft-color-gradient-generator
+# Minecraft Color Gradient Generator
 
-Yolo!
+v2
