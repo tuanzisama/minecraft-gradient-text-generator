@@ -17,7 +17,7 @@
       </div>
     </t-space>
     <mcg-footer />
-    <mcg-setting v-model="visibleSetting" />
+    <mcg-setting v-model="visibleSetting" @on-save="onSettingSaveHandler" />
   </div>
 </template>
 
@@ -43,6 +43,10 @@ const onTextInputChangeHandler = (val: string) => {
 
 const onColorPickerChangeHandler = (colors: HexColorString[]) => {
   textOutputRef.value?.generate(undefined, colors);
+};
+
+const onSettingSaveHandler = () => {
+  textOutputRef.value?.generate();
 };
 </script>
 

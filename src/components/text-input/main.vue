@@ -45,5 +45,10 @@ export interface TextInputEmit {
     font-weight: 700;
     font-family: "Barlow", "Noto Sans SC", sans-serif;
   }
+  &:deep(.t-textarea__limit) {
+    position: absolute;
+    right: 0;
+    top: -22px;
+  }
 }
 </style>

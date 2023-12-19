@@ -12,6 +12,7 @@ export interface AppStoreState {
      * 移除空格/换行/制表符
      */
     clearWhiteSpace: boolean;
+    simulateMode: "default" | "chat";
     processor: KeyOfProcessorMap;
   };
 }
@@ -22,6 +23,7 @@ export const useAppStore = defineStore("app", {
     setting: {
       vanillaCharCode: "&",
       clearWhiteSpace: true,
+      simulateMode: "chat",
       processor: "vanilla",
     },
   }),

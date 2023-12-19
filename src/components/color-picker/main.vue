@@ -73,8 +73,12 @@ const onColorCellDeleteHandler = (item: HexColorString, index: number) => {
 };
 
 const onAddColorClickHandler = () => {
+  if (colorStore.selectColorList.length >= 50) {
+    MessagePlugin.warning({ content: "色彩数量超出阈值", placement: "bottom" });
+    return;
+  }
+
   colorStore.addSelectColorList();
-  console.info(draggableRef.value);
   emit("on-change", [...colorStore.selectColorList]);
 
   nextTick(() => {
@@ -137,8 +141,8 @@ export interface ColorPickerEmit {
   width: 100%;
   .color-picker-header {
     width: 100%;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
     border-bottom: 1px solid #d4d7de;
     display: flex;
     flex-direction: column;

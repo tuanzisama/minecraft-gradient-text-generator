@@ -10,9 +10,13 @@ class CSVProcessorClazz extends GradientProcessor {
     return `{color},{char}`;
   }
 
-  getRawResultByHTML(): string {
+  getResultByText(): string {
     const list = super.getResult().map((item) => parseTemplate(this.template, item.char, item.color));
-    return parseTemplateToHTML(`color,character\n${list.join("\n")}`);
+    return `color,character\n${list.join("\n")}`;
+  }
+
+  getRawResultByHTML(): string {
+    return parseTemplateToHTML(this.getResultByText());
   }
 }
 

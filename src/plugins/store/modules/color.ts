@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { includes } from "lodash";
+import { getGradientCss, randomColor } from "@/utils/util";
 
 export interface ColorState {
   selectColorList: HexColorString[];
@@ -30,7 +30,7 @@ export const useColorStore = defineStore("color", {
   },
   actions: {
     resetSelectColorList() {
-      this.selectColorList = ["#A8ABB2", "#303133"];
+      this.selectColorList = ["#55FF55", "#55FFFF"];
     },
     resetCacheColorList() {
       this.cacheColorList = [];
@@ -60,12 +60,3 @@ export const useColorStore = defineStore("color", {
     paths: ["cacheColorList"],
   },
 });
-
-function randomColor(): HexColorString {
-  return ("#" + ((Math.random() * 0xffffff) << 0).toString(16)) as HexColorString;
-}
-
-function getGradientCss(list: string[]): GradientCSS {
-  const stops = list.map((item, index, list) => `${item} ${((100 / list.length) * index).toFixed(2)}%`);
-  return `linear-gradient(to right, ${stops.join(", ")})`;
-}

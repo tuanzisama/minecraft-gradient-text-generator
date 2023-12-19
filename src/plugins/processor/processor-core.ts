@@ -30,7 +30,6 @@ export abstract class GradientProcessor {
 
   /**
    * 获取结果
-   * 通常用作预览
    * @example <span>&#FFFFFF文</span>
    */
   getResultByText(): string {

@@ -1,4 +1,12 @@
+/**
+ * Representation of color in Hex format.
+ */
 type HexColorString = `#${string}`;
+/**
+ * Representation of color in HSL (hue, saturation, value) format.
+ */
+type HslColor = Record<"h" | "s" | "l", number>;
+
 type GradientCSS = `linear-gradient${string}`;
 
 interface ColorStop {

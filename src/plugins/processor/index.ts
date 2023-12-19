@@ -12,6 +12,7 @@ import { TrChatProcessor } from "./modules/trchat";
 import { JSONProcessor } from "./modules/json";
 import { CSVProcessor } from "./modules/csv";
 import { StandardProcessor } from "./modules/standard";
+import { MiniMessageGradientProcessor } from "./modules/minimessage-gradient";
 
 interface ProcessorMapValue {
   label: string;
@@ -25,13 +26,17 @@ export const processorMap = new Map<KeyOfProcessorMap, ProcessorMapValue>([
   ["standard", { label: "标准", sample: "#RRGGBB", processor: StandardProcessor }],
   ["cmi", { label: "CMI", sample: "{#RRGGBB}", processor: CMIProcessor }],
   ["minimessage", { label: "MiniMessage (adventure-api)", sample: "<#RRGGBB>", processor: MiniMessageProcessor }],
+  [
+    "minimessage-gradient",
+    { label: "MiniMessage#Gradient (adventure-api)", sample: "<gradient:[color1]:[color...]>", processor: MiniMessageGradientProcessor },
+  ],
   ["minedown", { label: "MineDown", sample: "&#RRGGBB&", processor: MineDownProcessor }],
   ["trchat", { label: "TrChat", sample: "&{#RRGGBB}", processor: TrChatProcessor }],
   ["motd", { label: "MOTD", sample: "\\u00A7X", processor: MotdProcessor }],
   ["bbcode", { label: "BBCode", sample: "[color=#RRGGBB]", processor: BBCodeProcessor }],
   ["html", { label: "HTML", sample: '<span style="color: #RRGGBB"/>', processor: HTMLProcessor }],
-  ["json", { label: "JSON", sample: '{ color: "#RRGGBB" }', processor: JSONProcessor }],
-  ["csv", { label: "CSV", sample: "#RRGGBB,Text", processor: CSVProcessor }],
+  ["json", { label: "JSON", sample: '{ color: "#RRGGBB", "char": "T" }', processor: JSONProcessor }],
+  ["csv", { label: "CSV", sample: "#RRGGBB,T", processor: CSVProcessor }],
 ]);
 
 export const processorMapKey = [
@@ -47,6 +52,7 @@ export const processorMapKey = [
   "json",
   "csv",
   "standard",
+  "minimessage-gradient",
 ] as const;
 
 export type KeyOfProcessorMap = (typeof processorMapKey)[number];

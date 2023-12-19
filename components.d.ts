@@ -15,6 +15,8 @@ declare module 'vue' {
     HexInput: typeof import('./src/components/color-picker/hex-input.vue')['default']
     Main: typeof import('./src/components/color-picker/main.vue')['default']
     Picker: typeof import('./src/components/color-picker/picker.vue')['default']
+    PreviewBox: typeof import('./src/components/text-output/preview-box.vue')['default']
+    SimulateView: typeof import('./src/components/text-output/simulate-view.vue')['default']
     TButton: typeof import('tdesign-vue-next')['Button']
     TCard: typeof import('tdesign-vue-next')['Card']
     TDivider: typeof import('tdesign-vue-next')['Divider']
@@ -32,5 +34,6 @@ declare module 'vue' {
     TSpace: typeof import('tdesign-vue-next')['Space']
     TSwitch: typeof import('tdesign-vue-next')['Switch']
     TTextarea: typeof import('tdesign-vue-next')['Textarea']
+    TTooltip: typeof import('tdesign-vue-next')['Tooltip']
   }
 }

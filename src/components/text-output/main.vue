@@ -12,10 +12,12 @@
             <t-radio value="§">§</t-radio>
           </t-radio-group>
           <t-select
+            class="processor-select"
             v-model="appStore.setting.processor"
             placeholder="请选择生成器"
             @change="onProcessorSelectChangeHandler"
             filterable
+            auto-width
             :popup-props="{ overlayClassName: 'tdesign-processor-select__overlay-option' }"
           >
             <t-option v-for="[key, value] in processorMap" :key="key" :value="key" :label="value.label">
@@ -32,9 +34,12 @@
             </template>
           </t-select>
           <span style="cursor: pointer" @click="onCopyClickHandler">复制</span>
+          <t-tooltip content="切换至预览模式" theme="light">
+            <t-switch v-model="appStore.setting.simulateMode" :custom-value="['chat', 'default']" />
+          </t-tooltip>
         </t-space>
       </template>
-      <div class="text-output text-output--preview" v-html="processResult.preview"></div>
+      <preview-box class="text-output text-output--preview" v-model="processResult.preview" :mode="appStore.setting.simulateMode" />
       <t-divider />
       <div class="text-output text-output--raw" v-html="processResult.rawHTML" contenteditable></div>
     </t-card>
@@ -48,6 +53,7 @@ import { useColorStore } from "../../plugins/store/modules/color";
 import { MessagePlugin } from "tdesign-vue-next";
 import { KeyOfProcessorMap, processorMap } from "../../plugins/processor";
 import { GradientProcessor, GradientProcessorConstructor } from "@/plugins/processor/processor-core";
+import { isEmpty } from "lodash";
 
 const appStore = useAppStore();
 const colorStore = useColorStore();
@@ -85,8 +91,18 @@ const onProcessorSelectChangeHandler = (val: KeyOfProcessorMap) => {
 };
 
 const generateOutput = (text?: string, colors?: HexColorString[]) => {
+  const $text = text ?? appStore.processText;
+  const $colors = colors ?? colorStore.selectColorList;
+
+  if (isEmpty($text) || isEmpty($colors)) {
+    processResult.preview = "";
+    processResult.rawText = "";
+    processResult.rawHTML = "";
+    return;
+  }
+
   if (processorConstructor.value) {
-    processor.value = new processorConstructor.value(text ?? appStore.processText, colors ?? colorStore.selectColorList, {
+    processor.value = new processorConstructor.value($text, $colors, {
       vanilla: { charCode: appStore.setting.vanillaCharCode },
       clearWhiteSpace: appStore.setting.clearWhiteSpace,
     });
@@ -110,27 +126,27 @@ export interface TextOutputExpose {
   width: 100%;
 }
 
+.processor-select {
+  &:deep(.t-input__wrap.t-input--auto-width) {
+    min-width: 250px;
+  }
+}
+
 .text-output {
   width: 100%;
-  height: 150px;
-  font-size: 20px;
-  line-height: 25px;
-  word-break: break-all;
-
   outline: none;
   border: none;
 
-  text-wrap: wrap;
-  overflow-x: hidden;
-  overflow-y: auto;
-  @include custom-scrollbar();
-
-  &--preview {
-    height: 80px;
-  }
   &--raw {
+    height: 150px;
     font-size: 14px;
     line-height: 20px;
+    word-break: break-all;
+    text-wrap: wrap;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+    @include custom-scrollbar();
     &:deep(.color-tag) {
       color: var(--color-hex);
     }

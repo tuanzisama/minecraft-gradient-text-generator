@@ -59,6 +59,7 @@ const onConfirmHandler = () => {
 
   privateValue.value = false;
   MessagePlugin.success({ content: "已保存", placement: "bottom" });
+  emit("on-save");
 };
 
 const onResetClickHandler = () => {
@@ -74,6 +75,7 @@ export interface McgSettingProps {
 }
 export interface McgSettingEmit {
   (e: "update:modelValue", value: McgSettingProps["modelValue"]): void;
+  (e: "on-save"): void;
 }
 </script>
 
