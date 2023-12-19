@@ -42,6 +42,7 @@ const onInputPasteHandler = ({ e, pasteValue }: { e: ClipboardEvent; pasteValue:
 };
 
 const onInputChangeHandler = (_val: string | number) => {
+  console.info("onInputChangeHandler");
   const value = String(_val);
   if (value.length === 6 && hexColorRegExp.test(value)) {
     emit("on-change", `#${privateValue.value}` as HexColorString);

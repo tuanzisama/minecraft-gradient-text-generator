@@ -2,8 +2,8 @@
   <t-card bordered class="color-picker-wrapper">
     <div class="color-picker-header">
       <color-bar />
-      <picker ref="pickerRef" v-model="colorStore.selectColorList[colorStore.selectedIndex]">
-        <draggable v-model="colorStore.selectColorList" tag="ul" class="color-list">
+      <picker ref="pickerRef" v-model="colorStore.selectColorList[colorStore.selectedIndex]" @on-change="onPickerChangeHandler">
+        <draggable ref="draggableRef" v-model="colorStore.selectColorList" tag="ul" class="color-list" @change="onDraggableChangeHandler">
           <template #item="{ element, index }">
             <li
               class="color-cell"
@@ -41,14 +41,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import picker, { PickerExpose } from "./picker.vue";
 import { useColorStore } from "../../plugins/store/modules/color";
 import HexInput from "./hex-input.vue";
 import draggable from "vuedraggable";
 import { DialogPlugin, MessagePlugin } from "tdesign-vue-next";
 
+const emit = defineEmits<ColorPickerEmit>();
 const pickerRef = ref<PickerExpose>();
+const draggableRef = ref<typeof draggable>();
 const colorStore = useColorStore();
 
 onMounted(() => {
@@ -57,6 +59,7 @@ onMounted(() => {
 
 const onHexInputChangeHandler = (item: HexColorString) => {
   pickerRef.value?.setColor(item);
+  emit("on-change", [...colorStore.selectColorList]);
 };
 
 const onColorCellClickHandler = (item: HexColorString, index: number) => {
@@ -66,14 +69,33 @@ const onColorCellClickHandler = (item: HexColorString, index: number) => {
 
 const onColorCellDeleteHandler = (item: HexColorString, index: number) => {
   colorStore.pullSelectColorListAt(index);
+  emit("on-change", [...colorStore.selectColorList]);
 };
 
 const onAddColorClickHandler = () => {
   colorStore.addSelectColorList();
+  console.info(draggableRef.value);
+  emit("on-change", [...colorStore.selectColorList]);
+
+  nextTick(() => {
+    const ulElement = draggableRef.value?.$el as HTMLUListElement;
+    if (ulElement) {
+      ulElement.scrollTo(0, ulElement.scrollHeight);
+    }
+  });
 };
 
 const onResetClickHandler = () => {
   colorStore.resetSelectColorList();
+  emit("on-change", [...colorStore.selectColorList]);
+};
+
+const onDraggableChangeHandler = () => {
+  emit("on-change", [...colorStore.selectColorList]);
+};
+
+const onPickerChangeHandler = () => {
+  emit("on-change", [...colorStore.selectColorList]);
 };
 
 const onSaveColorsClickHandler = () => {
@@ -82,9 +104,13 @@ const onSaveColorsClickHandler = () => {
 };
 
 const onColorQuickSlotSelectHandler = (item: GradientColorItem) => {
-  colorStore.setCacheColorList(item.colors);
+  if (colorStore.selectColorList === item.colors) {
+    return;
+  }
+  colorStore.setSelectColor(item.colors);
   colorStore.selectedIndex = 0;
   MessagePlugin.success({ content: "已应用此渐变色", placement: "bottom" });
+  emit("on-change", [...colorStore.selectColorList]);
 };
 
 const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientColorItem, index: number) => {
@@ -98,6 +124,12 @@ const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientCo
     },
   });
 };
+</script>
+
+<script lang="ts">
+export interface ColorPickerEmit {
+  (e: "on-change", colors: HexColorString[]): void;
+}
 </script>
 
 <style lang="scss" scoped>

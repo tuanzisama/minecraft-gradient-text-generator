@@ -38,15 +38,21 @@ const initializeBoxPicker = () => {
   if (boxPickerRef.value) {
     boxPickerInstance.value = iro.ColorPicker(boxPickerRef.value, {
       layout: [
-        { component: iro.ui.Box, options: { boxHeight: 200 } },
+        { component: iro.ui.Box, options: { boxHeight: 250 } },
         { component: iro.ui.Slider, options: { sliderType: "hue" } },
       ],
-      width: 350,
+      width: 400,
       color: privateValue.value,
     });
 
     boxPickerInstance.value.on("color:change", (iroColor: iro.Color) => {
       privateValue.value = iroColor.hexString as HexColorString;
+    });
+
+    // may cause visual lag, like drop frame.
+    // don't ask why, "performance"
+    boxPickerInstance.value.on("input:end", (iroColor: iro.Color) => {
+      emit("on-change", iroColor.hexString as HexColorString);
     });
   }
 };
@@ -54,11 +60,14 @@ const initializeBoxPicker = () => {
 const onHexInputChangeHandler = (val: HexColorString) => {
   setColor(val);
   privateValue.value = val;
+  emit("on-change", val);
 };
 
 const onColorQuickSlotChangeHandler = (item: ColorItem) => {
-  setColor(item.color as HexColorString);
-  privateValue.value = item.color as HexColorString;
+  const color = item.color as HexColorString;
+  setColor(color);
+  privateValue.value = color;
+  emit("on-change", color);
 };
 
 const setColor = (color: HexColorString) => {
@@ -81,6 +90,7 @@ export interface PickerExpose {
 
 export interface PickerEmit {
   (e: "update:modelValue", value: PickerProps["modelValue"]): void;
+  (e: "on-change", colors: HexColorString): void;
 }
 </script>
 
@@ -104,7 +114,7 @@ export interface PickerEmit {
   flex-direction: column;
   flex-shrink: 0;
 
-  width: 350px;
+  width: 325px;
   $gap-size: 20px;
   margin-right: $gap-size;
   padding-right: $gap-size;

@@ -14,8 +14,15 @@
     "isolatedModules": true,
     "baseUrl": "./",
     "paths": {
-      "/@/*": ["src/*"]
+      "@/*": ["src/*"]
     }
   },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*.d.ts",
+    "node_modules/tdesign-vue-next/global.d.ts"
+  ],
   "exclude": ["node_modules"]
 }

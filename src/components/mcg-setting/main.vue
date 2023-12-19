@@ -8,18 +8,8 @@
     @confirm="onConfirmHandler"
   >
     <t-form class="setting-form" :data="formData" label-width="120px">
-      <t-form-item label="字符模式" name="charMode">
-        <t-radio-group v-model="formData.charMode">
-          <t-radio value="&">&</t-radio>
-          <t-radio value="§">§</t-radio>
-        </t-radio-group>
-      </t-form-item>
-      <t-form-item label="兼容模式" name="compatibleMode" class="warped-formitem">
-        <t-switch v-model="formData.compatibleMode" />
-        <p class="setting-item-summary">仅限服务器不支持&amp;&num;前缀发送Hex颜色</p>
-      </t-form-item>
-      <t-form-item label="移除空格" name="clearSpaceCharacter" class="warped-formitem">
-        <t-switch v-model="formData.clearSpaceCharacter" />
+      <t-form-item label="移除空格" name="clearWhiteSpace" class="warped-formitem">
+        <t-switch v-model="formData.clearWhiteSpace" />
         <p class="setting-item-summary">移除空格/换行/制表符</p>
       </t-form-item>
       <t-divider>其它</t-divider>
@@ -46,19 +36,15 @@ const props = withDefaults(defineProps<McgSettingProps>(), {
 const emit = defineEmits<McgSettingEmit>();
 const appStore = useAppStore();
 const colorStore = useColorStore();
-const formData = reactive<AppStoreState["setting"]>({
-  charMode: "&",
-  compatibleMode: false,
-  clearSpaceCharacter: true,
+const formData = reactive<Pick<AppStoreState["setting"], "clearWhiteSpace">>({
+  clearWhiteSpace: true,
 });
 
 watch(
   () => props.modelValue,
   (newVal) => {
     if (newVal) {
-      formData.charMode = appStore.setting.charMode;
-      formData.compatibleMode = appStore.setting.compatibleMode;
-      formData.clearSpaceCharacter = appStore.setting.clearSpaceCharacter;
+      formData.clearWhiteSpace = appStore.setting.clearWhiteSpace;
     }
   }
 );
@@ -69,7 +55,8 @@ const privateValue = computed({
 });
 
 const onConfirmHandler = () => {
-  appStore.saveSetting(formData);
+  appStore.setting.clearWhiteSpace = formData.clearWhiteSpace;
+
   privateValue.value = false;
   MessagePlugin.success({ content: "已保存", placement: "bottom" });
 };
