@@ -1,5 +1,5 @@
 import { parseTemplate, parseTemplateToHTML } from "../utils/parser";
-import { GradientProcessor, GradientProcessorConstructor } from "../processor-helper";
+import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
 class VanillaCompatibleProcessorClazz extends GradientProcessor {
   private charCode: string;

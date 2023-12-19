@@ -1,4 +1,4 @@
-import { GradientProcessor, GradientProcessorConstructor } from "../processor-helper";
+import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
 class BBCodeProcessorClazz extends GradientProcessor {
   constructor(text: string, colors: HexColorString[], options?: GradientProcessorOptions) {

@@ -47,7 +47,7 @@ import { useAppStore } from "../../plugins/store/modules/app";
 import { useColorStore } from "../../plugins/store/modules/color";
 import { MessagePlugin } from "tdesign-vue-next";
 import { KeyOfProcessorMap, processorMap } from "../../plugins/processor";
-import { GradientProcessor, GradientProcessorConstructor } from "@/plugins/processor/processor-helper";
+import { GradientProcessor, GradientProcessorConstructor } from "@/plugins/processor/processor-core";
 
 const appStore = useAppStore();
 const colorStore = useColorStore();

@@ -1,4 +1,4 @@
-import { GradientProcessor, GradientProcessorConstructor } from "../processor-helper";
+import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 import { parseTemplate, parseTemplateToHTML } from "../utils/parser";
 
 class CSVProcessorClazz extends GradientProcessor {

@@ -1,4 +1,4 @@
-import { GradientProcessor, GradientProcessorConstructor } from "../processor-helper";
+import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
 class JSONProcessorClazz extends GradientProcessor {
   private charCode: string;

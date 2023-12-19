@@ -1,5 +1,5 @@
 import { VanillaProcessor } from "./modules/vanilla";
-import { GradientProcessorConstructor } from "./processor-helper";
+import { GradientProcessorConstructor } from "./processor-core";
 
 import { VanillaCompatibleProcessor } from "./modules/vanilla-compatible";
 import { MotdProcessor } from "./modules/motd";
