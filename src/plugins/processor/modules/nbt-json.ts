@@ -1,6 +1,6 @@
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
-class JSONProcessorClazz extends GradientProcessor {
+class NBTJSONProcessorClazz extends GradientProcessor {
   private charCode: string;
   constructor(text: string, colors: HexColorString[], options?: GradientProcessorOptions) {
     super(text, colors, options);
@@ -8,7 +8,7 @@ class JSONProcessorClazz extends GradientProcessor {
   }
 
   get template(): string {
-    return `{color: \"{color}\", char: \"{char}\"}`;
+    return `{\"text\":\"{char}\",\"color\":\"{color}\"}`;
   }
 
   getResultByText(): string {
@@ -16,8 +16,11 @@ class JSONProcessorClazz extends GradientProcessor {
   }
 
   getRawResultByHTML(): string {
-    return JSON.stringify(super.getResult());
+    const list = super.getResult().map((item) => {
+      return { text: item.char, color: item.color };
+    });
+    return JSON.stringify(list);
   }
 }
 
-export const JSONProcessor: GradientProcessorConstructor = JSONProcessorClazz;
+export const NBTJSONProcessor: GradientProcessorConstructor = NBTJSONProcessorClazz;
