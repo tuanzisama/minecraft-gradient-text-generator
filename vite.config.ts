@@ -17,6 +17,21 @@ export default defineConfig({
   resolve: {
     alias: [{ find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) }],
   },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: `static/entry/[name]-[hash].js`,
+        chunkFileNames: `static/chunk/[name]-[hash].js`,
+        assetFileNames: `static/file/[name]-[hash].[ext]`,
+        manualChunks: {
+          vue: ["vue"],
+          lodash: ["lodash-es"],
+          vuedraggable: ["vuedraggable-es"],
+          tdesign: ["tdesign-vue-next"],
+        },
+      },
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {

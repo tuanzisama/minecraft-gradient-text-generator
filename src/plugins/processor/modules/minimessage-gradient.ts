@@ -1,5 +1,5 @@
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
-import { parseFullTemplate, parseTemplateToHTML } from "../utils/parser";
+import { FormatParams, parseFullyTemplate } from "../utils/parser";
 
 class MiniMessageGradientProcessorClazz extends GradientProcessor {
   constructor(text: string, colors: HexColorString[], options?: GradientProcessorOptions) {
@@ -7,23 +7,27 @@ class MiniMessageGradientProcessorClazz extends GradientProcessor {
   }
 
   get template(): string {
-    return "<gradient:{colors}>{text}</gradient>";
+    return "{char}";
   }
 
-  /**
-   * 获取结果
-   * @example <span>&#FFFFFF文</span>
-   */
-  getResultByText(): string {
-    return parseFullTemplate(this.template, this.text, this.colors, ":");
+  override get fullyTemplate(): string {
+    return "<gradient:{colors}>{bold}{italic}{underlined}{strikethrough}{template}</gradient>";
   }
 
-  /**
-   * 获取元结果 HTML 类型
-   * @example &#FFFFFF文
-   */
-  getRawResultByHTML(): string {
-    return parseTemplateToHTML(this.getResultByText());
+  override get format(): FormatParams {
+    return {
+      bold: "<b>",
+      italic: "<i>",
+      underlined: "<u>",
+      strikethrough: "<st>",
+    };
+  }
+
+  override getResultText(): string {
+    const result = this.getResult()
+      .map((item) => this.charProcessor(item.char, item.color, this.computeTemplate(), this.format))
+      .join("");
+    return parseFullyTemplate(this.computeFullyTemplate(), result, { format: this.format, colors: { colors: this.colors, separator: ":" } });
   }
 }
 

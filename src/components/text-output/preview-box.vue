@@ -1,26 +1,40 @@
 <template>
   <div class="preview-box-wrapper">
-    <Transition>
-      <div class="preview-box plain-mode" v-if="props.mode === 'default'" v-html="props.modelValue"></div>
-      <div class="preview-box chat-mode" v-else-if="props.mode === 'chat'">
-        <div class="content" v-html="props.modelValue"></div>
+    <div class="preview-box" :class="props.mode === 'default' ? 'plain-mode' : 'chat-mode'">
+      <div class="content">
+        <span
+          v-for="(item, index) in props.modelValue"
+          :key="index"
+          :style="{
+            '--text-color': item.color,
+            '--text-shadow-color': item.shadow,
+          }"
+          :class="{
+            'is-bold': item.format?.bold,
+            'is-italic': item.format?.italic,
+            'is-underlined': item.format?.underlined,
+            'is-strikethrough': item.format?.strikethrough,
+          }"
+        >
+          {{ item.char }}
+        </span>
       </div>
-    </Transition>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ProcessorResultItem } from "@/plugins/processor/processor-core";
 import { AppStoreState } from "@/plugins/store/modules/app";
 
 const props = withDefaults(defineProps<PreviewBoxProps>(), {
-  modelValue: "",
   mode: "default",
 });
 </script>
 
 <script lang="ts">
 export interface PreviewBoxProps {
-  modelValue: string;
+  modelValue: ProcessorResultItem[];
   mode: AppStoreState["setting"]["simulateMode"];
 }
 </script>
@@ -41,7 +55,7 @@ export interface PreviewBoxProps {
   position: absolute;
 
   &.plain-mode {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 24px;
   }
   &.chat-mode {
@@ -54,15 +68,60 @@ export interface PreviewBoxProps {
     background-size: cover;
     background-repeat: no-repeat;
     font-size: 18px;
-    line-height: 22px;
-    white-space: pre;
+    line-height: 24px;
+    word-wrap: break-word;
     .content {
       background-color: rgba(1, 1, 1, 0.4);
       padding: 8px;
       min-height: 38px;
     }
     &:deep(span) {
-      text-shadow: 3px 3px var(--text-shadow-hsl);
+      text-shadow: 0.125em 0.125em var(--text-shadow-color);
+      &.is-underlined:after,
+      &.is-strikethrough:after {
+        box-shadow: 0.125em 0.125em var(--text-shadow-color);
+      }
+    }
+  }
+
+  &.chat-mode,
+  &.plain-mode {
+    &:deep(span) {
+      color: var(--text-color);
+      &.is-bold {
+        font-weight: bold;
+      }
+      &.is-italic {
+        font-style: italic;
+      }
+      &.is-underlined {
+        display: inline-block;
+        position: relative;
+        &:after {
+          content: "";
+          position: absolute;
+          bottom: calc(0px - 2px);
+          left: 0;
+          display: inline-block;
+          width: 100%;
+          height: 2px;
+          background: var(--text-color);
+        }
+      }
+      &.is-strikethrough {
+        display: inline-block;
+        position: relative;
+        &::before {
+          content: "";
+          position: absolute;
+          top: calc(50% - 2px);
+          left: 0;
+          display: inline-block;
+          width: 100%;
+          height: 2px;
+          background: var(--text-color);
+        }
+      }
     }
   }
 }

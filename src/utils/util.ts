@@ -33,3 +33,7 @@ export function getTextShadowHsl(hex: HexColorString): HslColor {
 
   return { h, s, l };
 }
+
+export function getTextShadowHex(hex: HexColorString): HexColorString {
+  return new iro.Color(getTextShadowHsl(hex)).hexString as HexColorString;
+}

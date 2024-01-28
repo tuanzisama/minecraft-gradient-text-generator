@@ -5,14 +5,23 @@ export interface AppStoreState {
   processText: string;
   setting: {
     /**
-     * 字符模式
-     */
-    vanillaCharCode: "&" | "§";
-    /**
      * 移除空格/换行/制表符
      */
     clearWhiteSpace: boolean;
+    /**
+     * 模拟模式
+     */
     simulateMode: "default" | "chat";
+    format: {
+      bold: boolean;
+      italic: boolean;
+      underlined: boolean;
+      strikethrough: boolean;
+      /**
+       * 字符模式
+       */
+      vanillaCharCode: "&" | "§";
+    };
     processor: KeyOfProcessorMap;
   };
 }
@@ -21,12 +30,23 @@ export const useAppStore = defineStore("app", {
   state: (): AppStoreState => ({
     processText: "",
     setting: {
-      vanillaCharCode: "&",
       clearWhiteSpace: true,
       simulateMode: "chat",
+      format: {
+        bold: false,
+        italic: false,
+        underlined: false,
+        strikethrough: false,
+        vanillaCharCode: "&",
+      },
       processor: "vanilla",
     },
   }),
+  actions: {
+    switchSimulateMode() {
+      this.setting.simulateMode = this.setting.simulateMode === "chat" ? "default" : "chat";
+    },
+  },
   persist: {
     paths: ["setting"],
   },

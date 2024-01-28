@@ -6,7 +6,7 @@ class MineDownProcessorClazz extends GradientProcessor {
   }
 
   get template(): string {
-    return `&{color}&{char}`;
+    return `&{color}&{bold}{italic}{underlined}{strikethrough}{char}`;
   }
 }
 

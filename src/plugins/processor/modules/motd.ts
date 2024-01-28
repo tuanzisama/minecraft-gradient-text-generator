@@ -1,4 +1,4 @@
-import { parseTemplate, parseTemplateToHTML } from "../utils/parser";
+import { FormatParams, parseTemplate, parseTemplateToHTML } from "../utils/parser";
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
 class MotdProcessorClazz extends GradientProcessor {
@@ -10,10 +10,19 @@ class MotdProcessorClazz extends GradientProcessor {
   }
 
   get template(): string {
-    return `${this.charCode}x{color}{char}`;
+    return `${this.charCode}x{color}{bold}{italic}{underlined}{strikethrough}{char}`;
   }
 
-  override getResultByText(): string {
+  override get format(): FormatParams {
+    return {
+      bold: `${this.charCode}l`,
+      italic: `${this.charCode}o`,
+      underlined: `${this.charCode}n`,
+      strikethrough: `${this.charCode}m`,
+    };
+  }
+
+  override getResultText(): string {
     const colors = this.gradientColors;
 
     return this.splitText
@@ -22,12 +31,12 @@ class MotdProcessorClazz extends GradientProcessor {
           .slice(1)
           .split("")
           .reduce((acc, cur) => `${acc}${this.charCode}${cur}`, "");
-        return parseTemplate(this.template, el, colorSplit);
+        return parseTemplate(this.computeTemplate(), el, colorSplit, this.format);
       })
       .join("");
   }
 
-  getRawResultByHTML(): string {
+  override getRenderHTML(): string {
     const colors = this.gradientColors;
     return this.splitText
       .map((el, index) => {
@@ -35,7 +44,7 @@ class MotdProcessorClazz extends GradientProcessor {
           .slice(1)
           .split("")
           .reduce((acc, cur) => `${acc}${this.charCode}${cur}`, "");
-        return parseTemplateToHTML(parseTemplate(this.template, el, colorSplit));
+        return parseTemplateToHTML(parseTemplate(this.computeTemplate(), el, colorSplit, this.format));
       })
       .join("");
   }

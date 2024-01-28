@@ -2,15 +2,16 @@
   <div class="text-output-wrapper">
     <t-card title="生成" header-bordered>
       <template #actions>
-        <t-space align="center">
-          <t-radio-group
-            v-if="['vanilla', 'vanilla-compatible'].includes(appStore.setting.processor)"
-            v-model="appStore.setting.vanillaCharCode"
-            @change="() => generateOutput()"
-          >
-            <t-radio value="&">&</t-radio>
-            <t-radio value="§">§</t-radio>
-          </t-radio-group>
+        <div class="text-output-action">
+          <div class="tool-bar-wrapper">
+            <tool-bar
+              ref="toolBarRef"
+              :processor="processor"
+              :processor-key="appStore.setting.processor"
+              :result-raw-text="processResult.text"
+              @on-format-change="onFormatChangeHandler"
+            />
+          </div>
           <t-select
             class="processor-select"
             v-model="appStore.setting.processor"
@@ -33,15 +34,11 @@
               </div>
             </template>
           </t-select>
-          <span style="cursor: pointer" @click="onCopyClickHandler">复制</span>
-          <t-tooltip content="切换至预览模式" theme="light">
-            <t-switch v-model="appStore.setting.simulateMode" :custom-value="['chat', 'default']" />
-          </t-tooltip>
-        </t-space>
+        </div>
       </template>
       <preview-box class="text-output text-output--preview" v-model="processResult.preview" :mode="appStore.setting.simulateMode" />
       <t-divider />
-      <div class="text-output text-output--raw" v-html="processResult.rawHTML" contenteditable></div>
+      <div class="text-output text-output--raw" v-html="processResult.renderHTML"></div>
     </t-card>
   </div>
 </template>
@@ -50,44 +47,51 @@
 import { onMounted, ref, reactive, shallowRef } from "vue";
 import { useAppStore } from "../../plugins/store/modules/app";
 import { useColorStore } from "../../plugins/store/modules/color";
-import { MessagePlugin } from "tdesign-vue-next";
 import { KeyOfProcessorMap, processorMap } from "../../plugins/processor";
-import { GradientProcessor, GradientProcessorConstructor } from "@/plugins/processor/processor-core";
-import { isEmpty } from "lodash";
+import { GradientProcessor, GradientProcessorConstructor, ProcessorResultItem } from "@/plugins/processor/processor-core";
+import { isEmpty } from "lodash-es";
+import { ToolBarExpose, ToolBarModule } from "./tool-bar.vue";
 
 const appStore = useAppStore();
 const colorStore = useColorStore();
 
+const toolBarRef = ref<ToolBarExpose>();
 const processorConstructor = ref<GradientProcessorConstructor>();
 const processor = shallowRef<GradientProcessor>();
 
-const processResult = reactive({
-  preview: "",
-  rawText: "",
-  rawHTML: "",
+const processResult = reactive<{
+  /**
+   * 预览体结构
+   */
+  preview: ProcessorResultItem[];
+  /**
+   * 主要复制用
+   */
+  text: string;
+  /**
+   * 适用于渲染页面
+   */
+  renderHTML: string;
+}>({
+  preview: [],
+  text: "",
+  renderHTML: "",
 });
 
 onMounted(() => {
   processorConstructor.value = processorMap.get(appStore.setting.processor)?.processor;
+  switchToolbar(appStore.setting.processor);
 });
-
-const onCopyClickHandler = () => {
-  if (appStore.processText.length === 0) {
-    MessagePlugin.warning({ content: "请先输入文本", placement: "bottom" });
-    return;
-  }
-  navigator.clipboard
-    .writeText(processResult.rawText)
-    .then(() => MessagePlugin.success({ content: "复制成功 (ノ￣▽￣)", placement: "bottom" }))
-    .catch((err) => {
-      MessagePlugin.error({ content: "复制失败，请尝试更新您的浏览器", placement: "bottom" });
-      console.error(err);
-    });
-};
 
 const onProcessorSelectChangeHandler = (val: KeyOfProcessorMap) => {
   processorConstructor.value = processorMap.get(val)?.processor;
+  switchToolbar(val);
   generateOutput();
+};
+
+const switchToolbar = (val: KeyOfProcessorMap) => {
+  toolBarRef.value?.toggleDisplay(ToolBarModule.VANILLA_CHAR_CODE, ["vanilla", "vanilla-compatible"].includes(val));
+  toolBarRef.value?.toggleDisplay(ToolBarModule.DOWNLOAD, val === "csv");
 };
 
 const generateOutput = (text?: string, colors?: HexColorString[]) => {
@@ -95,21 +99,32 @@ const generateOutput = (text?: string, colors?: HexColorString[]) => {
   const $colors = colors ?? colorStore.selectColorList;
 
   if (isEmpty($text) || isEmpty($colors)) {
-    processResult.preview = "";
-    processResult.rawText = "";
-    processResult.rawHTML = "";
+    processResult.preview = [];
+    processResult.text = "";
+    processResult.renderHTML = "";
     return;
   }
 
   if (processorConstructor.value) {
     processor.value = new processorConstructor.value($text, $colors, {
-      vanilla: { charCode: appStore.setting.vanillaCharCode },
+      vanilla: { charCode: appStore.setting.format.vanillaCharCode },
+      format: {
+        bold: appStore.setting.format.bold,
+        italic: appStore.setting.format.italic,
+        underlined: appStore.setting.format.underlined,
+        strikethrough: appStore.setting.format.strikethrough,
+      },
       clearWhiteSpace: appStore.setting.clearWhiteSpace,
     });
-    processResult.preview = processor.value.getResultByHTML();
-    processResult.rawText = processor.value.getResultByText();
-    processResult.rawHTML = processor.value.getRawResultByHTML();
+
+    processResult.preview = processor.value.getResult();
+    processResult.text = processor.value.getResultText();
+    processResult.renderHTML = processor.value.getRenderHTML();
   }
+};
+
+const onFormatChangeHandler = () => {
+  generateOutput();
 };
 
 defineExpose<TextOutputExpose>({ generate: generateOutput });
@@ -127,6 +142,7 @@ export interface TextOutputExpose {
 }
 
 .processor-select {
+  width: auto !important;
   &:deep(.t-input__wrap.t-input--auto-width) {
     min-width: 250px;
   }
@@ -151,6 +167,17 @@ export interface TextOutputExpose {
       color: var(--color-hex);
     }
   }
+}
+
+.text-output-action {
+  display: flex;
+  justify-content: center;
+}
+
+.tool-bar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-right: 20px;
 }
 </style>
 

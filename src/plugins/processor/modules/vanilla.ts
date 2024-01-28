@@ -1,14 +1,12 @@
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
 class VanillaProcessorClazz extends GradientProcessor {
-  private charCode: string;
   constructor(text: string, colors: HexColorString[], options?: GradientProcessorOptions) {
     super(text, colors, options);
-    this.charCode = this.options?.vanilla?.charCode ?? "&";
   }
 
   get template(): string {
-    return `${this.charCode}{color}{char}`;
+    return `${this.vanillaCharCode}{color}{bold}{italic}{underlined}{strikethrough}{char}`;
   }
 }
 

@@ -27,6 +27,12 @@ interface GradientProcessorOptions {
   vanilla?: {
     charCode: "&" | "§";
   };
+  format?: {
+    bold: boolean;
+    italic: boolean;
+    underlined: boolean;
+    strikethrough: boolean;
+  };
   /**
    * 移除空格/换行/制表符
    */

@@ -45,7 +45,7 @@ import { nextTick, onMounted, ref } from "vue";
 import picker, { PickerExpose } from "./picker.vue";
 import { useColorStore } from "../../plugins/store/modules/color";
 import HexInput from "./hex-input.vue";
-import draggable from "vuedraggable";
+import draggable from "vuedraggable-es";
 import { DialogPlugin, MessagePlugin } from "tdesign-vue-next";
 
 const emit = defineEmits<ColorPickerEmit>();

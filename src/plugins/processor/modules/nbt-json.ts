@@ -1,4 +1,6 @@
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
+import { FormatParams } from "../utils/parser";
+import { pickBy, isBoolean } from "lodash-es";
 
 class NBTJSONProcessorClazz extends GradientProcessor {
   private charCode: string;
@@ -11,15 +13,25 @@ class NBTJSONProcessorClazz extends GradientProcessor {
     return `{\"text\":\"{char}\",\"color\":\"{color}\"}`;
   }
 
-  getResultByText(): string {
-    return this.getRawResultByHTML();
+  override get format(): FormatParams {
+    return {
+      bold: "<bold>",
+      italic: "<i>",
+      underlined: "<u>",
+      strikethrough: "<st>",
+    };
   }
 
-  getRawResultByHTML(): string {
+  override getResultText(): string {
     const list = super.getResult().map((item) => {
-      return { text: item.char, color: item.color };
+      const format = pickBy(item.format, (v) => v === true);
+      return { text: item.char, color: item.color, ...format };
     });
     return JSON.stringify(list);
+  }
+
+  override getRenderHTML(): string {
+    return this.getResultText();
   }
 }
 
