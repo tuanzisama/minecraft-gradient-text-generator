@@ -37,3 +37,8 @@ export function getTextShadowHsl(hex: HexColorString): HslColor {
 export function getTextShadowHex(hex: HexColorString): HexColorString {
   return new iro.Color(getTextShadowHsl(hex)).hexString as HexColorString;
 }
+
+export function rgbToHex(rgb: Record<"r" | "g" | "b", number>): HexColorString {
+  const color = new iro.Color(rgb);
+  return color.hexString as HexColorString;
+}

@@ -41,7 +41,6 @@ export interface PreviewBoxProps {
 
 <style lang="scss" scoped>
 .preview-box-wrapper {
-  height: 240px;
   position: relative;
 }
 .preview-box {
@@ -64,7 +63,7 @@ export interface PreviewBoxProps {
     transition: 0.3s;
 
     background-image: url(@/assets/images/minecraft-screenshot.png);
-    background-position: bottom;
+    background-position: left bottom;
     background-size: cover;
     background-repeat: no-repeat;
     font-size: 18px;

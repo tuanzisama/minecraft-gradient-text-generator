@@ -1,8 +1,15 @@
 <template>
-  <t-card bordered class="color-picker-wrapper">
+  <mcg-card class="color-picker-wrapper" body-class="color-pickercard-body">
     <div class="color-picker-header">
-      <color-bar />
-      <picker ref="pickerRef" v-model="colorStore.selectColorList[colorStore.selectedIndex]" @on-change="onPickerChangeHandler">
+      <color-bar ref="colorBarRef" @on-select="onColorBarSelectHandler" />
+    </div>
+    <div class="color-picker-body">
+      <picker
+        ref="pickerRef"
+        v-if="colorStore.selectColorList.length !== 0"
+        v-model="colorStore.selectColorList[colorStore.selectedIndex]"
+        @on-change="onPickerChangeHandler"
+      >
         <draggable ref="draggableRef" v-model="colorStore.selectColorList" tag="ul" class="color-list" @change="onDraggableChangeHandler">
           <template #item="{ element, index }">
             <li
@@ -13,7 +20,7 @@
               @click="onColorCellClickHandler(element, index)"
             >
               <div class="color-cell__cube"></div>
-              <hex-input v-model="colorStore.selectColorList[index]" style="width: 150px" @on-change="onHexInputChangeHandler" />
+              <hex-input v-model="colorStore.selectColorList[index]" style="width: 100px" @on-change="onHexInputChangeHandler" />
               <span class="color-cell__delete" @click.stop="onColorCellDeleteHandler(element, index)">×</span>
             </li>
           </template>
@@ -29,15 +36,14 @@
         />
       </div>
       <t-space class="list-setting" size="10px">
-        <t-button variant="dashed" @click="onSaveColorsClickHandler">保存</t-button>
         <t-button @click="onAddColorClickHandler">新增</t-button>
+        <t-button variant="dashed" @click="onSaveColorsClickHandler">保存</t-button>
         <t-popconfirm content="确认重置吗" @confirm="onResetClickHandler">
           <t-button theme="danger">重置</t-button>
         </t-popconfirm>
-        <slot name="list-setting"> </slot>
       </t-space>
     </div>
-  </t-card>
+  </mcg-card>
 </template>
 
 <script lang="ts" setup>
@@ -47,19 +53,23 @@ import { useColorStore } from "../../plugins/store/modules/color";
 import HexInput from "./hex-input.vue";
 import draggable from "vuedraggable-es";
 import { DialogPlugin, MessagePlugin } from "tdesign-vue-next";
+import { McgCard } from "../mcg-card";
+import { ColorBarExpose } from "./color-bar.vue";
 
 const emit = defineEmits<ColorPickerEmit>();
+const colorBarRef = ref<ColorBarExpose>();
 const pickerRef = ref<PickerExpose>();
 const draggableRef = ref<typeof draggable>();
 const colorStore = useColorStore();
 
 onMounted(() => {
   colorStore.resetSelectColorList();
+  colorBarRef.value?.reDraw();
 });
 
 const onHexInputChangeHandler = (item: HexColorString) => {
   pickerRef.value?.setColor(item);
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
 };
 
 const onColorCellClickHandler = (item: HexColorString, index: number) => {
@@ -69,7 +79,7 @@ const onColorCellClickHandler = (item: HexColorString, index: number) => {
 
 const onColorCellDeleteHandler = (item: HexColorString, index: number) => {
   colorStore.pullSelectColorListAt(index);
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
 };
 
 const onAddColorClickHandler = () => {
@@ -79,7 +89,7 @@ const onAddColorClickHandler = () => {
   }
 
   colorStore.addSelectColorList();
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
 
   nextTick(() => {
     const ulElement = draggableRef.value?.$el as HTMLUListElement;
@@ -91,15 +101,19 @@ const onAddColorClickHandler = () => {
 
 const onResetClickHandler = () => {
   colorStore.resetSelectColorList();
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
 };
 
 const onDraggableChangeHandler = () => {
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
 };
 
 const onPickerChangeHandler = () => {
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
+};
+
+const onColorBarSelectHandler = () => {
+  pickerChangeBroadcaster();
 };
 
 const onSaveColorsClickHandler = () => {
@@ -114,7 +128,7 @@ const onColorQuickSlotSelectHandler = (item: GradientColorItem) => {
   colorStore.setSelectColor(item.colors);
   colorStore.selectedIndex = 0;
   MessagePlugin.success({ content: "已应用此渐变色", placement: "bottom" });
-  emit("on-change", [...colorStore.selectColorList]);
+  pickerChangeBroadcaster();
 };
 
 const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientColorItem, index: number) => {
@@ -127,6 +141,11 @@ const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientCo
       dialogNode.hide();
     },
   });
+};
+
+const pickerChangeBroadcaster = () => {
+  emit("on-change", [...colorStore.selectColorList]);
+  colorBarRef.value?.reDraw();
 };
 </script>
 
@@ -141,6 +160,12 @@ export interface ColorPickerEmit {
   width: 100%;
   .color-picker-header {
     width: 100%;
+    margin-bottom: 16px;
+  }
+  .color-picker-body {
+    width: 100%;
+    flex: 1;
+    height: 0;
     padding-bottom: 16px;
     margin-bottom: 16px;
     border-bottom: 1px solid #d4d7de;
@@ -150,6 +175,7 @@ export interface ColorPickerEmit {
   .color-picker-footer {
     display: flex;
     align-items: center;
+    height: 50px;
     .color-setting {
       width: 0;
       flex: 1;
@@ -162,6 +188,7 @@ export interface ColorPickerEmit {
         @include custom-scrollbar();
         &:deep(.color-cube) {
           margin-bottom: 0 !important;
+          margin-right: 10px !important;
         }
       }
     }
@@ -174,7 +201,7 @@ export interface ColorPickerEmit {
 
 .color-list {
   width: 100%;
-  max-height: 400px;
+  height: 100%;
   overflow-y: auto;
   @include custom-scrollbar();
   .color-cell {
@@ -210,6 +237,7 @@ export interface ColorPickerEmit {
       user-select: none;
       pointer-events: none;
       transition: color 0.3s;
+      display: none !important;
     }
 
     &::after {
@@ -246,7 +274,7 @@ export interface ColorPickerEmit {
       background-color: var(--color-hex);
       border-radius: 5px;
       cursor: pointer;
-      margin-right: 20px;
+      margin-right: 15px;
       flex-shrink: 0;
       border: 3px solid #e4e7ed;
       outline: 2px solid transparent;
@@ -266,10 +294,19 @@ export interface ColorPickerEmit {
       padding-right: 5px;
       transition: color 0.3s;
       user-select: none;
+      margin-left: 15px;
       &:hover {
         color: #17233d;
       }
     }
   }
+}
+</style>
+
+<style lang="scss">
+.color-pickercard-body {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
 }
 </style>

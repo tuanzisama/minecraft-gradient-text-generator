@@ -1,3 +1,3 @@
 import Main from "./main.vue";
 
-export const McgSetting = Main;
+export const McgCard = Main;

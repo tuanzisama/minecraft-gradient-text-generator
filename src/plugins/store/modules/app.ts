@@ -22,7 +22,7 @@ export interface AppStoreState {
        */
       vanillaCharCode: "&" | "§";
     };
-    processor: KeyOfProcessorMap;
+    usingProcessor: KeyOfProcessorMap;
   };
 }
 
@@ -39,12 +39,15 @@ export const useAppStore = defineStore("app", {
         strikethrough: false,
         vanillaCharCode: "&",
       },
-      processor: "vanilla",
+      usingProcessor: "vanilla",
     },
   }),
   actions: {
     switchSimulateMode() {
       this.setting.simulateMode = this.setting.simulateMode === "chat" ? "default" : "chat";
+    },
+    switchClearWhiteSpace() {
+      this.setting.clearWhiteSpace = !this.setting.clearWhiteSpace;
     },
   },
   persist: {

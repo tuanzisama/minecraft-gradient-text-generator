@@ -1,23 +1,17 @@
 <template>
   <div class="cg-container">
     <mcg-header />
-    <t-space direction="vertical" style="width: 100%">
-      <div class="text-input-box">
-        <text-input v-model="appStore.processText" @on-change="onTextInputChangeHandler" />
-      </div>
-      <div class="picker-box">
-        <color-picker @on-change="onColorPickerChangeHandler">
-          <template #list-setting>
-            <t-button theme="default" @click="visibleSetting = true">设置</t-button>
-          </template>
-        </color-picker>
-      </div>
-      <div class="text-output-box">
-        <text-output ref="textOutputRef" v-model="appStore.processText" />
-      </div>
-    </t-space>
+    <mcg-body>
+      <template #input>
+        <text-input class="text-input-box" v-model="appStore.processText" @on-change="onTextInputChangeHandler" />
+        <text-params />
+        <color-picker class="picker-box" @on-change="onColorPickerChangeHandler" />
+      </template>
+      <template #output>
+        <text-output ref="textOutputRef" />
+      </template>
+    </mcg-body>
     <mcg-footer />
-    <mcg-setting v-model="visibleSetting" @on-save="onSettingSaveHandler" />
   </div>
 </template>
 
@@ -25,16 +19,14 @@
 import { useAppStore } from "./plugins/store/modules/app";
 
 import { ColorPicker } from "./components/color-picker";
-import { McgHeader, McgFooter } from "./components/mcg-layout";
+import { McgHeader, McgFooter, McgBody } from "./components/mcg-layout";
+import { TextParams } from "./components/text-params";
 import { TextInput } from "./components/text-input";
 import { TextOutput } from "./components/text-output";
-import { McgSetting } from "./components/mcg-setting";
 import { ref } from "vue";
 import { TextOutputExpose } from "./components/text-output/main.vue";
 
 const appStore = useAppStore();
-
-const visibleSetting = ref(false);
 const textOutputRef = ref<TextOutputExpose>();
 
 const onTextInputChangeHandler = (val: string) => {
@@ -44,16 +36,39 @@ const onTextInputChangeHandler = (val: string) => {
 const onColorPickerChangeHandler = (colors: HexColorString[]) => {
   textOutputRef.value?.generate(undefined, colors);
 };
-
-const onSettingSaveHandler = () => {
-  textOutputRef.value?.generate();
-};
 </script>
 
 <style lang="scss" scoped>
 .cg-container {
-  width: 96%;
-  margin: 0 auto;
-  width: 1200px;
+
+  
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  .cg-header {
+    width: 100%;
+    height: 160px;
+    flex-shrink: 0;
+  }
+  .cg-body {
+    width: 95%;
+    height: 0;
+    flex: 1;
+
+    min-height: 800px;
+    margin: 0 auto;
+    max-height: 80vh;
+  }
+  .cg-footer {
+    width: 100%;
+    flex-shrink: 0;
+    padding: 20px 0 !important;
+  }
+}
+.picker-box {
+  flex: 1;
+  height: 0;
+  min-height: 470px;
 }
 </style>

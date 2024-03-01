@@ -4,7 +4,7 @@
       v-model="privateValue"
       placeholder="输入文字..."
       maxlength="2000"
-      :autosize="{ minRows: 3, maxRows: 8 }"
+      :autosize="{ minRows: 4, maxRows: 4 }"
       @change="onTextareaChangeHandler"
     />
   </div>
@@ -47,8 +47,6 @@ export interface TextInputEmit {
   }
   &:deep(.t-textarea__limit) {
     position: absolute;
-    right: 0;
-    top: -22px;
   }
 }
 </style>

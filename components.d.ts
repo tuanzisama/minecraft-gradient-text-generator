@@ -7,8 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Body: typeof import('./src/components/mcg-layout/body.vue')['default']
     ColorBar: typeof import('./src/components/color-picker/color-bar.vue')['default']
     ColorQuickslot: typeof import('./src/components/color-picker/color-quickslot.vue')['default']
+    Container: typeof import('./src/components/mcg-layout/container.vue')['default']
     Footer: typeof import('./src/components/mcg-layout/footer.vue')['default']
     Header: typeof import('./src/components/mcg-layout/header.vue')['default']
     HexInput: typeof import('./src/components/color-picker/hex-input.vue')['default']
@@ -23,10 +25,12 @@ declare module 'vue' {
     TFormItem: typeof import('tdesign-vue-next')['FormItem']
     TInput: typeof import('tdesign-vue-next')['Input']
     TLink: typeof import('tdesign-vue-next')['Link']
-    ToolBar: typeof import('./src/components/text-output/tool-bar.vue')['default']
+    ToolBar: typeof import('./src/components/text-params/tool-bar.vue')['default']
     TOption: typeof import('tdesign-vue-next')['Option']
     TPopconfirm: typeof import('tdesign-vue-next')['Popconfirm']
     TPopup: typeof import('tdesign-vue-next')['Popup']
+    TRadio: typeof import('tdesign-vue-next')['Radio']
+    TRadioGroup: typeof import('tdesign-vue-next')['RadioGroup']
     TSelect: typeof import('tdesign-vue-next')['Select']
     TSpace: typeof import('tdesign-vue-next')['Space']
     TSwitch: typeof import('tdesign-vue-next')['Switch']

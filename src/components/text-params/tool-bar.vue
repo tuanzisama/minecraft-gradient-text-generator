@@ -14,7 +14,6 @@
 import { VNode, h, onMounted, reactive } from "vue";
 import { useAppStore } from "../../plugins/store/modules/app";
 import { MessagePlugin, NotifyPlugin } from "tdesign-vue-next";
-import { GradientProcessor } from "@/plugins/processor/processor-core";
 import { KeyOfProcessorMap } from "@/plugins/processor";
 
 const appStore = useAppStore();
@@ -66,10 +65,16 @@ const toolbars = reactive<ToolBarItem[]>([
     render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "format_strikethrough"),
   },
   {
-    key: ToolBarModule.SIMULATEMODE,
+    key: ToolBarModule.SIMULATE_MODE,
     label: "模拟模式",
     isActive: false,
     render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "videogame_asset"),
+  },
+  {
+    key: ToolBarModule.CLEAR_SPACE,
+    label: "移除空格/换行/制表符",
+    isActive: false,
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "backspace"),
   },
   { key: ToolBarModule.DOWNLOAD, label: "下载", render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "download") },
   {
@@ -108,6 +113,11 @@ const onToolbarItemClickHandler = (item: ToolBarItem) => {
     case "simulateMode":
       appStore.switchSimulateMode();
       item.isActive = appStore.setting.simulateMode === "chat";
+      break;
+    case "clearSpace":
+      appStore.switchClearWhiteSpace();
+      item.isActive = appStore.setting.clearWhiteSpace;
+      emit("on-format-change");
       break;
     case "vanillaCharCode":
       item.isActive = !item.isActive;
@@ -179,7 +189,8 @@ export enum ToolBarModule {
   ITALIC = "italic",
   UNDERLINED = "underlined",
   STRIKETHROUGH = "strikethrough",
-  SIMULATEMODE = "simulateMode",
+  SIMULATE_MODE = "simulateMode",
+  CLEAR_SPACE = "clearSpace",
   COPY = "copy",
   DOWNLOAD = "download",
 }
@@ -187,7 +198,6 @@ export enum ToolBarModule {
 export interface ToolBarProps {
   resultRawText: string;
   processorKey: KeyOfProcessorMap;
-  processor: GradientProcessor;
 }
 
 export interface ToolBarEmit {

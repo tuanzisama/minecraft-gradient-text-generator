@@ -57,6 +57,9 @@ export interface ColorCubeEmit {
     margin-bottom: 15px;
     border-radius: 5px;
     cursor: pointer;
+    &:nth-child(4n) {
+      margin-right: 0;
+    }
   }
 }
 </style>

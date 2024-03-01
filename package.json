@@ -1,6 +1,6 @@
 {
   "name": "minecraft-color-gradient-generator",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -12,6 +12,7 @@
     "@jaames/iro": "^5.5.2",
     "color-stepper": "^2.0.0-beta2",
     "lodash-es": "^4.17.21",
+    "mitt": "^3.0.1",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "reset.css": "^2.0.2",

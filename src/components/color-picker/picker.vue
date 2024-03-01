@@ -41,7 +41,7 @@ const initializeBoxPicker = () => {
         { component: iro.ui.Box, options: { boxHeight: 250 } },
         { component: iro.ui.Slider, options: { sliderType: "hue" } },
       ],
-      width: 400,
+      width: 300,
       color: privateValue.value,
     });
 
@@ -97,6 +97,7 @@ export interface PickerEmit {
 <style lang="scss" scoped>
 .picker-container {
   display: flex;
+  height: 100%;
 }
 .picker--box {
   margin-right: 20px;
@@ -114,7 +115,7 @@ export interface PickerEmit {
   flex-direction: column;
   flex-shrink: 0;
 
-  width: 325px;
+  width: 220px;
   $gap-size: 20px;
   margin-right: $gap-size;
   padding-right: $gap-size;
