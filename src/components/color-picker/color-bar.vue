@@ -52,8 +52,6 @@ const onMouseMoveHandler = throttle((event) => {
   const pixel = colorbarCtx.value!.getImageData(x, y, 1, 1).data;
   const pointColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
 
-  console.info(pointColor);
-
   if (!colorStore.selectColorList.includes("#000000") && pointColor.r === 0 && pointColor.g === 0 && pointColor.b === 0) {
     return;
   }
