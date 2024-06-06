@@ -1,3 +1,5 @@
-import Main from "./main.vue";
+import McgCard from "./mcg-card.vue";
 
-export const McgCard = Main;
+export {
+  McgCard
+}

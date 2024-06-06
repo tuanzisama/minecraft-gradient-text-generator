@@ -1,3 +1,5 @@
-import Main from "./main.vue";
+import TextParams from "./text-params.vue";
 
-export const TextParams = Main;
+export {
+  TextParams
+}

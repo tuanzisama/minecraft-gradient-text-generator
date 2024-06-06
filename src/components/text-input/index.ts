@@ -1,3 +1,5 @@
-import Main from "./main.vue";
+import TextInput from "./text-input.vue";
 
-export const TextInput = Main;
+export {
+  TextInput
+}

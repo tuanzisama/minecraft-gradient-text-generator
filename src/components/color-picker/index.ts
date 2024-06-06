@@ -1,3 +1,5 @@
-import PickerMain from "./main.vue";
+import ColorPicker from "./color-picker.vue";
 
-export const ColorPicker = PickerMain;
+export {
+  ColorPicker
+}
