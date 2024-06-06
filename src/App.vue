@@ -13,6 +13,7 @@
     </mcg-body>
     <mcg-footer />
   </div>
+  <mcg-feedback />
 </template>
 
 <script lang="ts" setup>
@@ -23,8 +24,9 @@ import { McgHeader, McgFooter, McgBody } from "./components/mcg-layout";
 import { TextParams } from "./components/text-params";
 import { TextInput } from "./components/text-input";
 import { TextOutput } from "./components/text-output";
+import { McgFeedback } from './components/mcg-feedback'
 import { ref } from "vue";
-import { TextOutputExpose } from "./components/text-output/main.vue";
+import { TextOutputExpose } from "./components/text-output/text-output.vue";
 
 const appStore = useAppStore();
 const textOutputRef = ref<TextOutputExpose>();
@@ -41,16 +43,18 @@ const onColorPickerChangeHandler = (colors: HexColorString[]) => {
 <style lang="scss" scoped>
 .cg-container {
 
-  
+
   display: flex;
   width: 100%;
   height: 100%;
   flex-direction: column;
+
   .cg-header {
     width: 100%;
     height: 160px;
     flex-shrink: 0;
   }
+
   .cg-body {
     width: 95%;
     height: 0;
@@ -60,12 +64,14 @@ const onColorPickerChangeHandler = (colors: HexColorString[]) => {
     margin: 0 auto;
     max-height: 80vh;
   }
+
   .cg-footer {
     width: 100%;
     flex-shrink: 0;
     padding: 20px 0 !important;
   }
 }
+
 .picker-box {
   flex: 1;
   height: 0;
