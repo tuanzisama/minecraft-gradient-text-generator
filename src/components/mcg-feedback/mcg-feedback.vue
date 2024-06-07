@@ -95,10 +95,12 @@ const onDialogConfirmHandler = () => {
     .then(async (res) => {
       if (res.status === 429) {
         MessagePlugin.error("请求太过频繁 😱")
-      } else {
+      } else if (res.status === 200) {
         dialogVisible.value = false;
         MessagePlugin.success("提交成功 😘")
         localStorage.setItem(FEEDBACK_STORAGE_KEY, "1")
+      } else {
+        return Promise.reject(res)
       }
     }).catch((err) => {
       console.error(err);
