@@ -3,6 +3,11 @@
     <p class="cg-header__title" :data-version="pkgVersion + modeText">Minecraft 渐变颜色生成器</p>
     <p class="cg-header__summary">
       <span>支持超 {{ processorCount }} 款格式 / 渐变缓存 / 预览结果</span>
+      <a href="https://github.com/tuanzisama/minecraft-color-gradient-generator" target="_blank"
+        rel="noopener noreferrer nofollow">
+        <img alt="GitHub Repo stars"
+          src="https://img.shields.io/github/stars/tuanzisama/minecraft-color-gradient-generator?style=flat-square&labelColor=%23f5f7fa&color=%23909399">
+      </a>
     </p>
   </header>
 </template>
@@ -30,10 +35,12 @@ const modeText = computed(() => {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
   &__title {
     position: relative;
     font-size: 40px;
     font-weight: 700;
+
     &::after {
       content: "v" attr(data-version);
       position: absolute;
@@ -47,8 +54,12 @@ const modeText = computed(() => {
       white-space: nowrap;
     }
   }
+
   &__summary {
+    display: flex;
+    align-items: center;
     margin: 15px 0;
+
     span {
       font-size: 14px;
       padding: 5px 10px;
@@ -57,6 +68,7 @@ const modeText = computed(() => {
       color: #909399;
       border-radius: 5px;
       margin-right: 10px;
+
       &:last-child {
         margin-right: 0;
       }
