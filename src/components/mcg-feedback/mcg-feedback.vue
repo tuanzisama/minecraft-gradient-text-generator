@@ -13,8 +13,15 @@
         <label class="form-item">
           <span class="form-item__label">意见或建议</span>
           <div class="form-item__content">
-            <t-textarea v-model="formData.comment" placeholder="请输入意见或建议" name="description"
-              :autosize="{ minRows: 3, maxRows: 5 }" maxlength="500" />
+            <t-textarea v-model="formData.comment" placeholder="请输入意见或建议" maxlength="500"
+              :autosize="{ minRows: 3, maxRows: 5 }" />
+          </div>
+        </label>
+        <label class="form-item">
+          <span class="form-item__label">[可选] 联系方式</span>
+          <div class="form-item__content">
+            <t-input v-model="formData.contact" placeholder="请输入联系方式 (例：QQ:123456 或 mail:abc#example.com)"
+              maxlength="255" />
           </div>
         </label>
       </div>
@@ -30,10 +37,11 @@ const FEEDBACK_STORAGE_KEY = 'feedback-202406'
 
 const dialogVisible = ref(false)
 const isLoading = ref(false)
-const formData = ref<{ star: number, comment: string, refer: string }>({
+const formData = ref<{ star: number, comment: string, refer: string, contact: string }>({
   star: 0,
   comment: '',
   refer: '',
+  contact: '',
 })
 
 onMounted(() => {
@@ -85,17 +93,15 @@ const onDialogConfirmHandler = () => {
     body: JSON.stringify(formData.value)
   })
     .then(async (res) => {
-      const result = await res.json()
       if (res.status === 429) {
         MessagePlugin.error("请求太过频繁 😱")
       } else {
-        console.dir(res, result);
         dialogVisible.value = false;
         MessagePlugin.success("提交成功 😘")
         localStorage.setItem(FEEDBACK_STORAGE_KEY, "1")
       }
     }).catch((err) => {
-      console.dir(err);
+      console.err(err);
       MessagePlugin.error("提交失败 😥")
     }).finally(() => {
       isLoading.value = false;
