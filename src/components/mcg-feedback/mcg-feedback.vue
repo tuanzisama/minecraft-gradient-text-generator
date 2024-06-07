@@ -101,7 +101,7 @@ const onDialogConfirmHandler = () => {
         localStorage.setItem(FEEDBACK_STORAGE_KEY, "1")
       }
     }).catch((err) => {
-      console.err(err);
+      console.error(err);
       MessagePlugin.error("提交失败 😥")
     }).finally(() => {
       isLoading.value = false;
