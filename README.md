@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/tuanzisama/minecraft-color-gradient-generator">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3a8.svg" width="200" height="200" alt="NoriLib">
+    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3a8.svg" width="200" height="200" alt="Minecraft Gradient Color Generator">
   </a>
 </p>
 
@@ -16,7 +16,7 @@
 
 - [x] Support 13+ text format
 - [x] Support Vanilla color code
-- [x] Live priview
+- [x] Live preview
 - [x] Color picker & plate
 - [ ] Localization 
 
