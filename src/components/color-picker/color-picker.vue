@@ -4,23 +4,18 @@
       <color-bar ref="colorBarRef" @on-select="onColorBarSelectHandler" />
     </div>
     <div class="color-picker-body">
-      <picker
-        ref="pickerRef"
-        v-if="colorStore.selectColorList.length !== 0"
-        v-model="colorStore.selectColorList[colorStore.selectedIndex]"
-        @on-change="onPickerChangeHandler"
-      >
-        <draggable ref="draggableRef" v-model="colorStore.selectColorList" tag="ul" class="color-list" @change="onDraggableChangeHandler">
+      <picker ref="pickerRef" v-if="colorStore.selectColorList.length !== 0"
+        v-model="colorStore.selectColorList[colorStore.selectedIndex]" @on-change="onPickerChangeHandler">
+        <draggable ref="draggableRef" v-model="colorStore.selectColorList" handle=".color-cell" tag="ul"
+          class="color-list" :delay="100" :delay-on-touch-only="true" :touch-start-threshold="35"
+          @change="onDraggableChangeHandler">
           <template #item="{ element, index }">
-            <li
-              class="color-cell"
-              :style="`--color-hex: ${element}`"
-              :data-index="index + 1"
+            <li class="color-cell" :style="`--color-hex: ${element}`" :data-index="index + 1"
               :class="{ 'color-cell--active': colorStore.selectedIndex === index }"
-              @click="onColorCellClickHandler(element, index)"
-            >
+              @click="onColorCellClickHandler(element, index)">
               <div class="color-cell__cube"></div>
-              <hex-input v-model="colorStore.selectColorList[index]" style="width: 100px" @on-change="onHexInputChangeHandler" />
+              <hex-input v-model="colorStore.selectColorList[index]" style="width: 100px"
+                @on-change="onHexInputChangeHandler" />
               <span class="color-cell__delete" @click.stop="onColorCellDeleteHandler(element, index)">×</span>
             </li>
           </template>
@@ -29,11 +24,8 @@
     </div>
     <div class="color-picker-footer">
       <div class="color-setting" size="10px">
-        <color-quickslot
-          :list="colorStore.getCacheList"
-          @on-select="onColorQuickSlotSelectHandler"
-          @on-rightclick="onColorQuickSlotRightClickHandler"
-        />
+        <color-quickslot :list="colorStore.getCacheList" @on-select="onColorQuickSlotSelectHandler"
+          @on-rightclick="onColorQuickSlotRightClickHandler" />
       </div>
       <t-space class="list-setting" size="10px">
         <t-button @click="onAddColorClickHandler">新增</t-button>
@@ -158,10 +150,12 @@ export interface ColorPickerEmit {
 <style lang="scss" scoped>
 .color-picker-wrapper {
   width: 100%;
+
   .color-picker-header {
     width: 100%;
     margin-bottom: 16px;
   }
+
   .color-picker-body {
     width: 100%;
     flex: 1;
@@ -172,26 +166,31 @@ export interface ColorPickerEmit {
     display: flex;
     flex-direction: column;
   }
+
   .color-picker-footer {
     display: flex;
     align-items: center;
     height: 50px;
+
     .color-setting {
       width: 0;
       flex: 1;
       margin-right: 20px;
+
       .color-cube-box {
         flex-wrap: nowrap;
         overflow-y: auto;
         padding: 4px;
         justify-content: flex-start;
         @include custom-scrollbar();
+
         &:deep(.color-cube) {
           margin-bottom: 0 !important;
           margin-right: 10px !important;
         }
       }
     }
+
     .list-setting {
       margin-left: auto;
       flex-shrink: 0;
@@ -204,6 +203,7 @@ export interface ColorPickerEmit {
   height: 100%;
   overflow-y: auto;
   @include custom-scrollbar();
+
   .color-cell {
     width: 100%;
     margin-bottom: 10px;
@@ -213,6 +213,11 @@ export interface ColorPickerEmit {
     transition: all 0.3s;
     border: 1px solid transparent;
     position: relative;
+
+    &.sortable-ghost {
+      background-color: #dbdcdd;
+    }
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -255,10 +260,12 @@ export interface ColorPickerEmit {
     &--active {
       background: #f0f1f2;
       border: 1px solid #d9dcdf;
+
       .color-cell__cube {
         border: 3px solid #ffffff;
         outline: 2px solid #17233d;
       }
+
       .color-cell__delete {
         color: #a7aeb9;
       }
@@ -280,11 +287,13 @@ export interface ColorPickerEmit {
       outline: 2px solid transparent;
       transition: all 0.3s;
     }
+
     &__text {
       font-weight: 700;
       font-size: 18px;
       transition: all 0.3s;
     }
+
     &__delete {
       color: #dfe1e6;
       cursor: pointer;
@@ -295,6 +304,7 @@ export interface ColorPickerEmit {
       transition: color 0.3s;
       user-select: none;
       margin-left: 15px;
+
       &:hover {
         color: #17233d;
       }

@@ -66,6 +66,21 @@
   .text-output-wrapper {
     .mcg-box__body {
       height: 500px !important;
+      display: grid !important;
+      grid-template-rows: 1fr 1fr;
+      .t-divider {
+        display: none !important;
+      }
+      .text-output {
+        height: auto !important;
+        &.text-output--preview {
+          margin-bottom: 10px;
+          .preview-box {
+            padding: 10px !important;
+            font-size: 14px !important;
+          }
+        }
+      }
     }
   }
   .color-picker {
@@ -78,7 +93,7 @@
         display: none;
       }
       .list-setting {
-        & > *:not(:last-child) {
+        :nth-child(2) {
           display: none;
         }
       }
