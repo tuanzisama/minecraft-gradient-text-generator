@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Button, MessagePlugin, NotifyPlugin } from 'tdesign-vue-next';
+import { Button, MessagePlugin, NotificationInstance, NotifyPlugin, Space } from 'tdesign-vue-next';
 import { onMounted, ref } from 'vue';
 
 const FEEDBACK_STORAGE_KEY = 'feedback-202406'
@@ -71,8 +71,13 @@ const popupNotify = async () => {
     footer: (h) => {
       return h('div', { style: { marginTop: '10px', float: 'right' } }, {
         default: () => [
-          h(Button, { variant: 'text', theme: 'primary', size: 'small', onClick: () => notify.close() }, { default: () => '暂不 💨' }),
-          h(Button, { theme: 'primary', size: 'medium', onClick: () => onAgreeClickHandler() }, { default: () => '好的 🎠' }),
+          h(Space, { align: 'center', size: 'small' }, {
+            default: () => [
+              h(Button, { theme: 'primary', variant: "text", size: 'small', onClick: () => onNeverNotifyClickHandler(notify) }, { default: () => '永不提醒 😠' }),
+              h(Button, { theme: 'primary', variant: "dashed", size: 'small', onClick: () => notify.close() }, { default: () => '暂不 💨' }),
+              h(Button, { theme: 'primary', size: 'medium', onClick: () => onAgreeClickHandler() }, { default: () => '好的 🎠' }),
+            ]
+          })
         ]
       })
     },
@@ -108,6 +113,12 @@ const onDialogConfirmHandler = () => {
     }).finally(() => {
       isLoading.value = false;
     })
+}
+
+const onNeverNotifyClickHandler = (notify: NotificationInstance) => {
+  MessagePlugin.info("本次问卷将不再提示 😪")
+  localStorage.setItem(FEEDBACK_STORAGE_KEY, "1")
+  notify.close()
 }
 </script>
 
