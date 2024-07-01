@@ -4,6 +4,7 @@ import store from "./plugins/store";
 import "reset.css";
 import "./styles/global.scss";
 import "tdesign-vue-next/es/style/index.css";
+import "./styles/responsive.scss";
 
 import App from "./App.vue";
 

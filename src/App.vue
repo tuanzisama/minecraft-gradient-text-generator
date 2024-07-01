@@ -42,8 +42,6 @@ const onColorPickerChangeHandler = (colors: HexColorString[]) => {
 
 <style lang="scss" scoped>
 .cg-container {
-
-
   display: flex;
   width: 100%;
   height: 100%;
