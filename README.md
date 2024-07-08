@@ -6,7 +6,7 @@
 
 <div align="center">
   
-# Minecraft Color Gradient Generator
+# Minecraft Gradient Text Generator
 
 👉 A tool for quickly generating gradient text for Minecraft 👈
 
