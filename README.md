@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://github.com/tuanzisama/minecraft-color-gradient-generator">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3a8.svg" width="200" height="200" alt="Minecraft Gradient Color Generator">
+  <a href="https://github.com/tuanzisama/minecraft-gradient-text-generator">
+    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3a8.svg" width="200" height="200" alt="Minecraft Gradient Text Generator">
   </a>
 </p>
 
