@@ -6,7 +6,7 @@
       <a href="https://github.com/tuanzisama/minecraft-color-gradient-generator" target="_blank"
         rel="noopener noreferrer nofollow">
         <img alt="GitHub Repo stars"
-          src="https://img.shields.io/github/stars/tuanzisama/minecraft-color-gradient-generator?style=flat-square&labelColor=%23f5f7fa&color=%23909399">
+          src="https://img.shields.io/github/stars/tuanzisama/minecraft-color-gradient-generator?style=flat-square&labelColor=%23f5f7fa&color=ffe156">
       </a>
     </p>
   </header>
