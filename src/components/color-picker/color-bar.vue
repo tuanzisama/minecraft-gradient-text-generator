@@ -1,17 +1,15 @@
 <template>
   <div class="colorbar-box">
-    <canvas class="colorbar" ref="colorbarRef" @mousemove="onMouseMoveHandler" height="40"></canvas>
-    <span
-      class="colorbar-stop"
+    <canvas class="colorbar" ref="colorbarRef" @mousemove="onMouseMoveHandler"></canvas>
+    <span class="colorbar-stop"
       :style="{ left: `${colorStopLeft}px`, '--color-stop': `rgb(${colorStopRgb.r}, ${colorStopRgb.g}, ${colorStopRgb.b})` }"
-      @mouseup="onColorStopClickHandler"
-    ></span>
+      @mouseup="onColorStopClickHandler"></span>
   </div>
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, shallowRef } from "vue";
 import { useColorStore } from "../../plugins/store/modules/color";
-import { rgbToHex } from "@/utils/util";
+import { rgbToHex } from "@/utils/color";
 import { throttle } from "lodash-es";
 
 const colorStore = useColorStore();
@@ -24,8 +22,8 @@ const colorStopRgb = ref({ r: 0, g: 0, b: 0 });
 
 onMounted(() => {
   if (colorbarRef.value) {
-    colorbarRef.value.width = colorbarRef.value.offsetWidth;
-    colorbarRef.value.height = colorbarRef.value.offsetHeight;
+    colorbarRef.value.width = colorbarRef.value.parentElement!.offsetWidth;
+    colorbarRef.value.height = colorbarRef.value.parentElement!.offsetHeight;
     colorbarCtx.value = colorbarRef.value?.getContext("2d");
 
     drawCanvas();
@@ -62,7 +60,6 @@ const onMouseMoveHandler = throttle((event) => {
 
 const onColorStopClickHandler = () => {
   const colorStopHex = rgbToHex(colorStopRgb.value);
-  colorStore.addSelectColorList(colorStopHex);
   emit("on-select", colorStopHex);
 };
 
@@ -73,6 +70,7 @@ defineExpose<ColorBarExpose>({ reDraw: drawCanvas });
 export interface ColorBarExpose {
   reDraw: () => void;
 }
+
 export interface ColorBarEmit {
   (e: "on-select", color: HexColorString): void;
 }
@@ -81,22 +79,25 @@ export interface ColorBarEmit {
 <style lang="scss" scoped>
 .colorbar-box {
   width: 100%;
-  margin-bottom: 20px;
+  height: 100%;
   position: relative;
+
   .colorbar {
     width: 100%;
-    height: 40px;
+    height: 100%;
     border-radius: 5px;
     border: 2px solid #ffffff;
     outline: 2px solid #17233d;
     background-color: #000000;
     cursor: pointer;
   }
+
   &:hover {
     .colorbar-stop {
       opacity: 1 !important;
     }
   }
+
   .colorbar-stop {
     opacity: 0;
     position: absolute;

@@ -22,7 +22,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "src/**/*.d.ts",
-    "node_modules/tdesign-vue-next/global.d.ts"
+    "node_modules/tdesign-vue-next/global.d.ts",
+    "src/types/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -1,6 +1,8 @@
 import * as cs from "color-stepper";
 import iro from "@jaames/iro";
 
+export const hexColorRegExp = /^&?#?[a-fA-F0-9]{6}$/;
+
 export const strHexTo16Bit = (hexStr: string): number => {
   return (parseInt(hexStr.substr(1), 16) << 8) / 256;
 };
@@ -41,4 +43,8 @@ export function getTextShadowHex(hex: HexColorString): HexColorString {
 export function rgbToHex(rgb: Record<"r" | "g" | "b", number>): HexColorString {
   const color = new iro.Color(rgb);
   return color.hexString as HexColorString;
+}
+
+export function isHexColor(value: HexColorString | string): boolean {
+  return hexColorRegExp.test(value);
 }

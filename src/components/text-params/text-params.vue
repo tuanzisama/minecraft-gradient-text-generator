@@ -1,78 +1,87 @@
 <template>
-  <mcg-card body-class="text-params-body">
+  <div class="text-params">
     <label class="processor-select-wrapper">
-      <span class="processor-label">生成器:</span>
-      <t-select
-        class="processor-select"
-        v-model="appStore.setting.usingProcessor"
-        placeholder="请选择生成器"
-        @change="onProcessorSelectChangeHandler"
-        filterable
-        auto-width
+      <t-select class="processor-select" v-model="appStore.setting.usingAdapterKey" placeholder="请选择生成器"
         :popup-props="{ overlayClassName: 'tdesign-processor-select__overlay-option' }"
-      >
-        <t-option v-for="[key, value] in processorMap" :key="key" :value="key" :label="value.label">
-          <span class="label">{{ value.label }}</span>
+        @change="onProcessorSelectChangeHandler" filterable auto-width>
+        <t-option v-for="[key, value] in adapterMap" :key="key" :value="key" :label="value.label">
+          <p class="label-wrapper">
+            <span class="label">{{ value.label }}</span>
+            <t-tooltip v-if="value.hint" :content="value.hint" placement="top-start" :overlay-style="{ width: '200px' }"
+              show-arrow>
+              <span class="hint" title="">❓</span>
+            </t-tooltip>
+          </p>
           <span class="sample">{{ value.sample }}</span>
         </t-option>
         <template #panel-bottom-content>
           <div class="panel-bottom">
             <span>希望支持其它插件/格式？</span>
-            <t-link theme="primary" href="https://github.com/tuanzisama/minecraft-color-gradient-generator/issues/new/choose" target="_blank">
-              告诉我！
+            <t-link theme="primary"
+              href="https://github.com/tuanzisama/minecraft-color-gradient-generator/issues/new/choose" target="_blank">
+              联系开发者！
             </t-link>
           </div>
         </template>
       </t-select>
     </label>
+    <t-tooltip :content="`处理时间 (精确): ${props.usageTime}ms`" placement="top-left" show-arrow theme="light">
+      <span class="usage-time">{{ props.usageTime.toFixed(2) }}ms</span>
+    </t-tooltip>
     <div class="tool-bar-wrapper">
-      <tool-bar
-        ref="toolBarRef"
-        :processor-key="appStore.setting.usingProcessor"
-        :result-raw-text="textStore.text"
-        @on-format-change="onFormatChangeHandler"
-      />
+      <tool-bar ref="toolBarRef" @on-format-change="onFormatChangeHandler" />
     </div>
-  </mcg-card>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { useAppStore } from "../../plugins/store/modules/app";
-import { useTextStore } from "../../plugins/store/modules/text";
-import { KeyOfProcessorMap, processorMap } from "../../plugins/processor";
-import { ToolBarExpose, ToolBarModule } from "./tool-bar.vue";
-import { McgCard } from "../mcg-card";
+import { KeyOfAdapterMap, adapterMap } from "../../plugins/processor";
+import ToolBar, { ToolBarExpose, ToolBarModule } from "./tool-bar.vue";
 import { useEventBus } from "../../plugins/eventbus";
 
 const appStore = useAppStore();
-const textStore = useTextStore();
 const eventBus = useEventBus();
+
+const props = withDefaults(defineProps<TextParamsProps>(), {
+});
 
 const toolBarRef = ref<ToolBarExpose>();
 
 onMounted(() => {
-  switchToolbar(appStore.setting.usingProcessor);
+  switchToolbar(appStore.setting.usingAdapterKey);
 });
 
-const onProcessorSelectChangeHandler = (val: KeyOfProcessorMap) => {
-  switchToolbar(val);
-  eventBus.emit("generate:invoke", {});
+const switchToolbar = (val: KeyOfAdapterMap) => {
+  toolBarRef.value?.toggleDisplay(ToolBarModule.VANILLA_CHAR_CODE, ["vanilla", "vanilla-compatible"].includes(val));
 };
 
-const switchToolbar = (val: KeyOfProcessorMap) => {
-  toolBarRef.value?.toggleDisplay(ToolBarModule.VANILLA_CHAR_CODE, ["vanilla", "vanilla-compatible"].includes(val));
-  toolBarRef.value?.toggleDisplay(ToolBarModule.DOWNLOAD, val === "csv");
+const onProcessorSelectChangeHandler = (val: KeyOfAdapterMap) => {
+  switchToolbar(val);
+  eventBus.emit("generate:invoke", { tags: null });
 };
 
 const onFormatChangeHandler = () => {
-  eventBus.emit("generate:invoke", {});
+  eventBus.emit("generate:invoke", { tags: null });
 };
 </script>
 
+
+<script lang="ts">
+export interface TextParamsProps {
+  usageTime: number;
+}
+</script>
+
 <style lang="scss" scoped>
+.text-params {
+  align-items: center;
+}
+
 .processor-select {
   width: auto;
+
   &:deep(.t-input__wrap.t-input--auto-width) {
     min-width: 250px;
   }
@@ -91,42 +100,69 @@ const onFormatChangeHandler = () => {
 
 .processor-select-wrapper {
   @include flex-center;
+
   .processor-label {
     margin-right: 10px;
   }
 }
+
+.usage-time {
+  margin-left: 10px;
+}
 </style>
 
 <style lang="scss">
-.text-params-body {
-  display: flex !important;
+.text-params {
+  display: flex;
   user-select: none;
 }
 
 .tdesign-processor-select__overlay-option {
   user-select: none;
+
   .t-popup__content {
     max-height: 450px !important;
   }
+
   .t-select-option {
     height: 100%;
     padding: 4px 8px;
     margin-bottom: 4px;
-    & > span {
+
+    &>span {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      span.label {
-        font-weight: 700;
-        font-size: 15px;
+
+      .label-wrapper {
+        display: flex;
+        align-items: center;
         margin-bottom: 2px;
+
+        .label {
+          font-weight: 700;
+          font-size: 15px;
+        }
+
+        .hint {
+          font-size: 12px;
+          margin-left: 5px;
+          padding: 2px 5px;
+          border-radius: 50%;
+
+          &:hover {
+            background: var(--td-brand-color-2);
+          }
+        }
       }
-      span.sample {
+
+      .sample {
         opacity: 0.6;
         font-size: 12px;
       }
     }
   }
+
   .panel-bottom {
     text-align: center;
     padding: 10px 0;

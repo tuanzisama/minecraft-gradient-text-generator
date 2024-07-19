@@ -1,7 +1,6 @@
 {
   "name": "minecraft-color-gradient-generator",
-  "version": "2.4.1",
-  "type": "module",
+  "version": "2.5.0-alpha",
   "license": "MIT",
   "scripts": {
     "dev": "vite --force --host",
@@ -9,7 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.29.1",
+    "@editorjs/underline": "^1.1.0",
     "@jaames/iro": "^5.5.2",
+    "@sotaproject/strikethrough": "^1.0.1",
     "color-stepper": "^2.0.0-beta2",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
@@ -17,6 +19,7 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "reset.css": "^2.0.2",
     "tdesign-vue-next": "^1.7.1",
+    "vanilla-caret-js": "^1.1.0",
     "vue": "^3.2.47",
     "vuedraggable-es": "^4.1.1"
   },

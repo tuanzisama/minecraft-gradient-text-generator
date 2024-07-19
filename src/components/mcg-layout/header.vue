@@ -8,15 +8,20 @@
         <img alt="GitHub Repo stars"
           src="https://img.shields.io/github/stars/tuanzisama/minecraft-color-gradient-generator?style=flat-square&labelColor=%23f5f7fa&color=%23909399">
       </a>
+      <a href="https://qm.qq.com/q/wxxCCGLoHg" target="_blank" title="点击链接加入群聊【Minecraft 渐变颜色生成器】"
+        rel="noopener noreferrer nofollow">
+        <img alt="GitHub Repo stars"
+          src="https://img.shields.io/badge/QQ%E7%BE%A4%20994713939-0099FF?logo=tencent-qq&logoColor=white">
+      </a>
     </p>
   </header>
 </template>
 <script lang="ts" setup>
-import { processorMap } from "@/plugins/processor";
+import { adapterMap } from "@/plugins/processor";
 import { computed } from "vue";
 
 const processorCount = computed(() => {
-  return processorMap.size;
+  return adapterMap.size;
 });
 
 const pkgVersion = computed(() => {
@@ -58,6 +63,7 @@ const modeText = computed(() => {
   &__summary {
     display: flex;
     align-items: center;
+    gap: 10px;
     margin: 15px 0;
 
     span {
@@ -67,11 +73,6 @@ const modeText = computed(() => {
       border: 1px solid #dcdfe6;
       color: #909399;
       border-radius: 5px;
-      margin-right: 10px;
-
-      &:last-child {
-        margin-right: 0;
-      }
     }
   }
 }
