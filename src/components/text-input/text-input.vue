@@ -72,8 +72,6 @@ onMounted(() => {
             text: record.textNode?.textContent ?? '',
           } as RichTag
 
-          console.info('tag', `[${record.textNode?.textContent}]`);
-
           const format = nodeNameParser(record.parentNodes);
           if (!isEmpty(format)) tag.format = format
 

@@ -147,7 +147,6 @@ const onColorBarSelectHandler = (colorStopHex: HexColorString) => {
 
     setTimeout(() => {
       const ulElement = draggableRef.value?.$el as HTMLUListElement;
-      console.dir(ulElement);
       if (ulElement) {
         ulElement.scrollTo({ top: ulElement.scrollHeight, behavior: "smooth", });
       }
