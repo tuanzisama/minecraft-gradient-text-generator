@@ -22,15 +22,13 @@ class CSVAdapterClazz extends GradientProcessor {
       return [color, char, bold, italic, underlined, strikethrough].join(",");
     });
 
-    console.info(result);
-
     return result.join("\n");
   }
 
   override generateAsString(): string {
     return this.generate().reduce((acc, cur) => {
       return `${acc}${cur.join("\n")}\n`;
-    }, "");
+    }, "color,char,bold,italic,underlined,strikethrough\n");
   }
 }
 
