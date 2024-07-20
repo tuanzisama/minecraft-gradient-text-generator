@@ -1,4 +1,8 @@
 @media screen and (max-width: 600px) {
+  .cg-container {
+    height: auto !important;
+  }
+
   .cg-header {
     height: auto !important;
     margin: 60px 0 20px 0;
@@ -11,92 +15,50 @@
       }
     }
   }
+
   .cg-body {
-    height: auto !important;
-    flex-direction: column !important;
-    max-height: none !important;
+    flex-direction: column;
+    gap: 10px;
     &__input {
-      min-width: auto !important;
-      width: 100%;
-      margin-bottom: 10px;
-      & > *:nth-child(2) {
-        margin-bottom: 10px !important;
-      }
-    }
-    &__output {
-      min-width: auto !important;
       width: 100% !important;
+      height: 400px !important;
     }
-    .picker-box {
-      min-height: auto !important;
-      .color-picker-header {
-        .colorbar-box {
-          margin-bottom: 0 !important;
-        }
-      }
-      .picker-container {
-        .picker--box,
-        .picker-options {
-          display: none;
-        }
-      }
-    }
-  }
-  .text-params-body {
-    flex-direction: column;
-    align-items: center;
-    .processor-select-wrapper {
-      margin-bottom: 10px;
-    }
-    .tool-bar-wrapper {
-      margin-left: 0 !important;
-    }
-  }
-  .picker-container {
-    flex-direction: column;
-    .color-list {
-      .color-cell {
-        .hex-input {
-          width: 0 !important;
-          flex: 1;
-        }
-      }
-    }
-  }
-  .text-output-wrapper {
-    .mcg-card__body {
-      height: 500px !important;
-      display: grid !important;
-      grid-template-rows: 1fr 1fr;
-      .t-divider {
-        display: none !important;
-      }
-      .text-output {
-        height: auto !important;
-        &.text-output--preview {
-          margin-bottom: 10px;
-          .preview-box {
-            padding: 10px !important;
-            font-size: 14px !important;
-          }
-        }
-      }
-    }
-  }
-  .color-picker {
-    &-body {
-      padding-bottom: 8px !important;
-    }
-    &-footer {
+    .color-picker-body {
       height: auto !important;
-      .color-setting {
-        display: none;
-      }
-      .list-setting {
-        :nth-child(2) {
-          display: none;
+      align-items: center;
+      flex-direction: column;
+      .picker-container {
+        margin-bottom: 20px !important;
+        .picker {
+          margin-right: 0 !important;
         }
       }
+      .color-list-wrapper {
+        width: 80%;
+        .color-list {
+          width: 100% !important;
+          height: auto !important;
+          min-height: 200px;
+          max-height: 300px;
+        }
+      }
+    }
+  }
+
+  .text-output-wrapper {
+    height: 600px !important;
+    .text-params {
+      flex-wrap: wrap;
+      gap: 10px;
+      .tool-bar-wrapper {
+        margin-left: 0 !important;
+      }
+    }
+  }
+
+  .mcg-presets-dialog {
+    .t-dialog {
+      width: 100% !important;
     }
   }
 }

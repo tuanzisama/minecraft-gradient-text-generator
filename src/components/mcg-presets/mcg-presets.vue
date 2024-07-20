@@ -1,5 +1,5 @@
 <template>
-  <t-dialog v-model:visible="dialogVisible" header="渐变色预设管理" width="800px" :footer="false">
+  <t-dialog v-model:visible="dialogVisible" header="渐变色预设管理" width="800px" class="mcg-presets-dialog" :footer="false">
     <div class="button-group">
       <t-button theme="primary" variant="outline" @click="onImportPresetsClickHandler">
         <template #icon>
@@ -55,6 +55,7 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
   {
     colKey: 'gradient', title: '渐变色',
     className: cssModule['table-gradient-column'],
+    minWidth: '200',
     cell: (h, props) => {
       return h(Tooltip, { content: `${props.row.colors.length} 个颜色`, theme: 'light' }, {
         default: () => [h('div', {
@@ -78,7 +79,7 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
     }
   },
   {
-    colKey: 'operate', title: '操作', fixed: 'right', width: '120',
+    colKey: 'operate', title: '操作', fixed: 'right', width: '100',
     cell: (h, props) => {
       return h('div', {
         class: cssModule['table-operate-column'],
@@ -181,7 +182,13 @@ export interface McgPresetsEmit {
 <style lang="scss" scoped>
 .mcg-presets-table {
   :deep(tr>th) {
-    background-color: rgba(243, 243, 243, 0.6);
+    background-color: #ffffff;
+
+    border-bottom: none !important;
+  }
+
+  :deep(.t-table__header) {
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 8px 16px 0px, rgba(0, 0, 0, 0.1) 0px -1px 0px 0px inset;
   }
 }
 
