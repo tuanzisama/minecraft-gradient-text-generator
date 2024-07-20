@@ -108,6 +108,8 @@ export interface TextParamsProps {
 
 .usage-time {
   margin-left: 10px;
+  color: #a6a6a6;
+  font-size: 14px;
 }
 </style>
 
