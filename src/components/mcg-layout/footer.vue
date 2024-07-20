@@ -5,7 +5,7 @@
         @tuanzisama
       </t-link>
       <t-divider layout="vertical" />
-      <t-link href="https://github.com/tuanzisama/minecraft-color-gradient-generator" target="_blank" theme="primary"
+      <t-link href="https://github.com/tuanzisama/minecraft-gradient-text-generator" target="_blank" theme="primary"
         style="font-weight: bold">
         Code source
         <span class="material-symbols-outlined" style="font-size: 16px; margin-left: 5px;">open_in_new</span>
@@ -13,7 +13,7 @@
     </div>
 
     <div class="cg-footer-badger">
-      <a class="badge-tag github-star" href="https://github.com/tuanzisama/minecraft-color-gradient-generator"
+      <a class="badge-tag github-star" href="https://github.com/tuanzisama/minecraft-gradient-text-generator"
         target="_blank" rel="noopener noreferrer nofollow">
         <img alt="GitHub Repo stars"
           src="https://badgen.net/github/stars/tuanzisama/minecraft-gradient-text-generator?color=FDD835">
