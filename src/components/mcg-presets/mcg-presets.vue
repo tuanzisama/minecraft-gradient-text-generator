@@ -30,12 +30,13 @@
 
 <script lang="ts" setup>
 import { computed, ref, useCssModule } from 'vue'
-import { BaseTableCellParams, BaseTableCol, Button, MessagePlugin, NotifyPlugin, Space, Popconfirm } from 'tdesign-vue-next';
+import { BaseTableCellParams, BaseTableCol, Button, MessagePlugin, NotifyPlugin, Space, Popconfirm, Tooltip } from 'tdesign-vue-next';
 import { pick } from 'lodash-es';
 import { saveAs } from '@/utils/file';
 import { randomString } from '@/utils/random';
 import { isHexColor } from '@/utils/color';
 import { useColorStore } from '@/plugins/store/modules/color';
+import { format as timeAgoFormat } from 'timeago.js';
 
 const props = withDefaults(defineProps<McgPresetsProps>(), {});
 const emit = defineEmits<McgPresetsEmit>();
@@ -55,11 +56,26 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
     colKey: 'gradient', title: '渐变色',
     className: cssModule['table-gradient-column'],
     cell: (h, props) => {
-      return h('div', {
-        class: cssModule['presets-gradient-bar'],
-        style: { background: `linear-gradient(to right, ${props.row.colors.join(', ')})` }
+      return h(Tooltip, { content: `${props.row.colors.length} 个颜色`, theme: 'light' }, {
+        default: () => [h('div', {
+          class: cssModule['presets-gradient-bar'],
+          style: { background: `linear-gradient(to right, ${props.row.colors.join(', ')})` }
+        })]
       })
     },
+  },
+  {
+    colKey: 'createTime', title: '创建时间', ellipsis: true, width: '100',
+    cell: (h, props) => {
+      if (props.row.createTime === null) {
+        return h('span', null, "N/A");
+      }
+
+      const date = new Date(props.row.createTime);
+      return h(Tooltip, { content: date.toLocaleString(), theme: 'light' }, {
+        default: () => [h('span', null, timeAgoFormat(date, 'zh_CN'))]
+      })
+    }
   },
   {
     colKey: 'operate', title: '操作', fixed: 'right', width: '120',
@@ -88,7 +104,7 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
 ]);
 
 const onApplyClickHandler = (props: BaseTableCellParams<GradientPresetsRecord>) => {
-  emit('on-apply', props.row.colors)
+  emit('on-apply', [...props.row.colors])
 }
 
 const onDeleteClickHandler = (props: BaseTableCellParams<GradientPresetsRecord>) => {
@@ -117,7 +133,7 @@ const onImportPresetsClickHandler = () => {
         return { name: item.name ?? `预设 ${randomString(6)}`, colors: item.colors as HexColorString[], createTime }
       })
 
-      colorStore.setPresetsColorList(filteredData)
+      colorStore.appendPresetsColorList(filteredData)
       MessagePlugin.success({ content: `已导入 ${filteredData.length} 条渐变色预设` });
     } catch (error) {
       console.error(error);
@@ -131,7 +147,7 @@ const onImportPresetsClickHandler = () => {
 }
 
 const onExportPresetsClickHandler = () => {
-  const exportData = colorStore.presetsColorList.map(item => pick(item, ['name', 'colors']))
+  const exportData = colorStore.presetsColorList.filter(item => !item.isLocked).map(item => pick(item, ['name', 'colors']))
   const blob = new Blob([JSON.stringify(exportData)], { type: `application/json; charset=utf-8` });
 
   const fileName = `mcg-userdata`;

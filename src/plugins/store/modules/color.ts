@@ -65,8 +65,8 @@ export const useColorStore = defineStore("color", {
     setSelectColorIndex(index: number) {
       this.selectedIndex = index;
     },
-    setPresetsColorList(records: GradientPresetsRecord[]) {
-      this.presetsColorList = records;
+    appendPresetsColorList(records: GradientPresetsRecord | GradientPresetsRecord[]) {
+      Array.prototype.push.apply(this.presetsColorList, Array.isArray(records) ? records : [records]);
     },
     resetPresetsColorList() {
       this.presetsColorList = [Object.assign(PRESET_COLOR, { isLocked: true })];
