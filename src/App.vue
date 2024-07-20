@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import { useAppStore } from "./plugins/store/modules/app";
 import { ColorPicker } from "./components/color-picker";
@@ -30,9 +30,43 @@ import { TextInput } from "./components/text-input";
 import { TextOutput } from "./components/text-output";
 // import { McgFeedback } from './components/mcg-feedback'
 import { TextOutputExpose } from "./components/text-output/text-output.vue";
+import { Button, NotificationInstance, NotifyPlugin, Space } from "tdesign-vue-next";
 
 const appStore = useAppStore();
 const textOutputRef = ref<TextOutputExpose>();
+
+onMounted(() => {
+  popupPreviewNotify()
+})
+
+const popupPreviewNotify = async () => {
+  const notify = await NotifyPlugin.info({
+    title: '预先体验版 😺',
+    duration: 0,
+    content: (h) => {
+      return h('p', [
+        h('p', '可能会存在BUG。如有问题请联系开发者。'),
+        h('p', 'Ciallo～(∠·ω< )⌒☆')
+      ])
+    },
+    footer: (h) => {
+      return h('div', { style: { marginTop: '10px', float: 'right' } }, {
+        default: () => [
+          h(Space, { align: 'center', size: 'small' }, {
+            default: () => [
+              h(Button, { theme: 'primary', variant: "text", size: 'small', onClick: () => onContactAuthorClickHandler(notify) }, { default: () => '联系开发者' }),
+              h(Button, { theme: 'primary', size: 'medium', onClick: () => notify.close() }, { default: () => '我知道了 🤗' }),
+            ]
+          })
+        ]
+      })
+    },
+  })
+}
+
+const onContactAuthorClickHandler = (notify: NotificationInstance) => {
+  window.open('https://github.com/tuanzisama/minecraft-gradient-text-generator', "_blank")
+}
 
 const onTextInputChangeHandler = (val: RichTagChunk) => {
   textOutputRef.value?.generate(val);
