@@ -86,8 +86,6 @@ export abstract class GradientProcessor<T = string> {
       const chapterEl = document.createElement("p");
 
       chunk.forEach((tag) => {
-        console.info(tag);
-
         const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
         const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
         startIndex = startIndex + length;
@@ -95,7 +93,6 @@ export abstract class GradientProcessor<T = string> {
         let colorIndex = 0;
 
         tag.text.split("").forEach((char) => {
-          console.info(char);
           const spanEl = document.createElement("span");
           // class="is-bold is-italic is-underlined is-strikethrough" style="--text-color: #55ffa4; --text-shadow-color: #156a3d;"
           if (char.trim() !== "") {
