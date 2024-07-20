@@ -31,6 +31,27 @@ onMounted(() => {
       underline: Underline,
       strikethrough: Strikethrough
     },
+    i18n: {
+      messages: {
+        toolNames: {
+          "Text": "文本",
+          "Bold": "粗体",
+          "Italic": "斜体",
+          "Underline": "下划线",
+          "Strikethrough": "删除线",
+        },
+        ui: {
+          "toolbar": {
+            "toolbox": {
+              "Add": "新增"
+            }
+          },
+          "popover": {
+            "Filter": "搜索组件...",
+          }
+        }
+      },
+    },
     onChange: async (api) => {
       const { blocks } = await api.saver.save();
 
