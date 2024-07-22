@@ -1,12 +1,12 @@
 <p align="center">
   <a href="https://github.com/tuanzisama/minecraft-gradient-text-generator">
-    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3a8.svg" width="200" height="200" alt="Minecraft Gradient Color Generator">
+    <img src="https://raw.githubusercontent.com/twitter/twemoji/master/assets/svg/1f3a8.svg" width="200" height="200" alt="Minecraft Gradient Text Generator">
   </a>
 </p>
 
 <div align="center">
   
-# Minecraft Color Gradient Generator
+# Minecraft Gradient Text Generator
 
 👉 A tool for quickly generating gradient text for Minecraft 👈
 
