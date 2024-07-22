@@ -37,6 +37,7 @@
   font-size: 12px;
   text-align: center;
   padding: 40px 0;
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   gap: 10px;

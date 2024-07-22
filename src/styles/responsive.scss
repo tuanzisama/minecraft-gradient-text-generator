@@ -19,6 +19,7 @@
   .cg-body {
     flex-direction: column;
     gap: 10px;
+    min-height: auto !important;
     &__input {
       width: 100% !important;
       height: 400px !important;

@@ -93,6 +93,7 @@ const onColorPickerChangeHandler = (colors: HexColorString[]) => {
   .cg-body {
     flex: 1;
     height: 0;
+    min-height: 800px;
   }
 
   .cg-footer {
