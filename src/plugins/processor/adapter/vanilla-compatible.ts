@@ -16,15 +16,18 @@ class VanillaCompatibleAdapterClazz extends GradientProcessor {
     let index = 0;
     tag.text.split("").forEach((char) => {
       let color = "";
+
+      const charBuilder = new CharacterBuilder(char);
       if (char.trim() !== "") {
         color = (tag.colors?.[index] ?? "")
           .replace("#", "")
           .split("")
           .reduce((acc, char) => `${acc}${this.vanillaCharCode}${char}`, "");
         index += 1;
+        charBuilder.withColor("&x" + color);
       }
 
-      textBuilder.appendCharacter(new CharacterBuilder(char).withColor("&x" + color));
+      textBuilder.appendCharacter(charBuilder);
     }, "");
 
     return textBuilder.build();

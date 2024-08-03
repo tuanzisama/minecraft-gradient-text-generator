@@ -17,6 +17,7 @@ import { useAppStore } from "../../plugins/store/modules/app";
 import { MessagePlugin, NotifyPlugin } from "tdesign-vue-next";
 import { useTextStore } from "@/plugins/store/modules/text";
 import { saveAs } from "@/utils/file";
+import { previewPip } from '../preview-pip'
 
 const appStore = useAppStore();
 const textStore = useTextStore();
@@ -37,6 +38,11 @@ const toolbars = reactive<ToolBarItem[]>([
     label: "字符格式",
     isActive: false,
     render: (item: ToolBarItem) => h("span", { class: "vanilla-char-code" }, item.isActive ? "§" : "&"),
+  },
+  {
+    key: ToolBarModule.PREVIEW_PIP,
+    label: "新窗口预览",
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "picture_in_picture_alt")
   },
   {
     key: ToolBarModule.DOWNLOAD,
@@ -73,6 +79,9 @@ const onToolbarItemClickHandler = (item: ToolBarItem) => {
       break;
     case "download":
       onDownloadClickHandler();
+      break;
+    case "preview_pip":
+      previewPip()
       break;
   }
 };
@@ -140,6 +149,7 @@ export enum ToolBarModule {
   VANILLA_CHAR_CODE = "vanillaCharCode",
   COPY = "copy",
   DOWNLOAD = "download",
+  PREVIEW_PIP = "preview_pip",
 }
 
 export interface ToolBarEmit {

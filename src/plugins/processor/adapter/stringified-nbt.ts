@@ -19,12 +19,12 @@ class StringifiedNBTAdapterClazz extends GradientProcessor<SNBTRecord[]> {
   processor(tag: RichTag): SNBTRecord[] {
     let index = 0;
     const list = tag.text.split("").map<SNBTRecord>((char) => {
-      let color = "";
+      let obj: Partial<SNBTRecord> = { text: char, ...tag.format };
       if (char.trim() !== "") {
-        color = `${this.vanillaCharCode}${tag.colors?.[index]}`;
+        obj.color = tag.colors?.[index] as HexColorString;
         index += 1;
       }
-      return { text: char, color, ...tag.format } as SNBTRecord;
+      return obj as SNBTRecord;
     });
     return list;
   }

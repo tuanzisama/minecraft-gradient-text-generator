@@ -18,6 +18,8 @@ declare module 'vue' {
     McgFeedback: typeof import('./src/components/mcg-feedback/mcg-feedback.vue')['default']
     McgPresets: typeof import('./src/components/mcg-presets/mcg-presets.vue')['default']
     Picker: typeof import('./src/components/color-picker/picker.vue')['default']
+    Preview: typeof import('./src/components/preview-pip/preview.vue')['default']
+    PreviewBox: typeof import('./src/components/preview-pip/preview-box.vue')['default']
     TAlert: typeof import('tdesign-vue-next')['Alert']
     TButton: typeof import('tdesign-vue-next')['Button']
     TCollapse: typeof import('tdesign-vue-next')['Collapse']

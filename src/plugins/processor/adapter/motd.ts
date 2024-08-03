@@ -30,14 +30,17 @@ class MotdAdapterClazz extends GradientProcessor {
     let index = 0;
     tag.text.split("").forEach((char) => {
       let color = "";
+
+      const charBuilder = new CharacterBuilder(char);
       if (char.trim() !== "") {
         color = (tag.colors?.[index] ?? "")
           .slice(1)
           .split("")
           .reduce((acc, cur) => `${acc}${this.charCode}${cur}`, "");
         index += 1;
+        charBuilder.withColor(`${this.charCode}x${color}`);
       }
-      textBuilder.appendCharacter(new CharacterBuilder(char).withColor(`${this.charCode}x${color}`));
+      textBuilder.appendCharacter(charBuilder);
     });
 
     return textBuilder.build();

@@ -56,6 +56,17 @@ interface GradientPresetsRecord extends BaseGradientPresets {
   isLocked?: boolean;
 }
 
+interface FlattenTag {
+  tags: {
+    char: string;
+    /**
+     * This value may be null because it is a space.
+     */
+    color: HexColorString | null;
+  }[];
+  format?: RichTag["format"];
+}
+
 interface BaseGradientPresets {
   name: string;
   colors: HexColorString[];

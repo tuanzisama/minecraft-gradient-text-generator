@@ -31,7 +31,7 @@ class HTMLAdapterClazz extends GradientProcessor {
         color = [`<span style="color: ${tag.colors?.[index]};">`, "</span>"];
         index += 1;
       }
-      textBuilder.appendCharacter(new CharacterBuilder(char).withColor(color));
+      textBuilder.appendCharacter(new CharacterBuilder(char.trim() === "" ? "&nbsp;" : "").withColor(color));
     });
 
     return textBuilder.build();

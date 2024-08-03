@@ -5,11 +5,13 @@ export interface TextStoreState {
   /**
    * 适用于渲染页面
    */
-  adapter?: GradientProcessor;
+  adapter: GradientProcessor | null;
 }
 
 export const useTextStore = defineStore("text", {
-  state: (): TextStoreState => ({}),
+  state: (): TextStoreState => ({
+    adapter: null,
+  }),
   getters: {},
   persist: {
     paths: [],

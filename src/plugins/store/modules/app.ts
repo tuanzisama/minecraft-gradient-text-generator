@@ -12,6 +12,7 @@ export interface AppStoreState {
     };
     usingAdapterKey: KeyOfAdapterMap;
   };
+  previewPip: boolean;
 }
 
 export const useAppStore = defineStore("app", {
@@ -23,6 +24,7 @@ export const useAppStore = defineStore("app", {
       },
       usingAdapterKey: "vanilla",
     },
+    previewPip: false,
   }),
   getters: {
     usingAdapter(state) {
