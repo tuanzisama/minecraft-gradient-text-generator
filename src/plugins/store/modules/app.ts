@@ -31,6 +31,11 @@ export const useAppStore = defineStore("app", {
       return adapterMap.get(state.setting.usingAdapterKey);
     },
   },
+  actions: {
+    setVanillaCharCode(code: AppStoreState["setting"]["format"]["vanillaCharCode"]) {
+      this.setting.format.vanillaCharCode = code;
+    },
+  },
   persist: {
     paths: ["setting"],
   },

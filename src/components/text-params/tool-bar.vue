@@ -61,8 +61,8 @@ onMounted(() => {
     const element = toolbars[i];
     const key = element.key;
 
-    if (element.hasOwnProperty("isActive")) {
-      element.isActive = appStore.setting.format[key as never] as boolean;
+    if (key === ToolBarModule.VANILLA_CHAR_CODE) {
+      element.isActive = appStore.setting.format.vanillaCharCode === '§';
     }
   }
 });
@@ -71,7 +71,7 @@ const onToolbarItemClickHandler = (item: ToolBarItem) => {
   switch (item.key) {
     case "vanillaCharCode":
       item.isActive = !item.isActive;
-      appStore.setting.format.vanillaCharCode = item.isActive ? "§" : "&";
+      appStore.setVanillaCharCode(item.isActive ? "§" : "&");
       emit("on-format-change");
       break;
     case "copy":
