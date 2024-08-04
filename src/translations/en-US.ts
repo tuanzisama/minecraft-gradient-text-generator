@@ -139,10 +139,10 @@ export default {
     },
     toolbar: {
       vanilla_char_code: "Vanilla character code",
-      copy: "Preview",
-      download: "Preview by Picture-in-Picture",
-      preview: "Download",
-      preview_pip: "Copy",
+      copy: "Copy",
+      download: "Download",
+      preview: "Preview",
+      preview_pip: "Preview by Picture-in-Picture",
     },
   },
   output: {

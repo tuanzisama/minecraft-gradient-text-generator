@@ -141,10 +141,10 @@ export default {
     },
     toolbar: {
       vanilla_char_code: "キャラクターフォーマット",
-      copy: "プレビュー",
-      download: "新しいウィンドウでプレビュー",
-      preview: "ダウンロード",
-      preview_pip: "コピー",
+      copy: "コピー",
+      download: "ダウンロード",
+      preview: "プレビュー",
+      preview_pip: "ピクチャ・イン・ピクチャ",
     },
   },
   output: {

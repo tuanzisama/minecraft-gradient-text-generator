@@ -136,10 +136,10 @@ export default {
     },
     toolbar: {
       vanilla_char_code: "字符格式",
-      copy: "预览",
-      download: "新窗口预览",
-      preview: "下载",
-      preview_pip: "复制",
+      copy: "复制",
+      download: "下载",
+      preview: "预览",
+      preview_pip: "新窗口预览",
     },
   },
   output: {
