@@ -2,10 +2,6 @@
   <mcg-card class="color-picker-wrapper" body-class="color-pickercard-body">
     <div class="color-picker-header">
       <color-bar ref="colorBarRef" @on-select="onColorBarSelectHandler" />
-      <!-- <div class="colorhex-input">
-        <hex-input v-model="colorStore.selectColorList[colorStore.selectedIndex]" ref="hexInputRef" theme="dashed"
-          @on-change="onHexInputChangeHandler" />
-      </div> -->
     </div>
     <div class="color-picker-body">
       <picker ref="pickerRef" v-if="colorStore.selectColorList.length !== 0"
@@ -45,19 +41,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="color-picker-footer">
-      <div class="color-setting" size="10px">
-        <color-quickslot :list="colorStore.getCacheList" @on-select="onColorQuickSlotSelectHandler"
-          @on-rightclick="onColorQuickSlotRightClickHandler" />
-      </div>
-      <t-space class="list-setting" size="10px">
-        <t-button @click="onAddColorClickHandler">新增</t-button>
-        <t-button variant="dashed" @click="onSaveColorsClickHandler">保存</t-button>
-        <t-popconfirm content="确认重置吗" @confirm="onResetClickHandler">
-          <t-button theme="danger">重置</t-button>
-        </t-popconfirm>
-      </t-space>
-    </div> -->
   </mcg-card>
   <text-import v-model="isTextImportDialogVisible" @on-change="onTextImportChangeHandler" />
   <mcg-presets v-model="isMcgPresetsDialogVisible" @on-apply="onMcgPresetsApplyHandler" />

@@ -4,7 +4,6 @@
     <mcg-body>
       <template #input>
         <text-input class="text-input-box" v-model="appStore.processTags" @on-change="onTextInputChangeHandler" />
-        <!-- <text-input class="text-input-box" v-model="appStore.processText" @on-change="onTextInputChangeHandler" /> -->
       </template>
       <template #colorplate>
         <div>
