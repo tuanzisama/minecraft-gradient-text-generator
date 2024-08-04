@@ -4,8 +4,9 @@
   }
 
   .cg-header {
+    width: 96% !important;
     height: auto !important;
-    margin: 60px 0 20px 0;
+    margin: 60px auto 20px auto;
     &__title {
       font-size: 28px !important;
       &::after {

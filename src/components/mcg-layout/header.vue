@@ -35,6 +35,7 @@ const modeText = computed(() => {
     position: relative;
     font-size: 40px;
     font-weight: 700;
+    text-align: center;
 
     &::after {
       content: "v" attr(data-version);
@@ -58,8 +59,7 @@ const modeText = computed(() => {
 
     .header-tag {
       font-size: 14px;
-      padding: 0 10px;
-      height: 25px;
+      padding: 6px 10px;
       background: #f5f7fa;
       border: 1px solid #dcdfe6;
       color: #909399;
@@ -68,7 +68,7 @@ const modeText = computed(() => {
       align-items: center;
       overflow: hidden;
       user-select: none;
-
+      line-height: 18px;
     }
   }
 }
