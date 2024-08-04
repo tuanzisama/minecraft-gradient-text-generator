@@ -29,15 +29,16 @@
               slot="icon">
               casino
             </span>
-            试试手气
+            {{ $t('picker.button.feeling_lucky') }}
           </t-button>
-          <t-popconfirm content="确认重置颜色吗？" placement="bottom" theme="warning" @confirm="onResetClickHandler">
-            <t-button theme="danger" size="small" variant="outline">重置</t-button>
+          <t-popconfirm :content="$t('picker.reset_confirm')" placement="bottom" theme="warning"
+            @confirm="onResetClickHandler">
+            <t-button theme="danger" size="small" variant="outline">{{ $t('picker.button.reset') }}</t-button>
           </t-popconfirm>
-          <t-button theme="primary" size="small" variant="outline"
-            @click="isMcgPresetsDialogVisible = true">预设</t-button>
-          <t-button theme="warning" size="small" variant="outline"
-            @click="isTextImportDialogVisible = true">导入</t-button>
+          <t-button theme="primary" size="small" variant="outline" @click="isMcgPresetsDialogVisible = true">{{
+            $t('picker.button.presets') }}</t-button>
+          <t-button theme="warning" size="small" variant="outline" @click="isTextImportDialogVisible = true">{{
+            $t('picker.button.import') }}</t-button>
         </div>
       </div>
     </div>
@@ -58,12 +59,14 @@ import ColorBar, { ColorBarExpose } from "./color-bar.vue";
 import { isHexColor } from "@/utils/color";
 import { TextImport } from "../text-import";
 import { McgPresets } from "../mcg-presets";
+import { useI18n } from "vue-i18n";
 
 const emit = defineEmits<ColorPickerEmit>();
 const colorBarRef = ref<ColorBarExpose>();
 const pickerRef = ref<PickerExpose>();
 const draggableRef = ref<typeof draggable>();
 const colorStore = useColorStore();
+const i18n = useI18n()
 
 const isTextImportDialogVisible = ref<boolean>(false)
 const isMcgPresetsDialogVisible = ref<boolean>(false)
@@ -96,7 +99,7 @@ const onColorCellDeleteHandler = (hexColor: HexColorString, index: number) => {
 
 const onAddColorClickHandler = () => {
   if (colorStore.selectColorList.length >= 50) {
-    MessagePlugin.warning({ content: "色彩数量超出阈值" });
+    MessagePlugin.warning({ content: i18n.t("picker.color_list_exceed") });
     return;
   }
 
@@ -162,7 +165,7 @@ const onMcgPresetsApplyHandler = (hexColors: HexColorString[]) => {
 const colorAssertion = (hexColor: HexColorString) => {
   const flag = isHexColor(hexColor);
   if (!flag) {
-    MessagePlugin.warning({ content: "当前颜色格式不正确" });
+    MessagePlugin.warning({ content: i18n.t("picker.color_incorrect") });
   }
   return flag
 };
@@ -216,6 +219,7 @@ export interface ColorPickerEmit {
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
+    gap: 10px;
 
     .t-button {
       height: 100%;
@@ -224,7 +228,7 @@ export interface ColorPickerEmit {
 }
 
 .color-list {
-  width: 240px;
+  min-width: 240px;
   height: 100%;
   overflow-y: auto;
   @include custom-scrollbar();

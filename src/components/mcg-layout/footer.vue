@@ -28,9 +28,16 @@
     <!-- <t-link href="https://www.mcbbs.net/thread-1004671-1-1.html" target="_blank" theme="warning">
         [广告] PlayerTitle × 一款有点好用的玩家称号插件
       </t-link> -->
-    <p>"Minecraft" 是 Mojang Synergies AB 的商标</p>
+    <p>{{ $t("common.not_affiliated_notice") }}</p>
+    <p v-if="i18n.locale.value !== 'zh_CN'">{{ $t("common.translate_by", { author: $t("$internel.author") }) }}</p>
   </footer>
 </template>
+
+<script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
+
+const i18n = useI18n()
+</script>
 
 <style lang="scss" scoped>
 .cg-footer {

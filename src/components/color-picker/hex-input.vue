@@ -1,6 +1,6 @@
 <template>
   <div class="hex-input" :data-theme="props.theme" :class="{ 'is-incorrect': !isCorrect }">
-    <input class="hex-input__inner" v-model="privateValue" maxlength="6" placeholder="16进制颜色"
+    <input class="hex-input__inner" v-model="privateValue" maxlength="6" :placeholder="$t('picker.input.placeholder')"
       @paste="onInputPasteHandler" @input="onInputChangeHandler" @blur="onInputBlurHandler" />
   </div>
 </template>
@@ -9,11 +9,13 @@
 import { isHexColor } from "@/utils/color";
 import { MessagePlugin } from "tdesign-vue-next";
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
 
 const props = withDefaults(defineProps<HexInputProps>(), {
   theme: 'default'
 });
 const emit = defineEmits<HexInputEmit>();
+const i18n = useI18n()
 
 const privateValue = computed({
   get: () => props.modelValue?.replace(/#|&/g, "") as string,
@@ -28,12 +30,12 @@ const onInputPasteHandler = (event: ClipboardEvent) => {
   const pasteValue = event.clipboardData!.getData('text');
 
   if (pasteValue === "") {
-    MessagePlugin.warning({ content: "请粘贴文本" });
+    MessagePlugin.warning({ content: i18n.t("picker.input.paste_is_empty") });
     event.preventDefault();
     return;
   }
   if (!isHexColor(pasteValue)) {
-    MessagePlugin.warning({ content: "请粘贴16进制文字" });
+    MessagePlugin.warning({ content: i18n.t("picker.input.paste_incorrect") });
     event.preventDefault();
     return;
   }
@@ -49,7 +51,7 @@ const onInputChangeHandler = () => {
 
 const onInputBlurHandler = () => {
   if (!isHexColor(privateValue.value)) {
-    MessagePlugin.warning({ content: "请输入16进制颜色" });
+    MessagePlugin.warning({ content: i18n.t("picker.input.paste_incorrect") });
   }
 }
 </script>

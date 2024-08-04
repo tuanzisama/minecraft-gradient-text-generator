@@ -5,17 +5,20 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, shallowRef } from "vue";
 import EditorJS from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
 import Strikethrough from '@sotaproject/strikethrough';
 import { isEmpty } from "lodash-es";
+import { useI18n } from "vue-i18n";
+
+const i18n = useI18n()
 
 const props = withDefaults(defineProps<TextInputProps>(), {});
 const emit = defineEmits<TextInputEmit>();
 const inputRef = ref<HTMLDivElement>();
 
-const editorInstance = ref();
+const editorInstance = shallowRef();
 
 const privateValue = computed({
   get: () => props.modelValue,
@@ -25,7 +28,7 @@ const privateValue = computed({
 onMounted(() => {
   const instance = new EditorJS({
     holder: inputRef.value,
-    placeholder: '试着写一点什么...',
+    placeholder: i18n.t("input.placeholder"),
     inlineToolbar: ['bold', 'italic', 'underline', 'strikethrough'],
     tools: {
       underline: Underline,
@@ -34,20 +37,38 @@ onMounted(() => {
     i18n: {
       messages: {
         toolNames: {
-          "Text": "文本",
-          "Bold": "粗体",
-          "Italic": "斜体",
-          "Underline": "下划线",
-          "Strikethrough": "删除线",
+          "Text": i18n.t("input.editor.text"),
+          "Bold": i18n.t("input.editor.bold"),
+          "Italic": i18n.t("input.editor.italic"),
+          "Underline": i18n.t("input.editor.underline"),
+          "Strikethrough": i18n.t("input.editor.strikethrough"),
         },
         ui: {
+          "blockTunes": {
+            "toggler": {
+              "Click to tune": i18n.t("input.editor.toggler.tune"),
+              "or drag to move": i18n.t("input.editor.toggler.drag_to_move")
+            }
+          },
           "toolbar": {
             "toolbox": {
-              "Add": "新增"
+              "Add": i18n.t("input.editor.add")
             }
           },
           "popover": {
-            "Filter": "搜索组件...",
+            "Filter": i18n.t("input.editor.tune.filter"),
+          }
+        },
+        "blockTunes": {
+          "delete": {
+            "Delete": i18n.t("input.editor.tune.delete"),
+            "Click to delete": i18n.t("input.editor.tune.delete_confirm")
+          },
+          "moveUp": {
+            "Move up": i18n.t("input.editor.tune.move_up")
+          },
+          "moveDown": {
+            "Move down": i18n.t("input.editor.tune.move_down")
           }
         }
       },
@@ -85,6 +106,7 @@ onMounted(() => {
       emit('on-change', tags)
     }
   })
+  console.info(instance);
   editorInstance.value = instance
 })
 

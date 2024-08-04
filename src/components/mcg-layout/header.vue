@@ -1,8 +1,8 @@
 <template>
   <header class="cg-header">
-    <p class="cg-header__title" :data-version="pkgVersion + modeText">Minecraft 渐变颜色生成器</p>
+    <p class="cg-header__title" :data-version="pkgVersion + modeText">{{ $t('app.title') }}</p>
     <p class="cg-header__summary">
-      <span class="header-tag">支持超 {{ processorCount }} 款格式 / 混排样式 / 渐变预设</span>
+      <span class="header-tag">{{ $t("app.slogan", { count: processorCount }) }}</span>
     </p>
   </header>
 </template>

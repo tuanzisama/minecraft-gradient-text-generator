@@ -1,24 +1,26 @@
 <template>
-  <t-dialog v-model:visible="dialogVisible" header="渐变色预设管理" width="800px" class="mcg-presets-dialog" :footer="false">
+  <t-dialog v-model:visible="dialogVisible" :header="$t('picker.presets.title')" width="800px"
+    class="mcg-presets-dialog" :footer="false">
     <div class="button-group">
       <t-button theme="primary" variant="outline" @click="onImportPresetsClickHandler">
         <template #icon>
           <span class="material-symbols-outlined">download</span>
         </template>
-        导入
+        {{ $t('picker.presets.button.import') }}
       </t-button>
       <t-button theme="primary" variant="outline" @click="onExportPresetsClickHandler">
         <template #icon>
           <span class="material-symbols-outlined">upload</span>
         </template>
-        导出
+        {{ $t('picker.presets.button.export') }}
       </t-button>
-      <t-popconfirm content="确认清空预设吗" placement="left-top" theme="danger" @confirm="onClearPresetsClickHandler">
+      <t-popconfirm :content="$t('picker.presets.clear_confirm')" placement="left-top" theme="danger"
+        @confirm="onClearPresetsClickHandler">
         <t-button theme="danger" variant="outline">
           <template #icon>
             <span class="material-symbols-outlined">delete_forever</span>
           </template>
-          清空
+          {{ $t('picker.presets.button.clear') }}
         </t-button>
       </t-popconfirm>
     </div>
@@ -37,11 +39,13 @@ import { randomString } from '@/utils/random';
 import { isHexColor } from '@/utils/color';
 import { useColorStore } from '@/plugins/store/modules/color';
 import { format as timeAgoFormat } from 'timeago.js';
+import { useI18n } from 'vue-i18n';
 
 const props = withDefaults(defineProps<McgPresetsProps>(), {});
 const emit = defineEmits<McgPresetsEmit>();
 const cssModule = useCssModule();
 const colorStore = useColorStore();
+const i18n = useI18n();
 
 const dialogVisible = computed({
   get: () => props.modelValue,
@@ -51,13 +55,13 @@ const dialogVisible = computed({
 const isLoading = ref<boolean>(false)
 
 const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
-  { colKey: 'name', title: '名称', ellipsis: true, width: '140' },
+  { colKey: 'name', title: i18n.t("picker.presets.table.column.name"), ellipsis: true, width: '140' },
   {
-    colKey: 'gradient', title: '渐变色',
+    colKey: 'gradient', title: i18n.t("picker.presets.table.column.gradient"),
     className: cssModule['table-gradient-column'],
     minWidth: '200',
     cell: (h, props) => {
-      return h(Tooltip, { content: `${props.row.colors.length} 个颜色`, theme: 'light' }, {
+      return h(Tooltip, { content: i18n.t("picker.presets.table.gradient_count", { count: props.row.colors.length }), theme: 'light' }, {
         default: () => [h('div', {
           class: cssModule['presets-gradient-bar'],
           style: { background: `linear-gradient(to right, ${props.row.colors.join(', ')})` }
@@ -66,7 +70,7 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
     },
   },
   {
-    colKey: 'createTime', title: '创建时间', ellipsis: true, width: '100',
+    colKey: 'createTime', title: i18n.t("picker.presets.table.column.create_time"), ellipsis: true, width: '120',
     cell: (h, props) => {
       if (props.row.createTime === null) {
         return h('span', null, "N/A");
@@ -74,12 +78,12 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
 
       const date = new Date(props.row.createTime);
       return h(Tooltip, { content: date.toLocaleString(), theme: 'light' }, {
-        default: () => [h('span', null, timeAgoFormat(date, 'zh_CN'))]
+        default: () => [h('span', null, timeAgoFormat(date, i18n.t('app.timeago_locale')))]
       })
     }
   },
   {
-    colKey: 'operate', title: '操作', fixed: 'right', width: '100',
+    colKey: 'operate', title: i18n.t("picker.presets.table.column.operate"), fixed: 'right', width: '100',
     cell: (h, props) => {
       return h('div', {
         class: cssModule['table-operate-column'],
@@ -89,7 +93,7 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
             h(Button, { shape: "square", variant: "text", class: cssModule['table-operate-button'], onClick: () => onApplyClickHandler(props) }, {
               icon: () => h('span', { class: ['material-symbols-outlined', cssModule['table-operate-button-icon']] }, 'check')
             }),
-            h(Popconfirm, { content: '确认删除吗', theme: "danger", onConfirm: () => onDeleteClickHandler(props) }, {
+            h(Popconfirm, { content: i18n.t("picker.presets.table.delete_confirm"), theme: "danger", onConfirm: () => onDeleteClickHandler(props) }, {
               default: () => [
                 h(Button, { shape: "square", variant: "text", disabled: props.row.isLocked, class: cssModule['table-operate-button'] }, {
                   icon: () => h('span', { class: ['material-symbols-outlined', cssModule['table-operate-button-icon']] }, 'delete')
@@ -131,14 +135,14 @@ const onImportPresetsClickHandler = () => {
       const filteredData = parsedData.filter(item => {
         return item.hasOwnProperty('colors') && item.colors?.every(color => isHexColor(color));
       }).map<GradientPresetsRecord>(item => {
-        return { name: item.name ?? `预设 ${randomString(6)}`, colors: item.colors as HexColorString[], createTime }
+        return { name: item.name ?? randomString(6), colors: item.colors as HexColorString[], createTime }
       })
 
       colorStore.appendPresetsColorList(filteredData)
-      MessagePlugin.success({ content: `已导入 ${filteredData.length} 条渐变色预设` });
+      MessagePlugin.success({ content: i18n.t('picker.presets.import_success', { count: filteredData.length }) });
     } catch (error) {
       console.error(error);
-      MessagePlugin.error({ content: "无法识别此文件，请重试或联系开发者" });
+      MessagePlugin.error({ content: i18n.t('picker.presets.import_failed') });
     } finally {
       isLoading.value = false
     }
@@ -155,15 +159,15 @@ const onExportPresetsClickHandler = () => {
 
   saveAs(blob, fileName).then(() => {
     NotifyPlugin.success({
-      title: "预设导出成功",
-      content: "请留意浏览器下载提示",
+      title: i18n.t('picker.presets.export_success'),
+      content: i18n.t('common.download_tip'),
     });
   })
 }
 
 const onClearPresetsClickHandler = () => {
   colorStore.resetPresetsColorList()
-  MessagePlugin.success({ content: "已清空所有预设" });
+  MessagePlugin.success({ content: i18n.t('picker.presets.clear_success') });
 }
 </script>
 
@@ -183,7 +187,6 @@ export interface McgPresetsEmit {
 .mcg-presets-table {
   :deep(tr>th) {
     background-color: #ffffff;
-
     border-bottom: none !important;
   }
 

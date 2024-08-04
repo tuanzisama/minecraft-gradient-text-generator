@@ -30,11 +30,14 @@ import { TextOutput } from "./components/text-output";
 // import { McgFeedback } from './components/mcg-feedback'
 import { TextOutputExpose } from "./components/text-output/text-output.vue";
 import { Button, NotificationInstance, NotifyPlugin, Space } from "tdesign-vue-next";
+import { useI18n } from "vue-i18n";
 
 const appStore = useAppStore();
+const i18n = useI18n()
 const textOutputRef = ref<TextOutputExpose>();
 
 onMounted(() => {
+  document.title = i18n.t("app.title")
   popupPreviewNotify()
 })
 

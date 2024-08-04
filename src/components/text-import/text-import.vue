@@ -1,25 +1,25 @@
 <template>
-  <t-dialog v-model:visible="dialogVisible" header="导入渐变色" width="600px" confirm-btn="识别并导入"
-    @confirm="onDialogConfirmHandler" destroy-on-close>
+  <t-dialog v-model:visible="dialogVisible" :header="$t('picker.import.title')" width="600px"
+    :confirm-btn="$t('picker.import.confirm_button')" @confirm="onDialogConfirmHandler" destroy-on-close>
 
     <div class="dialog-container">
-      <t-textarea v-model="textValue" placeholder="输入受支持的格式文本..." name="description"
+      <t-textarea v-model="textValue" :placeholder="$t('picker.import.placeholder')" name="description"
         :autosize="{ minRows: 3, maxRows: 12 }" />
 
       <div class="collapse-wrapper">
         <t-collapse>
-          <t-collapse-panel header="支持格式">
-            <section class="rule-box" v-for="(item, index) in importRules" :key="index">
+          <t-collapse-panel :header="$t('picker.import.support_format')">
+            <section class="rule-box" v-for="(item, index) in getImportRules()" :key="index">
               <span class="rule-box__label">{{ item.label }}</span>
               <div class="rule-box__example">
                 <pre v-html="item.example"></pre>
               </div>
             </section>
             <p>
-              <span>希望支持其它插件/格式？</span>
+              <span>{{ $t("common.support_request") }}</span>
               <t-link theme="primary" href="https://github.com/tuanzisama/minecraft-gradient-text-generator/issues"
                 target="_blank">
-                联系开发者！
+                {{ $t("common.contact_developer") }}
               </t-link>
             </p>
           </t-collapse-panel>
@@ -31,12 +31,14 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { importRules } from './import-rule'
+import { getImportRules } from './import-rule'
 import { parseText } from './parser';
 import { MessagePlugin } from 'tdesign-vue-next';
+import { useI18n } from 'vue-i18n';
 
 const props = withDefaults(defineProps<TextImportProps>(), {});
 const emit = defineEmits<TextImportEmit>();
+const i18n = useI18n()
 
 const dialogVisible = computed({
   get: () => props.modelValue,
@@ -50,7 +52,7 @@ const onDialogConfirmHandler = () => {
     const result = parseText(textValue.value)
 
     if (result === null) {
-      MessagePlugin.warning({ content: "识别失败" });
+      MessagePlugin.warning({ content: i18n.t("picker.import.import_failed") });
       return
     }
 

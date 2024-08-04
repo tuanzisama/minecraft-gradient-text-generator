@@ -1,14 +1,15 @@
 <template>
   <div class="text-params">
     <label class="processor-select-wrapper">
-      <t-select class="processor-select" v-model="appStore.setting.usingAdapterKey" placeholder="请选择生成器"
+      <t-select class="processor-select" v-model="appStore.setting.usingAdapterKey"
+        :placeholder="$t('processor.placeholder')"
         :popup-props="{ overlayClassName: 'tdesign-processor-select__overlay-option' }"
         @change="onProcessorSelectChangeHandler" filterable auto-width>
-        <t-option v-for="[key, value] in adapterMap" :key="key" :value="key" :label="value.label">
+        <t-option v-for="[key, value] in adapterMap" :key="key" :value="key" :label="$t(value.label)">
           <p class="label-wrapper">
-            <span class="label">{{ value.label }}</span>
-            <t-tooltip v-if="value.hint" :content="value.hint" placement="top-start" :overlay-style="{ width: '200px' }"
-              show-arrow>
+            <span class="label">{{ $t(value.label) }}</span>
+            <t-tooltip v-if="value.hint" :content="$t(value.hint)" placement="top-start"
+              :overlay-style="{ width: '200px' }" show-arrow>
               <span class="hint" title="">❓</span>
             </t-tooltip>
           </p>
@@ -16,16 +17,17 @@
         </t-option>
         <template #panel-bottom-content>
           <div class="panel-bottom">
-            <span>希望支持其它插件/格式？</span>
+            <span>{{ $t("common.support_request") }}</span>
             <t-link theme="primary"
               href="https://github.com/tuanzisama/minecraft-gradient-text-generator/issues/new/choose" target="_blank">
-              联系开发者！
+              {{ $t("common.contact_developer") }}
             </t-link>
           </div>
         </template>
       </t-select>
     </label>
-    <t-tooltip :content="`处理时间 (精确): ${props.usageTime}ms`" placement="top-left" show-arrow theme="light">
+    <t-tooltip :content="$t('processor.usage_accurate_time', { time: props.usageTime })" placement="top-left" show-arrow
+      theme="light">
       <span class="usage-time">{{ props.usageTime.toFixed(2) }}ms</span>
     </t-tooltip>
     <div class="tool-bar-wrapper">
@@ -167,10 +169,12 @@ export interface TextParamsProps {
 
   .panel-bottom {
     text-align: center;
-    padding: 10px 0;
+    padding: 10px;
     border-top: 1px solid #e4e7ed;
     font-size: 13px;
     font-weight: 400;
+    display: flex;
+    flex-wrap: wrap;
   }
 }
 </style>
