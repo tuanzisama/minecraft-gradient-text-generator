@@ -37,6 +37,7 @@ export const adapterMap = new Map<KeyOfAdapterMap, AdapterMapValue>([
   ["trchat", { label: "TrChat", sample: "&{#RRGGBB}", adapter: TrChatAdapter }],
   ["motd", { label: "MOTD", sample: "\\u00A7X", adapter: MotdAdapter }],
   ["bbcode", { label: "BBCode", sample: "[color=#RRGGBB]", adapter: BBCodeAdapter }],
+  ["json", { label: "JSON", sample: '{"text":"T","color":"#RRGGBB"}', mimeType: "application/json", adapter: StringifiedNBTAdapter }],
   ["html", { label: "HTML", sample: '<span style="color: #RRGGBB"/>', mimeType: "text/html", adapter: HTMLAdapter }],
   ["csv", { label: "CSV", sample: "#RRGGBB,T", mimeType: "text/csv", adapter: CSVAdapter }],
 ]);
@@ -53,6 +54,7 @@ export const adapterMapKey = [
   "trchat",
   "motd",
   "bbcode",
+  "json",
   "html",
   "csv",
 ] as const;

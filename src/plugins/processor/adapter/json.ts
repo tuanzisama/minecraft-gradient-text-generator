@@ -5,15 +5,15 @@ class StringifiedNBTAdapterClazz extends GradientProcessor<SNBTRecord[]> {
     super(tags, colors, options);
   }
 
-  processor(tag: RichTag): SNBTRecord[] {
+  processor(tag: RichTag): JSONRecord[] {
     let index = 0;
-    const list = tag.text.split("").map<SNBTRecord>((char) => {
-      let obj: Partial<SNBTRecord> = { text: char, ...tag.format };
+    const list = tag.text.split("").map<JSONRecord>((char) => {
+      let obj: Partial<JSONRecord> = { text: char, ...tag.format };
       if (char.trim() !== "") {
         obj.color = tag.colors?.[index] as HexColorString;
         index += 1;
       }
-      return obj as SNBTRecord;
+      return obj as JSONRecord;
     });
     return list;
   }
@@ -27,6 +27,6 @@ class StringifiedNBTAdapterClazz extends GradientProcessor<SNBTRecord[]> {
   }
 }
 
-export const StringifiedNBTAdapter: GradientProcessorConstructor<SNBTRecord[]> = StringifiedNBTAdapterClazz;
+export const StringifiedNBTAdapter: GradientProcessorConstructor<JSONRecord[]> = StringifiedNBTAdapterClazz;
 
-export type SNBTRecord = { text: string; color: string } & { [x in Formats]?: boolean };
+export type JSONRecord = { text: string; color: string } & { [x in Formats]?: boolean };
