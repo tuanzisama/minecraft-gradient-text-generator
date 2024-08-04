@@ -106,7 +106,6 @@ onMounted(() => {
       emit('on-change', tags)
     }
   })
-  console.info(instance);
   editorInstance.value = instance
 })
 
