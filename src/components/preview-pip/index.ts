@@ -31,6 +31,12 @@ export async function requestPreviewPip(options?: PreviewPipOptions): Promise<Pr
     pipWindow.document.head.appendChild(style.cloneNode(true));
   });
 
+  document.querySelectorAll("link").forEach((link) => {
+    if (link.getAttribute("rel") === "stylesheet") {
+      pipWindow.document.head.appendChild(link.cloneNode(true));
+    }
+  });
+
   pipWindow.addEventListener("pagehide", (event: PageTransitionEvent) => {
     options?.onClose?.(event);
   });
