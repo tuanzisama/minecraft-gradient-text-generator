@@ -40,8 +40,15 @@ const toolbars = reactive<ToolBarItem[]>([
     render: (item: ToolBarItem) => h("span", { class: "vanilla-char-code" }, item.isActive ? "§" : "&"),
   },
   {
+    key: ToolBarModule.PREVIEW,
+    label: "预览",
+    isActive: true,
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "preview" : "preview_off")
+  },
+  {
     key: ToolBarModule.PREVIEW_PIP,
     label: "新窗口预览",
+    isDisplay: false,
     render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "picture_in_picture_alt")
   },
   {
@@ -64,6 +71,10 @@ onMounted(() => {
     if (key === ToolBarModule.VANILLA_CHAR_CODE) {
       element.isActive = appStore.setting.format.vanillaCharCode === '§';
     }
+
+    if (key === ToolBarModule.PREVIEW_PIP) {
+      element.isDisplay = window.hasOwnProperty('documentPictureInPicture')
+    }
   }
 });
 
@@ -79,6 +90,10 @@ const onToolbarItemClickHandler = (item: ToolBarItem) => {
       break;
     case "download":
       onDownloadClickHandler();
+      break;
+    case "preview":
+      item.isActive = !item.isActive
+      appStore.setSimulateMode(item.isActive ? "chat" : "default")
       break;
     case "preview_pip":
       previewPip()
@@ -149,6 +164,7 @@ export enum ToolBarModule {
   VANILLA_CHAR_CODE = "vanillaCharCode",
   COPY = "copy",
   DOWNLOAD = "download",
+  PREVIEW = "preview",
   PREVIEW_PIP = "preview_pip",
 }
 

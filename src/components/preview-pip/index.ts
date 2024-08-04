@@ -23,3 +23,5 @@ export async function previewPip() {
     pipWindow.document.head.appendChild(style.cloneNode(true));
   });
 }
+
+export { Preview };
