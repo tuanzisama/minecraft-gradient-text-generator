@@ -1,6 +1,6 @@
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
-class StringifiedNBTAdapterClazz extends GradientProcessor<SNBTRecord[]> {
+class StringifiedNBTAdapterClazz extends GradientProcessor<JSONRecord[]> {
   constructor(tags: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
     super(tags, colors, options);
   }
@@ -22,7 +22,7 @@ class StringifiedNBTAdapterClazz extends GradientProcessor<SNBTRecord[]> {
     const result = this.generate().reduce((acc, cur, index, list) => {
       if (index === list.length - 1) return acc.concat(...cur);
       return acc.concat(...cur.concat([{ text: "\n", color: "" }]));
-    }, [] as SNBTRecord[]);
+    }, [] as JSONRecord[]);
     return JSON.stringify(result);
   }
 }
