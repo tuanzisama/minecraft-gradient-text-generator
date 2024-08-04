@@ -11,6 +11,7 @@ declare global {
 
 interface DocumentPictureInPicture {
   requestWindow: (options: RequestWindowOptions) => Promise<Window>;
+  window: Window | null;
 }
 
 interface RequestWindowOptions {

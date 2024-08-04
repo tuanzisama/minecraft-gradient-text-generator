@@ -12,12 +12,12 @@
 </template>
 
 <script lang="ts" setup>
-import { VNode, h, onMounted, reactive } from "vue";
+import { VNode, h, onMounted, reactive, ref } from "vue";
 import { useAppStore } from "../../plugins/store/modules/app";
 import { MessagePlugin, NotifyPlugin } from "tdesign-vue-next";
 import { useTextStore } from "@/plugins/store/modules/text";
 import { saveAs } from "@/utils/file";
-import { previewPip } from '../preview-pip'
+import { PreviewPip, requestPreviewPip } from '../preview-pip'
 import { useI18n } from "vue-i18n";
 
 const appStore = useAppStore();
@@ -34,6 +34,7 @@ type ToolBarItem = {
   render: (item: ToolBarItem) => VNode;
 };
 
+const previewPip = ref<PreviewPip>()
 const toolbars = reactive<ToolBarItem[]>([
   {
     key: ToolBarModule.VANILLA_CHAR_CODE,
@@ -43,24 +44,24 @@ const toolbars = reactive<ToolBarItem[]>([
   },
   {
     key: ToolBarModule.PREVIEW,
-    label: "processor.toolbar.copy",
+    label: "processor.toolbar.preview",
     isActive: true,
     render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "preview" : "preview_off")
   },
   {
     key: ToolBarModule.PREVIEW_PIP,
-    label: "processor.toolbar.download",
+    label: "processor.toolbar.preview_pip",
     isDisplay: false,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "picture_in_picture_alt")
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "picture_in_picture_alt" : "pip")
   },
   {
     key: ToolBarModule.DOWNLOAD,
-    label: "processor.toolbar.preview",
+    label: "processor.toolbar.download",
     render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "download")
   },
   {
     key: ToolBarModule.COPY,
-    label: "processor.toolbar.preview_pip",
+    label: "processor.toolbar.copy",
     render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined small-icon" }, "content_copy"),
   },
 ]);
@@ -74,13 +75,17 @@ onMounted(() => {
       element.isActive = appStore.setting.format.vanillaCharCode === '§';
     }
 
+    if (key === ToolBarModule.PREVIEW) {
+      element.isActive = appStore.setting.simulateMode === "chat";
+    }
+
     if (key === ToolBarModule.PREVIEW_PIP) {
       element.isDisplay = window.hasOwnProperty('documentPictureInPicture')
     }
   }
 });
 
-const onToolbarItemClickHandler = (item: ToolBarItem) => {
+const onToolbarItemClickHandler = async (item: ToolBarItem) => {
   switch (item.key) {
     case "vanillaCharCode":
       item.isActive = !item.isActive;
@@ -98,7 +103,17 @@ const onToolbarItemClickHandler = (item: ToolBarItem) => {
       appStore.setSimulateMode(item.isActive ? "chat" : "default")
       break;
     case "preview_pip":
-      previewPip()
+      if (item.isActive) {
+        item.isActive = false
+        previewPip.value?.close?.()
+      } else {
+        item.isActive = true
+        previewPip.value = await requestPreviewPip({
+          onClose: () => {
+            item.isActive = false
+          }
+        })
+      }
       break;
   }
 };
