@@ -2,6 +2,7 @@ export default {
   app: {
     title: "Minecraft 渐变颜色生成器",
     slogan: "支持超 {count} 款格式 / 混排样式 / 渐变预设",
+    // timeago.js all locales: https://github.com/hustcc/timeago.js/tree/master/src/lang
     timeago_locale: "zh-CN",
   },
   common: {
@@ -10,7 +11,7 @@ export default {
     contact_developer: "联系开发者！",
     not_affiliated_notice: '"Minecraft" 是 Mojang Synergies AB 的商标',
     translate_by: "由 {author} 翻译",
-    // timeago.js all locales: https://github.com/hustcc/timeago.js/tree/master/src/lang
+    close: "关闭",
   },
   input: {
     placeholder: "试着写一点什么...",

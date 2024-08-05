@@ -17,6 +17,7 @@ export default {
     contact_developer: "開発者に連絡！",
     not_affiliated_notice: '"Minecraft" は Mojang Synergies AB の商標です',
     translate_by: "{author}が翻訳に参加しました",
+    close: "閉じる",
   },
   input: {
     placeholder: "何かを書いてみてください...",

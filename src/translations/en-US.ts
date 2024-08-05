@@ -14,6 +14,7 @@ export default {
     contact_developer: "Contact the developer!",
     not_affiliated_notice: '"Minecraft" is a trademark of Mojang Synergies AB.',
     translate_by: "Translate by {author}",
+    close: "Close",
   },
   input: {
     placeholder: "Try to write something...",
