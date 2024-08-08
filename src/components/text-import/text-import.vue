@@ -1,6 +1,7 @@
 <template>
   <t-dialog v-model:visible="dialogVisible" :header="$t('picker.import.title')" width="600px"
-    :confirm-btn="$t('picker.import.confirm_button')" @confirm="onDialogConfirmHandler" destroy-on-close>
+    :confirm-btn="$t('picker.import.confirm_button')" :close-btn="$t('common.close')" 
+    @confirm="onDialogConfirmHandler" destroy-on-close>
 
     <div class="dialog-container">
       <t-textarea v-model="textValue" :placeholder="$t('picker.import.placeholder')" name="description"
