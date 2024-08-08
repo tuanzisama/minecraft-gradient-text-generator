@@ -1,21 +1,12 @@
 <template>
   <div class="picker-container">
-    <div class="picker--box" ref="boxPickerRef"></div>
-    <div class="picker-options">
-      <div class="color-input">
-        <hex-input v-model="privateValue" @on-change="onHexInputChangeHandler" />
-      </div>
-      <color-quickslot :list="colorList" @on-change="onColorQuickSlotChangeHandler" />
-    </div>
-    <slot />
+    <div class="picker" ref="boxPickerRef"></div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import iro from "@jaames/iro";
-import HexInput from "./hex-input.vue";
 import { computed, onMounted, ref } from "vue";
-import colorList from "./colors";
 
 const boxPickerRef = ref<HTMLDivElement>();
 const boxPickerInstance = ref();
@@ -38,10 +29,10 @@ const initializeBoxPicker = () => {
   if (boxPickerRef.value) {
     boxPickerInstance.value = iro.ColorPicker(boxPickerRef.value, {
       layout: [
-        { component: iro.ui.Box, options: { boxHeight: 250 } },
+        { component: iro.ui.Box, options: { boxHeight: 200 } },
         { component: iro.ui.Slider, options: { sliderType: "hue" } },
       ],
-      width: 300,
+      width: 250,
       color: privateValue.value,
     });
 
@@ -55,19 +46,6 @@ const initializeBoxPicker = () => {
       emit("on-change", iroColor.hexString as HexColorString);
     });
   }
-};
-
-const onHexInputChangeHandler = (val: HexColorString) => {
-  setColor(val);
-  privateValue.value = val;
-  emit("on-change", val);
-};
-
-const onColorQuickSlotChangeHandler = (item: ColorItem) => {
-  const color = item.color as HexColorString;
-  setColor(color);
-  privateValue.value = color;
-  emit("on-change", color);
 };
 
 const setColor = (color: HexColorString) => {
@@ -97,19 +75,22 @@ export interface PickerEmit {
 <style lang="scss" scoped>
 .picker-container {
   display: flex;
-  height: 100%;
 }
-.picker--box {
+
+.picker {
   margin-right: 20px;
+
   &:deep(.IroBox) {
     border-radius: 6px !important;
   }
+
   &:deep(.IroColorPicker),
   &:deep(.IroSlider),
   &:deep(.IroSliderGradient) {
     border-radius: 6px !important;
   }
 }
+
 .picker-options {
   display: flex;
   flex-direction: column;

@@ -3,34 +3,49 @@
     <div class="cg-body__input">
       <slot name="input"></slot>
     </div>
-    <div class="cg-body__output">
-      <slot name="output"></slot>
+    <div class="cg-body__right">
+      <div class="cg-colorplate">
+        <slot name="colorplate"></slot>
+      </div>
+      <div class="cg-output">
+        <slot name="output"></slot>
+      </div>
     </div>
   </section>
 </template>
 
 <style lang="scss" scoped>
 .cg-body {
+  width: 96%;
+  margin: 0 auto;
+  max-width: 1440px;
+
   display: flex;
-  flex-direction: row;
+
   &__input {
+    width: 35%;
+    height: 100%;
+    flex-shrink: 0;
+    margin-right: 10px;
+  }
+
+  &__right {
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
-    margin-right: 20px;
-    min-width: 800px;
-    &:deep(> *) {
-      margin-bottom: 20px;
-      &:last-child {
-        margin-bottom: 0;
-      }
+    height: 100%;
+    flex: 1;
+
+    .cg-colorplate {
+      flex-shrink: 0;
+      margin-bottom: 10px;
+    }
+
+    .cg-output {
+      flex: 1;
+      height: 0;
     }
   }
-  &__output {
-    display: flex;
-    flex: 1;
-    width: 0;
-    min-width: 500px;
-  }
+
+
 }
 </style>

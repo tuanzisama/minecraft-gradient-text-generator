@@ -6,36 +6,45 @@
     <div class="color-picker-body">
       <picker ref="pickerRef" v-if="colorStore.selectColorList.length !== 0"
         v-model="colorStore.selectColorList[colorStore.selectedIndex]" @on-change="onPickerChangeHandler">
-        <draggable ref="draggableRef" v-model="colorStore.selectColorList" handle=".color-cell" tag="ul"
-          class="color-list" :delay="100" :delay-on-touch-only="true" :touch-start-threshold="35"
-          @change="onDraggableChangeHandler">
+      </picker>
+      <div class="color-list-wrapper">
+        <draggable ref="draggableRef" v-model="colorStore.selectColorList" handle=".color-cell" tag="ul" row-key="index"
+          item-key="item" class="color-list" :delay="100" :delay-on-touch-only="true" :touch-start-threshold="35"
+          filter='input,select,textarea,label,button,fieldset,legend,datalist,output,option,optgroup'
+          :prevent-on-filter="false" @change="onDraggableChangeHandler">
           <template #item="{ element, index }">
             <li class="color-cell" :style="`--color-hex: ${element}`" :data-index="index + 1"
               :class="{ 'color-cell--active': colorStore.selectedIndex === index }"
               @click="onColorCellClickHandler(element, index)">
               <div class="color-cell__cube"></div>
-              <hex-input v-model="colorStore.selectColorList[index]" style="width: 100px"
-                @on-change="onHexInputChangeHandler" />
+              <hex-input v-model="colorStore.selectColorList[index]" style="width: 80px"
+                @on-change="onHexInputChangeHandler" theme="ghost" />
               <span class="color-cell__delete" @click.stop="onColorCellDeleteHandler(element, index)">×</span>
             </li>
           </template>
         </draggable>
-      </picker>
-    </div>
-    <div class="color-picker-footer">
-      <div class="color-setting" size="10px">
-        <color-quickslot :list="colorStore.getCacheList" @on-select="onColorQuickSlotSelectHandler"
-          @on-rightclick="onColorQuickSlotRightClickHandler" />
+        <div class="color-operator">
+          <t-button theme="success" size="small" @click="onAddColorClickHandler">
+            <span class="material-symbols-outlined" style="font-size: 18px;line-height: normal;margin-right: 2px;"
+              slot="icon">
+              casino
+            </span>
+            {{ $t('picker.button.feeling_lucky') }}
+          </t-button>
+          <t-popconfirm :content="$t('picker.reset_confirm')" placement="bottom" theme="warning"
+            @confirm="onResetClickHandler">
+            <t-button theme="danger" size="small" variant="outline">{{ $t('picker.button.reset') }}</t-button>
+          </t-popconfirm>
+          <t-button theme="primary" size="small" variant="outline" @click="isMcgPresetsDialogVisible = true">{{
+            $t('picker.button.presets') }}</t-button>
+          <t-button theme="warning" size="small" variant="outline" @click="isTextImportDialogVisible = true">{{
+            $t('picker.button.import') }}</t-button>
+        </div>
       </div>
-      <t-space class="list-setting" size="10px">
-        <t-button @click="onAddColorClickHandler">新增</t-button>
-        <t-button variant="dashed" @click="onSaveColorsClickHandler">保存</t-button>
-        <t-popconfirm content="确认重置吗" @confirm="onResetClickHandler">
-          <t-button theme="danger">重置</t-button>
-        </t-popconfirm>
-      </t-space>
     </div>
   </mcg-card>
+  <text-import v-model="isTextImportDialogVisible" @on-change="onTextImportChangeHandler" />
+  <mcg-presets v-model="isMcgPresetsDialogVisible" @on-apply="onMcgPresetsApplyHandler" />
 </template>
 
 <script lang="ts" setup>
@@ -44,43 +53,58 @@ import picker, { PickerExpose } from "./picker.vue";
 import { useColorStore } from "../../plugins/store/modules/color";
 import HexInput from "./hex-input.vue";
 import draggable from "vuedraggable-es";
-import { DialogPlugin, MessagePlugin } from "tdesign-vue-next";
+import { MessagePlugin } from "tdesign-vue-next";
 import { McgCard } from "../mcg-card";
-import { ColorBarExpose } from "./color-bar.vue";
+import ColorBar, { ColorBarExpose } from "./color-bar.vue";
+import { isHexColor } from "@/utils/color";
+import { TextImport } from "../text-import";
+import { McgPresets } from "../mcg-presets";
+import { useI18n } from "vue-i18n";
 
 const emit = defineEmits<ColorPickerEmit>();
 const colorBarRef = ref<ColorBarExpose>();
 const pickerRef = ref<PickerExpose>();
 const draggableRef = ref<typeof draggable>();
 const colorStore = useColorStore();
+const i18n = useI18n()
+
+const isTextImportDialogVisible = ref<boolean>(false)
+const isMcgPresetsDialogVisible = ref<boolean>(false)
 
 onMounted(() => {
   colorStore.resetSelectColorList();
   colorBarRef.value?.reDraw();
 });
 
-const onHexInputChangeHandler = (item: HexColorString) => {
-  pickerRef.value?.setColor(item);
-  pickerChangeBroadcaster();
+const onHexInputChangeHandler = (hexColor: HexColorString) => {
+  if (colorAssertion(hexColor)) {
+    pickerRef.value?.setColor(hexColor);
+    pickerChangeBroadcaster();
+  }
 };
 
-const onColorCellClickHandler = (item: HexColorString, index: number) => {
-  colorStore.selectedIndex = index;
-  pickerRef.value?.setColor(item);
+const onColorCellClickHandler = (hexColor: HexColorString, index: number) => {
+  if (colorAssertion(hexColor)) {
+    colorStore.selectedIndex = index;
+    pickerRef.value?.setColor(hexColor);
+  }
 };
 
-const onColorCellDeleteHandler = (item: HexColorString, index: number) => {
-  colorStore.pullSelectColorListAt(index);
-  pickerChangeBroadcaster();
+const onColorCellDeleteHandler = (hexColor: HexColorString, index: number) => {
+  if (colorAssertion(hexColor)) {
+    colorStore.pullSelectColorListAt(index);
+    pickerChangeBroadcaster();
+  }
 };
 
 const onAddColorClickHandler = () => {
   if (colorStore.selectColorList.length >= 50) {
-    MessagePlugin.warning({ content: "色彩数量超出阈值", placement: "bottom" });
+    MessagePlugin.warning({ content: i18n.t("picker.color_list_exceed") });
     return;
   }
 
-  colorStore.addSelectColorList();
+  colorStore.appendToSelectColorList();
+  colorStore.selectedIndex = colorStore.selectColorList.length - 1;
   pickerChangeBroadcaster();
 
   nextTick(() => {
@@ -91,12 +115,8 @@ const onAddColorClickHandler = () => {
   });
 };
 
-const onResetClickHandler = () => {
-  colorStore.resetSelectColorList();
-  pickerChangeBroadcaster();
-};
-
-const onDraggableChangeHandler = () => {
+const onDraggableChangeHandler = (event: { moved: { newIndex: number } }) => {
+  colorStore.selectedIndex = event.moved.newIndex;
   pickerChangeBroadcaster();
 };
 
@@ -104,35 +124,50 @@ const onPickerChangeHandler = () => {
   pickerChangeBroadcaster();
 };
 
-const onColorBarSelectHandler = () => {
-  pickerChangeBroadcaster();
-};
+const onColorBarSelectHandler = (colorStopHex: HexColorString) => {
+  if (colorAssertion(colorStore.getCurrentColor)) {
+    colorStore.appendToSelectColorList(colorStopHex);
 
-const onSaveColorsClickHandler = () => {
-  colorStore.setColorsToCacheList();
-  MessagePlugin.success({ content: "已加入色彩列表", placement: "bottom" });
-};
+    colorStore.selectedIndex = colorStore.selectColorList.length - 1;
+    pickerRef.value?.setColor(colorStore.selectColorList[colorStore.selectedIndex]);
 
-const onColorQuickSlotSelectHandler = (item: GradientColorItem) => {
-  if (colorStore.selectColorList === item.colors) {
-    return;
+    setTimeout(() => {
+      const ulElement = draggableRef.value?.$el as HTMLUListElement;
+      if (ulElement) {
+        ulElement.scrollTo({ top: ulElement.scrollHeight, behavior: "smooth", });
+      }
+    }, 100);
+    pickerChangeBroadcaster();
   }
-  colorStore.setSelectColor(item.colors);
-  colorStore.selectedIndex = 0;
-  MessagePlugin.success({ content: "已应用此渐变色", placement: "bottom" });
+};
+
+
+const onResetClickHandler = () => {
+  colorStore.resetSelectColorList();
+  colorStore.setSelectColorIndex(0)
+  pickerRef.value?.setColor(colorStore.getCurrentColor)
   pickerChangeBroadcaster();
 };
 
-const onColorQuickSlotRightClickHandler = (event: PointerEvent, item: GradientColorItem, index: number) => {
-  event.preventDefault();
-  const dialogNode = DialogPlugin.confirm({
-    header: "是否删除此渐变色？",
-    onConfirm: () => {
-      colorStore.pullCacheColorListAt(index);
-      MessagePlugin.success({ content: "已删除此渐变色", placement: "bottom" });
-      dialogNode.hide();
-    },
-  });
+const onTextImportChangeHandler = (hexColors: HexColorString[]) => {
+  colorStore.setSelectColorList(hexColors)
+  pickerChangeBroadcaster();
+}
+
+const onMcgPresetsApplyHandler = (hexColors: HexColorString[]) => {
+  colorStore.setSelectColorList(hexColors)
+  isMcgPresetsDialogVisible.value = false
+  colorStore.setSelectColorIndex(0)
+  pickerRef.value?.setColor(colorStore.getCurrentColor)
+  pickerChangeBroadcaster();
+}
+
+const colorAssertion = (hexColor: HexColorString) => {
+  const flag = isHexColor(hexColor);
+  if (!flag) {
+    MessagePlugin.warning({ content: i18n.t("picker.color_incorrect") });
+  }
+  return flag
 };
 
 const pickerChangeBroadcaster = () => {
@@ -150,56 +185,50 @@ export interface ColorPickerEmit {
 <style lang="scss" scoped>
 .color-picker-wrapper {
   width: 100%;
+  height: 100%;
 
   .color-picker-header {
     width: 100%;
+    height: 30px;
     margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+
+    .colorhex-input {
+      width: 120px;
+      height: 100%;
+      margin-left: 10px;
+    }
   }
 
   .color-picker-body {
     width: 100%;
-    flex: 1;
-    height: 0;
-    padding-bottom: 16px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid #d4d7de;
+    height: 240px;
     display: flex;
-    flex-direction: column;
   }
+}
 
-  .color-picker-footer {
+.color-list-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  .color-operator {
+    height: 28px;
+    margin-top: 12px;
     display: flex;
     align-items: center;
-    height: 50px;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 10px;
 
-    .color-setting {
-      width: 0;
-      flex: 1;
-      margin-right: 20px;
-
-      .color-cube-box {
-        flex-wrap: nowrap;
-        overflow-y: auto;
-        padding: 4px;
-        justify-content: flex-start;
-        @include custom-scrollbar();
-
-        &:deep(.color-cube) {
-          margin-bottom: 0 !important;
-          margin-right: 10px !important;
-        }
-      }
-    }
-
-    .list-setting {
-      margin-left: auto;
-      flex-shrink: 0;
+    .t-button {
+      height: 100%;
     }
   }
 }
 
 .color-list {
-  width: 100%;
+  min-width: 240px;
   height: 100%;
   overflow-y: auto;
   @include custom-scrollbar();
@@ -208,10 +237,10 @@ export interface ColorPickerEmit {
     width: 100%;
     margin-bottom: 10px;
     border-radius: 5px;
-    padding: 10px 10px 10px 20px;
+    padding: 6px 10px 6px 10px;
     @include flex-center;
     transition: all 0.3s;
-    border: 1px solid transparent;
+    border: 1px solid #EEEEEE;
     position: relative;
 
     &.sortable-ghost {
@@ -276,8 +305,8 @@ export interface ColorPickerEmit {
     }
 
     &__cube {
-      width: 35px;
-      height: 35px;
+      width: 25px;
+      height: 25px;
       background-color: var(--color-hex);
       border-radius: 5px;
       cursor: pointer;
@@ -297,13 +326,13 @@ export interface ColorPickerEmit {
     &__delete {
       color: #dfe1e6;
       cursor: pointer;
-      margin-left: auto;
       font-weight: 700;
       font-size: 30px;
       padding-right: 5px;
       transition: color 0.3s;
       user-select: none;
-      margin-left: 15px;
+      margin-left: auto;
+      transform: translateY(-2px);
 
       &:hover {
         color: #17233d;

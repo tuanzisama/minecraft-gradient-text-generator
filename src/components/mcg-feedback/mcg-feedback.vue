@@ -5,12 +5,6 @@
     <t-space direction="vertical" style="width: 100%">
       <div>
         <label class="form-item">
-          <span class="form-item__label">是否喜欢此工具</span>
-          <div class="form-item__content">
-            <t-rate v-model="formData.star" :count="10" />
-          </div>
-        </label>
-        <label class="form-item">
           <span class="form-item__label">意见或建议</span>
           <div class="form-item__content">
             <t-textarea v-model="formData.comment" placeholder="请输入意见或建议" maxlength="500"
@@ -38,7 +32,7 @@ const FEEDBACK_STORAGE_KEY = 'feedback-202406'
 const dialogVisible = ref(false)
 const isLoading = ref(false)
 const formData = ref<{ star: number, comment: string, refer: string, contact: string }>({
-  star: 0,
+  star: 99,
   comment: '',
   refer: '',
   contact: '',

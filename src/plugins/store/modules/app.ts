@@ -1,53 +1,47 @@
 import { defineStore } from "pinia";
-import { KeyOfProcessorMap } from "../../../plugins/processor";
+import { KeyOfAdapterMap, adapterMap } from "../../../plugins/processor";
 
 export interface AppStoreState {
-  processText: string;
+  processTags: RichTagChunk;
   setting: {
-    /**
-     * 移除空格/换行/制表符
-     */
-    clearWhiteSpace: boolean;
     /**
      * 模拟模式
      */
     simulateMode: "default" | "chat";
     format: {
-      bold: boolean;
-      italic: boolean;
-      underlined: boolean;
-      strikethrough: boolean;
       /**
        * 字符模式
        */
       vanillaCharCode: "&" | "§";
     };
-    usingProcessor: KeyOfProcessorMap;
+    usingAdapterKey: KeyOfAdapterMap;
   };
+  previewPip: boolean;
 }
 
 export const useAppStore = defineStore("app", {
   state: (): AppStoreState => ({
-    processText: "",
+    processTags: [],
     setting: {
-      clearWhiteSpace: true,
       simulateMode: "chat",
       format: {
-        bold: false,
-        italic: false,
-        underlined: false,
-        strikethrough: false,
         vanillaCharCode: "&",
       },
-      usingProcessor: "vanilla",
+      usingAdapterKey: "vanilla",
     },
+    previewPip: false,
   }),
-  actions: {
-    switchSimulateMode() {
-      this.setting.simulateMode = this.setting.simulateMode === "chat" ? "default" : "chat";
+  getters: {
+    usingAdapter(state) {
+      return adapterMap.get(state.setting.usingAdapterKey);
     },
-    switchClearWhiteSpace() {
-      this.setting.clearWhiteSpace = !this.setting.clearWhiteSpace;
+  },
+  actions: {
+    setVanillaCharCode(code: AppStoreState["setting"]["format"]["vanillaCharCode"]) {
+      this.setting.format.vanillaCharCode = code;
+    },
+    setSimulateMode(mode: AppStoreState["setting"]["simulateMode"]) {
+      this.setting.simulateMode = mode;
     },
   },
   persist: {

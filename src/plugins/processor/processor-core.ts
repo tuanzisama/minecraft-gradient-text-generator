@@ -1,139 +1,146 @@
-import { genColorGradients, getTextShadowHex } from "@/utils/util";
-import { FormatParams, assertReplace, parseFullyTemplate, parseHTMLTemplate, parseTemplate, parseTemplateToHTML } from "./utils/parser";
+import { genColorGradients, getTextShadowHex } from "@/utils/color";
 
-export abstract class GradientProcessor {
-  protected text: string;
+export abstract class GradientProcessor<T = string> {
+  protected tagChunk: RichTagChunk;
   protected colors: HexColorString[];
-  protected options?: GradientProcessorOptions;
+  protected options?: GradientProcessAdapterOptions;
   protected gradientColors: HexColorString[];
   protected vanillaCharCode: string;
   private className: string;
 
-  constructor(text: string, colors: HexColorString[], options?: GradientProcessorOptions) {
-    this.text = text;
+  constructor(tagChunk: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
+    this.tagChunk = tagChunk;
     this.colors = colors;
     this.options = options;
-    this.gradientColors = genColorGradients(this.colors, this.splitText.length);
+    this.gradientColors = genColorGradients(this.colors, this.rawTextWithoutSpace.length);
     this.vanillaCharCode = this.options?.vanilla?.charCode ?? "&";
-    this.className = this.constructor.name
+    this.className = this.constructor.name;
   }
 
-  get name(): string {
+  public get name(): string {
     return this.className;
   }
 
-  get splitText(): string[] {
-    const $text = this.options?.clearWhiteSpace ? this.text.replace(/\t|\s|\r|\n/g, "") : this.text;
-    return $text.split("");
+  public get tags(): RichTagChunk {
+    return this.tagChunk;
   }
 
-  /**
-   * 单字个体模板
-   */
-  abstract get template(): string;
-
-  /**
-   * 联合模板
-   *
-   * {template}: template#get
-   */
-  get fullyTemplate(): string {
-    return "{template}";
-  }
-
-  get format(): FormatParams {
+  public get format(): FormatPresets {
     return {
       bold: `${this.vanillaCharCode}l`,
       italic: `${this.vanillaCharCode}o`,
       underlined: `${this.vanillaCharCode}n`,
       strikethrough: `${this.vanillaCharCode}m`,
+      obfuscated: `${this.vanillaCharCode}k`,
+      reset: `${this.vanillaCharCode}r`,
     };
   }
 
-  /**
-   * 根据配置处理模板
-   * 在处理模板时，应当使用此方法
-   *
-   * @returns 断言处理后的模板
-   */
-  protected computeTemplate(): string {
-    let _template = this.template;
-    _template = assertReplace(!this.options?.format?.bold, _template, /{bold}|{\/bold}/g);
-    _template = assertReplace(!this.options?.format?.italic, _template, /{italic}|{\/italic}/g);
-    _template = assertReplace(!this.options?.format?.underlined, _template, /{underlined}|{\/underlined}/g);
-    _template = assertReplace(!this.options?.format?.strikethrough, _template, /{strikethrough}|{\/strikethrough}/g);
-    return _template;
+  public get rawText(): string {
+    return this.tagChunk.reduce((prevChunk, chunk, index, list) => {
+      const enterCode = index !== list.length - 1 ? "\n" : "";
+      return prevChunk.concat(chunk.reduce((prev, tag) => `${prev}${tag.text}${enterCode}`, ""));
+    }, "");
+  }
+
+  public get rawTextWithoutSpace(): string {
+    return this.rawText.replace(/\t|\s|\r|\n/g, "");
   }
 
   /**
-   * 根据配置处理模板
-   * 在处理模板时，应当使用此方法
-   *
-   * @returns 断言处理后的模板
+   * 处理器
    */
-  protected computeFullyTemplate(): string {
-    let _template = this.fullyTemplate;
-    _template = assertReplace(!this.options?.format?.bold, _template, /{bold}|{\/bold}/g);
-    _template = assertReplace(!this.options?.format?.italic, _template, /{italic}|{\/italic}/g);
-    _template = assertReplace(!this.options?.format?.underlined, _template, /{underlined}|{\/underlined}/g);
-    _template = assertReplace(!this.options?.format?.strikethrough, _template, /{strikethrough}|{\/strikethrough}/g);
-    return _template;
+  abstract processor(tag: RichTag): T;
+
+  public chunker(): FlattenTag[] {
+    let startIndex = 0;
+    return this.tagChunk.map<FlattenTag>((chunk) => {
+      const result = chunk.reduce<FlattenTag["tags"]>((acc, tag) => {
+        const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
+        const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
+        startIndex = startIndex + length;
+
+        let index = -1;
+        const insideTag = tag.text.split("").map((char) => {
+          if (char.trim() !== "") index += 1;
+          return { char, color: char.trim() === "" ? null : (tagColors?.[index] as HexColorString) };
+        });
+        return acc.concat(insideTag);
+      }, []);
+      let tag: FlattenTag = { tags: result };
+      if (chunk?.[0]?.format) {
+        tag.format = chunk?.[0]?.format;
+      }
+      return tag;
+    });
   }
 
-  /**
-   * 渐变结构
-   */
-  getResult(): ProcessorResultItem[] {
-    const colors = this.gradientColors;
-    return this.splitText.map((char, index) => {
-      const color = colors[index];
-      return {
-        color,
-        char,
-        shadow: getTextShadowHex(color),
-        format: this.options?.format ?? null,
-      };
+  public generate(): T[][] {
+    let startIndex = 0;
+    return this.tagChunk.map<T[]>((chunk) => {
+      const result = chunk.map<T>((tag) => {
+        const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
+        const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
+        startIndex = startIndex + length;
+        tag.colors = tagColors;
+        return this.processor(tag);
+      });
+      return result;
     });
   }
 
   /**
-   * 单字个体处理器
+   * 生成 Minecraft 格式
    */
-  protected charProcessor(char: string, color: HexColorString, template: string, format?: FormatParams): string {
-    return parseTemplate(template, char, color, format);
+  public generateAsString(): string {
+    const result = this.generate();
+    return result.reduce((acc, cur, index, list) => {
+      if (index === list.length - 1) {
+        return acc + cur.join("");
+      }
+      return acc + cur + "\n";
+    }, "");
   }
 
-  public getResultText(): string {
-    const result = this.getResult()
-      .map((item) => this.charProcessor(item.char, item.color, this.computeTemplate(), this.format))
-      .join("");
-    return parseFullyTemplate(this.computeFullyTemplate(), result, { format: this.format });
-  }
+  public generateAsHTML(): string {
+    let startIndex = 0;
+    const doc = document.createElement("p");
+    this.tagChunk.forEach((chunk) => {
+      const chapterEl = document.createElement("p");
 
-  /**
-   * 获取元结果 HTML 类型
-   * @example &#FFFFFF文
-   */
-  public getRenderHTML(): string {
-    return parseTemplateToHTML(this.getResultText());
+      chunk.forEach((tag) => {
+        const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
+        const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
+        startIndex = startIndex + length;
+
+        let colorIndex = 0;
+
+        tag.text.split("").forEach((char) => {
+          const spanEl = document.createElement("span");
+          // class="is-bold is-italic is-underlined is-strikethrough" style="--text-color: #55ffa4; --text-shadow-color: #156a3d;"
+          if (char.trim() !== "") {
+            tag.format?.bold && spanEl.classList.add("is-bold");
+            tag.format?.italic && spanEl.classList.add("is-italic");
+            tag.format?.underlined && spanEl.classList.add("is-underlined");
+            tag.format?.strikethrough && spanEl.classList.add("is-strikethrough");
+
+            const color = tagColors[colorIndex];
+            spanEl.style.setProperty("--text-color", color);
+            spanEl.style.setProperty("--text-shadow-color", getTextShadowHex(color));
+            colorIndex += 1;
+          }
+          spanEl.textContent = char;
+          chapterEl.append(spanEl);
+        });
+
+        doc.append(chapterEl);
+      }, "");
+    }, "");
+
+    return doc.innerHTML;
   }
 }
 
-export interface GradientProcessorConstructor {
-  new (text: string, colors: HexColorString[], options?: GradientProcessorOptions): GradientProcessor;
-}
-
-export interface ProcessorResultItem {
-  color: HexColorString;
-  char: string;
-  /**
-   * 文字阴影
-   */
-  shadow: HexColorString;
-  format: {
-    bold: boolean;
-    italic: boolean;
-    underlined: boolean;
-    strikethrough: boolean;
-  } | null;
+export interface GradientProcessorConstructor<T = string> {
+  new (text: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions): GradientProcessor<T>;
 }
