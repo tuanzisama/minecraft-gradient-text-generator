@@ -1,7 +1,10 @@
 <template>
-  <t-dialog v-model:visible="dialogVisible" header="评价反馈" width="600px" confirm-btn="提交反馈"
-    @confirm="onDialogConfirmHandler()" :confirm-loading="isLoading" :close-on-esc-keydown="false"
-    :close-on-overlay-click="false" destroy-on-close>
+  <t-dialog v-model:visible="dialogVisible" width="600px" confirm-btn="提交反馈" @confirm="onDialogConfirmHandler()"
+    :confirm-loading="isLoading" :close-on-esc-keydown="false" :close-on-overlay-click="false" destroy-on-close>
+    <template #header>
+      <span>评价反馈</span>
+      <span class="feedback-version">{{ FEEDBACK_STORAGE_KEY }}</span>
+    </template>
     <t-space direction="vertical" style="width: 100%">
       <div>
         <label class="form-item">
@@ -12,13 +15,18 @@
           </div>
         </label>
         <label class="form-item">
-          <span class="form-item__label">[可选] 联系方式</span>
+          <span class="form-item__label">联系方式</span>
           <div class="form-item__content">
             <t-input v-model="formData.contact" placeholder="请输入联系方式 (例：QQ:123456 或 mail:abc#example.com)"
               maxlength="255" />
           </div>
         </label>
       </div>
+      <a class="badge-tag qq-group" href="https://qm.qq.com/q/wxxCCGLoHg" target="_blank"
+        title="点击链接加入群聊【Minecraft 渐变颜色生成器】" rel="noopener noreferrer nofollow">
+        <img alt="GitHub Repo stars"
+          src="https://img.shields.io/badge/QQ%E7%BE%A4%20994713939-0099FF?logo=tencent-qq&logoColor=white">
+      </a>
     </t-space>
   </t-dialog>
 </template>
@@ -27,7 +35,7 @@
 import { Button, MessagePlugin, NotificationInstance, NotifyPlugin, Space } from 'tdesign-vue-next';
 import { onMounted, ref } from 'vue';
 
-const FEEDBACK_STORAGE_KEY = 'feedback-202406'
+const FEEDBACK_STORAGE_KEY = 'feedback-202408'
 
 const dialogVisible = ref(false)
 const isLoading = ref(false)
@@ -79,10 +87,10 @@ const popupNotify = async () => {
 }
 
 const onDialogConfirmHandler = () => {
-  if (formData.value.star === 0) {
-    return MessagePlugin.warning("请评分")
-  } else if (formData.value.comment === '') {
+  if (formData.value.comment === '') {
     return MessagePlugin.warning("请填写意见或建议")
+  } else if (formData.value.contact === '') {
+    return MessagePlugin.warning("")
   }
 
   isLoading.value = true;
@@ -130,5 +138,14 @@ const onNeverNotifyClickHandler = (notify: NotificationInstance) => {
     display: inline-block;
     margin-bottom: 5px;
   }
+}
+
+.feedback-version {
+  font-size: 12px;
+  color: #e8e8e8;
+  font-weight: 400;
+  margin-left: 15px;
+  user-select: none;
+  cursor: default;
 }
 </style>
