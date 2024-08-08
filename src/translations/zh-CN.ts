@@ -1,6 +1,6 @@
 export default {
   app: {
-    title: "Minecraft 渐变颜色生成器",
+    title: "Minecraft 渐变文字生成器",
     slogan: "支持超 {count} 款格式 / 混排样式 / 渐变预设",
     // timeago.js all locales: https://github.com/hustcc/timeago.js/tree/master/src/lang
     timeago_locale: "zh-CN",
