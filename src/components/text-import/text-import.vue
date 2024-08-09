@@ -1,6 +1,6 @@
 <template>
   <t-dialog v-model:visible="dialogVisible" :header="$t('picker.import.title')" width="600px"
-    :confirm-btn="$t('picker.import.confirm_button')" :close-btn="$t('common.close')" 
+    :confirm-btn="$t('picker.import.confirm_button')" :cancel-btn="$t('common.close')" 
     @confirm="onDialogConfirmHandler" destroy-on-close>
 
     <div class="dialog-container">
