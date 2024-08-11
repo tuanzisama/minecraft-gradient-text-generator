@@ -2755,11 +2755,6 @@ validator@^13.9.0:
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.11.0.tgz#23ab3fd59290c61248364eabf4067f04955fbb1b"
   integrity sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==
 
-vanilla-caret-js@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/vanilla-caret-js/-/vanilla-caret-js-1.1.0.tgz#851acd7be81998223ce69ae1b62e03f472fa4e90"
-  integrity sha512-vl3R4Xjqb+xnM0gYyg+wcqWGYwKKnkz58Yj29/FQB+w+yP7R8IR1DGoJnDIs05moEZiGlQUTabPMoEtnQNcrpQ==
-
 vite-plugin-package-version@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vite-plugin-package-version/-/vite-plugin-package-version-1.1.0.tgz#7d8088955aa21e4ec93353c98992b3f58c4bf13c"
