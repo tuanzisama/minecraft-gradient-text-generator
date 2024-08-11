@@ -33,24 +33,33 @@
 
 <script lang="ts" setup>
 import { Button, MessagePlugin, NotificationInstance, NotifyPlugin, Space } from 'tdesign-vue-next';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 const FEEDBACK_STORAGE_KEY = 'feedback-202408'
 
 const dialogVisible = ref(false)
 const isLoading = ref(false)
-const formData = ref<{ star: number, comment: string, refer: string, contact: string }>({
+const formData = ref<FeedbackParams>({
   star: 99,
   comment: '',
   refer: '',
   contact: '',
+  version: '',
+  feedbackVersion: '',
 })
+
+const pkgVersion = computed(() => {
+  return import.meta.env.PACKAGE_VERSION;
+});
 
 onMounted(() => {
   const isFeedback = localStorage.getItem(FEEDBACK_STORAGE_KEY) === '1'
   if (!isFeedback) {
     const searchParams = new URLSearchParams(window.location.search);
     formData.value.refer = searchParams.get('ref') ?? searchParams.get('refer') ?? ''
+
+    formData.value.feedbackVersion = FEEDBACK_STORAGE_KEY
+    formData.value.version = pkgVersion.value
     popupNotify()
   }
 })
@@ -89,10 +98,9 @@ const popupNotify = async () => {
 const onDialogConfirmHandler = () => {
   if (formData.value.comment === '') {
     return MessagePlugin.warning("请填写意见或建议")
-  } else if (formData.value.contact === '') {
-    return MessagePlugin.warning("")
   }
 
+  console.info(JSON.stringify(formData.value));
   isLoading.value = true;
   fetch('https://api.mcg.tuanzi.ink/feedback', {
     method: 'PUT',
@@ -118,9 +126,19 @@ const onDialogConfirmHandler = () => {
 }
 
 const onNeverNotifyClickHandler = (notify: NotificationInstance) => {
-  MessagePlugin.info("本次问卷将不再提示 😪")
+  MessagePlugin.info("本期问卷将不再提示 😪")
   localStorage.setItem(FEEDBACK_STORAGE_KEY, "1")
   notify.close()
+}
+</script>
+<script lang="ts">
+interface FeedbackParams {
+  star: number
+  comment: string
+  refer: string
+  contact: string
+  version: string
+  feedbackVersion: string
 }
 </script>
 
