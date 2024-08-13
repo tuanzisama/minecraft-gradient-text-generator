@@ -144,6 +144,7 @@ export default {
       download: "Download",
       preview: "Preview",
       preview_pip: "Preview by Picture-in-Picture",
+      share: "Share",
     },
   },
   output: {

@@ -43,6 +43,12 @@ const toolbars = reactive<ToolBarItem[]>([
     render: (item: ToolBarItem) => h("span", { class: "vanilla-char-code" }, item.isActive ? "§" : "&"),
   },
   {
+    key: ToolBarModule.SHARE,
+    label: "processor.toolbar.share",
+    isActive: false,
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "share_windows"),
+  },
+  {
     key: ToolBarModule.PREVIEW,
     label: "processor.toolbar.preview",
     isActive: true,
@@ -102,6 +108,9 @@ const onToolbarItemClickHandler = async (item: ToolBarItem) => {
       item.isActive = !item.isActive
       appStore.setSimulateMode(item.isActive ? "chat" : "default")
       break;
+    case "share":
+      copyAdapterURL()
+      break;
     case "preview_pip":
       if (item.isActive) {
         item.isActive = false
@@ -138,6 +147,20 @@ const copyProcessText = () => {
       console.error(err);
     });
 };
+
+const copyAdapterURL = () => {
+  const url = new URL(location.href)
+  if (appStore.setting.usingAdapterKey) {
+    url.searchParams.set("adapter", appStore.setting.usingAdapterKey)
+  }
+  navigator.clipboard
+    .writeText(url.toString())
+    .then(() => MessagePlugin.success({ content: i18n.t("output.copy_success") }))
+    .catch((err) => {
+      MessagePlugin.error({ content: i18n.t("output.copy_failed") });
+      console.error(err);
+    });
+}
 
 const toggleDisplay = (key: ToolBarModule, flag?: boolean) => {
   const tool = toolbars.find((el) => el.key === key);
@@ -178,6 +201,7 @@ defineExpose<ToolBarExpose>({ toggleDisplay });
 
 <script lang="ts">
 export enum ToolBarModule {
+  SHARE = "share",
   VANILLA_CHAR_CODE = "vanillaCharCode",
   COPY = "copy",
   DOWNLOAD = "download",

@@ -29,8 +29,8 @@ import { TextInput } from "./components/text-input";
 import { TextOutput } from "./components/text-output";
 import { McgFeedback } from './components/mcg-feedback'
 import { TextOutputExpose } from "./components/text-output/text-output.vue";
-import { NotificationInstance } from "tdesign-vue-next";
 import { useI18n } from "vue-i18n";
+import { adapterMapKey, KeyOfAdapterMap } from "./plugins/processor";
 
 const appStore = useAppStore();
 const i18n = useI18n()
@@ -38,10 +38,19 @@ const textOutputRef = ref<TextOutputExpose>();
 
 onMounted(() => {
   document.title = i18n.t("app.title")
+  detectSearchParamAdapter()
 })
 
-const onContactAuthorClickHandler = (notify: NotificationInstance) => {
-  window.open('https://github.com/tuanzisama/minecraft-gradient-text-generator', "_blank")
+const detectSearchParamAdapter = () => {
+  const params = new URLSearchParams(location.search);
+  const adapter = params.get('adapter') as KeyOfAdapterMap;
+  if (adapter && adapterMapKey.includes(adapter)) {
+    appStore.setting.usingAdapterKey = adapter
+
+    const url = new URL(location.href)
+    url.searchParams.delete("adapter")
+    history.pushState(null, '', url);
+  }
 }
 
 const onTextInputChangeHandler = (val: RichTagChunk) => {

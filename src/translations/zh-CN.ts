@@ -141,6 +141,7 @@ export default {
       download: "下载",
       preview: "预览",
       preview_pip: "新窗口预览",
+      share: "分享",
     },
   },
   output: {

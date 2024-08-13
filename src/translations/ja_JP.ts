@@ -146,6 +146,7 @@ export default {
       download: "ダウンロード",
       preview: "プレビュー",
       preview_pip: "ピクチャ・イン・ピクチャ",
+      share: "共有",
     },
   },
   output: {
