@@ -52,27 +52,31 @@ export abstract class GradientProcessor<T = string> {
    */
   abstract processor(tag: RichTag): T;
 
-  public chunker(): FlattenTag[] {
+  public chunker(): FlattenTag[][][] {
     let startIndex = 0;
-    return this.tagChunk.map<FlattenTag>((chunk) => {
-      const result = chunk.reduce<FlattenTag["tags"]>((acc, tag) => {
-        const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
+
+    return this.tagChunk.reduce<FlattenTag[][][]>((acc, chapter) => {
+      // chapter
+      const result = chapter.map<FlattenTag[]>((richTag) => {
+        const length = richTag.text.replace(/\t|\s|\r|\n/g, "").length;
         const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
         startIndex = startIndex + length;
 
         let index = -1;
-        const insideTag = tag.text.split("").map((char) => {
+        const insideTag = richTag.text.split("").map((char) => {
           if (char.trim() !== "") index += 1;
-          return { char, color: char.trim() === "" ? null : (tagColors?.[index] as HexColorString) };
+
+          const tag: FlattenTag = { char, color: char.trim() === "" ? null : (tagColors?.[index] as HexColorString) };
+          if (richTag.format) tag.format = richTag.format;
+
+          return tag;
         });
-        return acc.concat(insideTag);
-      }, []);
-      let tag: FlattenTag = { tags: result };
-      if (chunk?.[0]?.format) {
-        tag.format = chunk?.[0]?.format;
-      }
-      return tag;
-    });
+
+        return insideTag;
+      });
+
+      return acc.concat([result]);
+    }, []);
   }
 
   public generate(): T[][] {
