@@ -175,7 +175,11 @@ interface NodeRecursionRecord {
     margin-bottom: 10px;
     @include custom-scrollbar();
     overflow-y: auto;
-    overflow-x: hidden;
+
+    &:deep(.codex-editor) {
+      width: calc(100% - 5px);
+      height: 100%;
+    }
   }
 
   &__toolbar {
