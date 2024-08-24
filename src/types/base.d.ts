@@ -37,35 +37,48 @@ type RichFormats = "reset" | "obfuscated";
 type FormatPresets = Record<Formats | RichFormats, FormatExpression>;
 type FormatExpression = string | [string, string];
 
-interface RichTag {
-  text: string;
-  /**
-   * Each color is character of the `text` field.
-   * **ignore empty space.**
-   */
-  colors?: HexColorString[];
-  format?: {
-    [x in Formats]: boolean;
-  };
-}
-
-type RichTagChunk = RichTag[][];
-
 interface GradientPresetsRecord extends BaseGradientPresets {
   createTime: Date | null;
   isLocked?: boolean;
-}
-
-interface FlattenTag {
-  char: string;
-  /**
-   * This value may be null because it is a space.
-   */
-  color: HexColorString | null;
-  format?: RichTag["format"];
 }
 
 interface BaseGradientPresets {
   name: string;
   colors: HexColorString[];
 }
+
+type TagFormat = {
+  [x in Formats]: boolean;
+};
+
+/**
+ * Unprocessed tags.
+ */
+interface RichTag {
+  text: string;
+  format?: TagFormat;
+}
+type RichTagChunk = RichTag[][];
+
+/**
+ * Processed tags.
+ * Tag > Chunk > Chapter
+ */
+interface Tag {
+  character: string;
+  /**
+   * This value may be null because it is a space.
+   */
+  color: HexColorString | null;
+}
+
+type Chunk = {
+  tags: Tag[];
+  /**
+   * All tags will be inherit this formats.
+   */
+  format: TagFormat;
+};
+
+type Chunks = Chunk[];
+type Chapters = Chunks[];

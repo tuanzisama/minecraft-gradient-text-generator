@@ -5,21 +5,14 @@ class CSVAdapterClazz extends GradientProcessor {
     super(tags, colors, options);
   }
 
-  processor(tag: RichTag): string {
-    let index = 0;
-    const result = tag.text.split("").map((char) => {
-      let color: FormatExpression = "";
-      if (char.trim() !== "") {
-        color = tag.colors?.[index] ?? "";
-        index += 1;
-      }
+  processor(chunk: Chunk): string {
+    const bold = !!chunk.format?.bold;
+    const italic = !!chunk.format?.italic;
+    const underlined = !!chunk.format?.underlined;
+    const strikethrough = !!chunk.format?.strikethrough;
 
-      const bold = !!tag.format?.bold;
-      const italic = !!tag.format?.italic;
-      const underlined = !!tag.format?.underlined;
-      const strikethrough = !!tag.format?.strikethrough;
-
-      return [color, char, bold, italic, underlined, strikethrough].join(",");
+    const result = chunk.tags.map((tag) => {
+      return [tag.color, tag.character, bold, italic, underlined, strikethrough].join(",");
     });
 
     return result.join("\n");

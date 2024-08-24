@@ -17,21 +17,17 @@ class HTMLAdapterClazz extends GradientProcessor {
     };
   }
 
-  processor(tag: RichTag): string {
+  processor(chunk: Chunk): string {
     const textBuilder = new TextBuilder();
-    textBuilder.withFormat(tag.format?.bold, this.format.bold);
-    textBuilder.withFormat(tag.format?.italic, this.format.italic);
-    textBuilder.withFormat(tag.format?.underlined, this.format.underlined);
-    textBuilder.withFormat(tag.format?.strikethrough, this.format.strikethrough);
+    textBuilder.withFormat(chunk.format?.bold, this.format.bold);
+    textBuilder.withFormat(chunk.format?.italic, this.format.italic);
+    textBuilder.withFormat(chunk.format?.underlined, this.format.underlined);
+    textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
 
-    let index = 0;
-    tag.text.split("").forEach((char) => {
-      let color: FormatExpression = "";
-      if (char.trim() !== "") {
-        color = [`<span style="color: ${tag.colors?.[index]};">`, "</span>"];
-        index += 1;
-      }
-      textBuilder.appendCharacter(new CharacterBuilder(char.trim() === "" ? "&nbsp;" : char).withColor(color));
+    chunk.tags.forEach((tag) => {
+      textBuilder.appendCharacter(
+        new CharacterBuilder(tag.character.trim() === "" ? "&nbsp;" : tag.character).withColor([`<span style="color: ${tag.color};">`, "</span>"])
+      );
     });
 
     return textBuilder.build();

@@ -76,11 +76,11 @@ onMounted(() => {
     onChange: async (api) => {
       const { blocks } = await api.saver.save();
 
-      const tags = blocks.map<RichTag[]>((block) => {
+      const richTagChunk = blocks.map<RichTag[]>((block) => {
         const parser = new DOMParser()
         const doc = parser.parseFromString(block.data.text, "text/html")
 
-        const result = Object.values(doc.body.childNodes).reduce((acc, node) => {
+        const nodes = Object.values(doc.body.childNodes).reduce((acc, node) => {
           if (node.nodeType === 3) {
             return acc.concat({ textNode: node, parentNodes: [] });
           } else {
@@ -88,22 +88,21 @@ onMounted(() => {
           }
         }, [] as NodeRecursionRecord[]);
 
-        const _tags = result.map<RichTag>(record => {
-          const tag = {
-            text: record.textNode?.textContent ?? '',
-          } as RichTag
+        const chunks = nodes.map<RichTag>(record => {
+          const textContent = record.textNode?.textContent;
+          let richTag = { text: textContent } as RichTag
 
           const format = nodeNameParser(record.parentNodes);
-          if (!isEmpty(format)) tag.format = format
+          if (!isEmpty(format)) richTag.format = format
 
-          return tag;
+          return richTag;
         })
 
-        return _tags
+        return chunks
       })
 
-      privateValue.value = tags
-      emit('on-change', tags)
+      privateValue.value = richTagChunk
+      emit('on-change', richTagChunk)
     }
   })
   editorInstance.value = instance

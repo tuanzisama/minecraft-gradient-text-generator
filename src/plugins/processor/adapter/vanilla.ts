@@ -6,21 +6,21 @@ class VanillaAdapterClazz extends GradientProcessor {
     super(tags, colors, options);
   }
 
-  processor(tag: RichTag): string {
+  processor(chunk: Chunk): string {
     const textBuilder = new TextBuilder();
-    textBuilder.withFormat(tag.format?.bold, this.format.bold);
-    textBuilder.withFormat(tag.format?.italic, this.format.italic);
-    textBuilder.withFormat(tag.format?.underlined, this.format.underlined);
-    textBuilder.withFormat(tag.format?.strikethrough, this.format.strikethrough);
+    textBuilder.withFormat(chunk.format?.bold, this.format.bold);
+    textBuilder.withFormat(chunk.format?.italic, this.format.italic);
+    textBuilder.withFormat(chunk.format?.underlined, this.format.underlined);
+    textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
 
-    let index = 0;
-    tag.text.split("").forEach((char) => {
-      let color = "";
-      if (char.trim() !== "") {
-        color = `${this.vanillaCharCode}${tag.colors?.[index]}`;
-        index += 1;
+    chunk.tags.forEach((tag) => {
+      const characterBuilder = new CharacterBuilder(tag.character);
+
+      if (tag.character !== "") {
+        characterBuilder.withColor(this.vanillaCharCode + tag.color);
       }
-      textBuilder.appendCharacter(new CharacterBuilder(char).withColor(color));
+
+      textBuilder.appendCharacter(characterBuilder);
     });
 
     return textBuilder.build();

@@ -20,27 +20,24 @@ class MotdAdapterClazz extends GradientProcessor {
     };
   }
 
-  processor(tag: RichTag): string {
+  processor(chunk: Chunk): string {
     const textBuilder = new TextBuilder();
-    textBuilder.withFormat(tag.format?.bold, this.format.bold);
-    textBuilder.withFormat(tag.format?.italic, this.format.italic);
-    textBuilder.withFormat(tag.format?.underlined, this.format.underlined);
-    textBuilder.withFormat(tag.format?.strikethrough, this.format.strikethrough);
+    textBuilder.withFormat(chunk.format?.bold, this.format.bold);
+    textBuilder.withFormat(chunk.format?.italic, this.format.italic);
+    textBuilder.withFormat(chunk.format?.underlined, this.format.underlined);
+    textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
 
-    let index = 0;
-    tag.text.split("").forEach((char) => {
-      let color = "";
+    chunk.tags.forEach((tag) => {
+      let color = tag.color as string | null;
 
-      const charBuilder = new CharacterBuilder(char);
-      if (char.trim() !== "") {
-        color = (tag.colors?.[index] ?? "")
-          .slice(1)
+      if (color !== null) {
+        color = (color as HexColorString)
+          .replace("#", "")
           .split("")
-          .reduce((acc, cur) => `${acc}${this.charCode}${cur}`, "");
-        index += 1;
-        charBuilder.withColor(`${this.charCode}x${color}`);
+          .reduce((acc, char) => `${acc}${this.charCode}${char}`, "") as string;
       }
-      textBuilder.appendCharacter(charBuilder);
+
+      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(`${this.charCode}x${color}`));
     });
 
     return textBuilder.build();

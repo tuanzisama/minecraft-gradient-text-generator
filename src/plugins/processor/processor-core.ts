@@ -1,15 +1,15 @@
 import { genColorGradients, getTextShadowHex } from "@/utils/color";
 
 export abstract class GradientProcessor<T = string> {
-  protected tagChunk: RichTagChunk;
+  protected richTagChunk: RichTagChunk;
   protected colors: HexColorString[];
   protected options?: GradientProcessAdapterOptions;
   protected gradientColors: HexColorString[];
   protected vanillaCharCode: string;
   private className: string;
 
-  constructor(tagChunk: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
-    this.tagChunk = tagChunk;
+  constructor(richTagChunk: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
+    this.richTagChunk = richTagChunk;
     this.colors = colors;
     this.options = options;
     this.gradientColors = genColorGradients(this.colors, this.rawTextWithoutSpace.length);
@@ -19,10 +19,6 @@ export abstract class GradientProcessor<T = string> {
 
   public get name(): string {
     return this.className;
-  }
-
-  public get tags(): RichTagChunk {
-    return this.tagChunk;
   }
 
   public get format(): FormatPresets {
@@ -37,7 +33,7 @@ export abstract class GradientProcessor<T = string> {
   }
 
   public get rawText(): string {
-    return this.tagChunk.reduce((prevChunk, chunk, index, list) => {
+    return this.richTagChunk.reduce((prevChunk, chunk, index, list) => {
       const enterCode = index !== list.length - 1 ? "\n" : "";
       return prevChunk.concat(chunk.reduce((prev, tag) => `${prev}${tag.text}${enterCode}`, ""));
     }, "");
@@ -48,46 +44,43 @@ export abstract class GradientProcessor<T = string> {
   }
 
   /**
-   * 处理器
+   * the processor.
    */
-  abstract processor(tag: RichTag): T;
+  abstract processor(tag: Chunk): T;
 
-  public chunker(): FlattenTag[][][] {
+  public get chapters(): Chapters {
     let startIndex = 0;
 
-    return this.tagChunk.reduce<FlattenTag[][][]>((acc, chapter) => {
-      // chapter
-      const result = chapter.map<FlattenTag[]>((richTag) => {
+    const chapters = this.richTagChunk.map<Chunks>((chapter) => {
+      const chunks = chapter.map<Chunk>((richTag) => {
         const length = richTag.text.replace(/\t|\s|\r|\n/g, "").length;
         const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
         startIndex = startIndex + length;
 
         let index = -1;
-        const insideTag = richTag.text.split("").map((char) => {
-          if (char.trim() !== "") index += 1;
+        const tags = richTag.text.split("").map((character) => {
+          if (character.trim() !== "") index += 1;
 
-          const tag: FlattenTag = { char, color: char.trim() === "" ? null : (tagColors?.[index] as HexColorString) };
-          if (richTag.format) tag.format = richTag.format;
-
+          const tag: Tag = {
+            character,
+            color: character.trim() === "" ? null : (tagColors?.[index] as HexColorString),
+          };
           return tag;
         });
 
-        return insideTag;
+        const chunk = { tags } as Chunk;
+        if (richTag.format) chunk.format = richTag.format;
+        return chunk;
       });
-
-      return acc.concat([result]);
-    }, []);
+      return chunks;
+    });
+    return chapters;
   }
 
   public generate(): T[][] {
-    let startIndex = 0;
-    return this.tagChunk.map<T[]>((chunk) => {
-      const result = chunk.map<T>((tag) => {
-        const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
-        const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
-        startIndex = startIndex + length;
-        tag.colors = tagColors;
-        return this.processor(tag);
+    return this.chapters.map<T[]>((chunks) => {
+      const result = chunks.map<T>((chunk) => {
+        return this.processor(chunk);
       });
       return result;
     });
@@ -108,39 +101,32 @@ export abstract class GradientProcessor<T = string> {
 
   public generateAsHTML(): string {
     let startIndex = 0;
+
     const doc = document.createElement("p");
-    this.tagChunk.forEach((chunk) => {
+    this.chapters.forEach((chunks) => {
       const chapterEl = document.createElement("p");
 
-      chunk.forEach((tag) => {
-        const length = tag.text.replace(/\t|\s|\r|\n/g, "").length;
-        const tagColors = this.gradientColors.slice(startIndex, startIndex + length);
-        startIndex = startIndex + length;
-
-        let colorIndex = 0;
-
-        tag.text.split("").forEach((char) => {
+      chunks.forEach((chunk) => {
+        chunk.tags.forEach((tag) => {
           const spanEl = document.createElement("span");
           // class="is-bold is-italic is-underlined is-strikethrough" style="--text-color: #55ffa4; --text-shadow-color: #156a3d;"
-          if (char.trim() !== "") {
-            tag.format?.bold && spanEl.classList.add("is-bold");
-            tag.format?.italic && spanEl.classList.add("is-italic");
-            tag.format?.underlined && spanEl.classList.add("is-underlined");
-            tag.format?.strikethrough && spanEl.classList.add("is-strikethrough");
+          if (tag.character.trim() !== "") {
+            chunk.format?.bold && spanEl.classList.add("is-bold");
+            chunk.format?.italic && spanEl.classList.add("is-italic");
+            chunk.format?.underlined && spanEl.classList.add("is-underlined");
+            chunk.format?.strikethrough && spanEl.classList.add("is-strikethrough");
 
-            const color = tagColors[colorIndex];
-            spanEl.style.setProperty("--text-color", color);
-            spanEl.style.setProperty("--text-shadow-color", getTextShadowHex(color));
-            colorIndex += 1;
+            spanEl.style.setProperty("--text-color", tag.color);
+            spanEl.style.setProperty("--text-shadow-color", getTextShadowHex(tag.color as HexColorString));
           }
-          spanEl.textContent = char;
+
+          spanEl.textContent = tag.character;
           chapterEl.append(spanEl);
         });
 
         doc.append(chapterEl);
       }, "");
     }, "");
-
     return doc.innerHTML;
   }
 }

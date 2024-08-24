@@ -17,19 +17,27 @@ class MiniMessageGradientAdapterClazz extends GradientProcessor {
     };
   }
 
-  processor(tag: RichTag): string {
+  processor(chunk: Chunk): string {
     const textBuilder = new TextBuilder();
-    textBuilder.withFormat(tag.format?.bold, this.format.bold);
-    textBuilder.withFormat(tag.format?.italic, this.format.italic);
-    textBuilder.withFormat(tag.format?.underlined, this.format.underlined);
-    textBuilder.withFormat(tag.format?.strikethrough, this.format.strikethrough);
+    textBuilder.withFormat(chunk.format?.bold, this.format.bold);
+    textBuilder.withFormat(chunk.format?.italic, this.format.italic);
+    textBuilder.withFormat(chunk.format?.underlined, this.format.underlined);
+    textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
 
-    const colors = tag.colors?.join(":") ?? "";
+    const colors: HexColorString[] = [];
+    const texts: string[] = [];
 
-    const characterBuilder = new CharacterBuilder(tag.text);
+    chunk.tags.forEach((tag) => {
+      if (tag.color !== null) {
+        colors.push(tag.color);
+      }
+      texts.push(tag.character);
+    });
 
-    if (tag.colors?.length === 1) {
-      textBuilder.appendCharacter(characterBuilder.withColor(`<${colors}>`));
+    const characterBuilder = new CharacterBuilder(texts.join(""));
+
+    if (colors.length === 1) {
+      textBuilder.appendCharacter(characterBuilder.withColor(`<${colors.join(":")}>`));
       return textBuilder.build();
     }
 

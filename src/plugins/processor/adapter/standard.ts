@@ -1,3 +1,4 @@
+import { CharacterBuilder, TextBuilder } from "../builder/text";
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
 class StandardAdapterClazz extends GradientProcessor {
@@ -5,16 +6,20 @@ class StandardAdapterClazz extends GradientProcessor {
     super(tags, colors, options);
   }
 
-  processor(tag: RichTag): string {
-    let index = 0;
-    return tag.text.split("").reduce((acc, char) => {
-      let color = "";
-      if (char.trim() !== "") {
-        color = tag.colors?.[index] ?? "";
-        index += 1;
+  processor(chunk: Chunk): string {
+    const textBuilder = new TextBuilder();
+
+    chunk.tags.forEach((tag) => {
+      const characterBuilder = new CharacterBuilder(tag.character);
+
+      if (tag.character !== "") {
+        characterBuilder.withColor(tag.color as HexColorString);
       }
-      return `${acc}${color}${char}`;
-    }, "");
+
+      textBuilder.appendCharacter(characterBuilder);
+    });
+
+    return textBuilder.build();
   }
 }
 

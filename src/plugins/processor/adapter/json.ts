@@ -5,14 +5,13 @@ class StringifiedNBTAdapterClazz extends GradientProcessor<JSONRecord[]> {
     super(tags, colors, options);
   }
 
-  processor(tag: RichTag): JSONRecord[] {
-    let index = 0;
-    const list = tag.text.split("").map<JSONRecord>((char) => {
-      let obj: Partial<JSONRecord> = { text: char, ...tag.format };
-      if (char.trim() !== "") {
-        obj.color = tag.colors?.[index] as HexColorString;
-        index += 1;
+  processor(chunk: Chunk): JSONRecord[] {
+    const list = chunk.tags.map<JSONRecord>((tag) => {
+      let obj: Partial<JSONRecord> = { text: tag.character, ...chunk.format };
+      if (tag.character.trim() !== "") {
+        obj.color = tag.color as string;
       }
+
       return obj as JSONRecord;
     });
     return list;

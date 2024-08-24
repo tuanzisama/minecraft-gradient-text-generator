@@ -2,20 +2,20 @@
   <div class="preview-box-wrapper" ref="previewBoxRef">
     <div class="preview-box">
       <div class="content">
-        <p v-for="(chapter, chapterIndex) in chunker" :key="chapterIndex">
+        <p v-for="(chapter, chapterIndex) in chapters" :key="chapterIndex">
           <template v-for="(words, wordsIndex) in chapter" :key="wordsIndex">
-            <template v-for="(word, wordIndex) in words" :key="wordIndex">
+            <template v-for="(word, wordIndex) in words.tags" :key="wordIndex">
               <span :style="{
                 '--text-color': word.color as string,
                 '--text-shadow-color': getTextShadowHex(word.color as HexColorString),
               }" :class="{
-                'is-bold': word.format?.bold,
-                'is-italic': word.format?.italic,
-                'is-underlined': word.format?.underlined,
-                'is-strikethrough': word.format?.strikethrough,
-                'is-space': word.char.trim() === '',
+                'is-bold': words.format?.bold,
+                'is-italic': words.format?.italic,
+                'is-underlined': words.format?.underlined,
+                'is-strikethrough': words.format?.strikethrough,
+                'is-space': word.character.trim() === '',
               }">
-                {{ word.char.trim() === '' ? '&nbsp;' : word.char }}
+                {{ word.character.trim() === '' ? '&nbsp;' : word.character }}
               </span>
             </template>
           </template>
@@ -32,8 +32,8 @@ import { useTextStore } from "../../plugins/store/modules/text";
 
 const textStore = useTextStore()
 
-const chunker = computed(() => {
-  return textStore.adapter?.chunker() ?? []
+const chapters = computed(() => {
+  return textStore.adapter?.chapters ?? []
 })
 </script>
 
