@@ -32,13 +32,13 @@ export class TextBuilder {
 
 export class CharacterBuilder {
   public character: string;
-  public colorExpression!: FormatExpression;
+  public colorExpression: FormatExpression | null = null;
 
   constructor(character: string) {
     this.character = character;
   }
 
-  public withColor(colorExpression: FormatExpression) {
+  public withColor(colorExpression: FormatExpression | null) {
     this.colorExpression = colorExpression;
     return this;
   }

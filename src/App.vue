@@ -17,6 +17,7 @@
     <mcg-footer />
   </div>
   <mcg-feedback />
+  <mcg-guide />
 </template>
 
 <script lang="ts" setup>
@@ -28,6 +29,7 @@ import { McgHeader, McgFooter, McgBody } from "./components/mcg-layout";
 import { TextInput } from "./components/text-input";
 import { TextOutput } from "./components/text-output";
 import { McgFeedback } from './components/mcg-feedback'
+import { McgGuide } from './components/mcg-guide'
 import { TextOutputExpose } from "./components/text-output/text-output.vue";
 import { useI18n } from "vue-i18n";
 import { adapterMapKey, KeyOfAdapterMap } from "./plugins/processor";

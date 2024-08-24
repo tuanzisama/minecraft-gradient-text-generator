@@ -156,4 +156,19 @@ export default {
     download_success: "エクスポート成功",
     download_failed: "エクスポートに失敗しました。開発者に連絡してください",
   },
+  guide: {
+    previous_button: "前へ",
+    next_button: "次へ",
+    finish_button: "終了",
+    intro: {
+      title: "ようこそ {app_title} へ",
+      summary: "次へをクリックしてユーザーガイドを表示します",
+    },
+    step1: {
+      title: "文字にスタイルを設定するには？",
+    },
+    step2: {
+      title: "おしゃれなスタイルをどう使えばいいの？",
+    },
+  },
 };

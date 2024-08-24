@@ -154,4 +154,19 @@ export default {
     download_success: "Export successful.",
     download_failed: "Export failed. Try to contact the developer.",
   },
+  guide: {
+    previous_button: "Previous",
+    next_button: "Next",
+    finish_button: "Done",
+    intro: {
+      title: "Welcome to {app_title}",
+      summary: "Click Next to view the user guide.",
+    },
+    step1: {
+      title: "How to format text?",
+    },
+    step2: {
+      title: "How should I use those nice styles?",
+    },
+  },
 };

@@ -151,4 +151,19 @@ export default {
     download_success: "导出成功",
     download_failed: "导出失败，请联系开发者",
   },
+  guide: {
+    previous_button: "上一步",
+    next_button: "下一步",
+    finish_button: "完成",
+    intro: {
+      title: "欢迎使用 {app_title}",
+      summary: "点按下一步查看用户引导",
+    },
+    step1: {
+      title: "如何为文字设置样式？",
+    },
+    step2: {
+      title: "那些好看的样式我该怎么用？",
+    },
+  },
 };
