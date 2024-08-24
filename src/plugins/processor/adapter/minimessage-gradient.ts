@@ -37,7 +37,7 @@ class MiniMessageGradientAdapterClazz extends GradientProcessor {
     const characterBuilder = new CharacterBuilder(texts.join(""));
 
     if (colors.length === 1) {
-      textBuilder.appendCharacter(characterBuilder.withColor(`<${colors.join(":")}>`));
+      textBuilder.appendCharacter(characterBuilder.withColor(colors.join(":"), `<{color}>`));
       return textBuilder.build();
     }
 

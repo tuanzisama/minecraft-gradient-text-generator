@@ -37,7 +37,7 @@ class MotdAdapterClazz extends GradientProcessor {
           .reduce((acc, char) => `${acc}${this.charCode}${char}`, "") as string;
       }
 
-      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(`${this.charCode}x${color}`));
+      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(color, `${this.charCode}x{color}`));
     });
 
     return textBuilder.build();

@@ -26,7 +26,10 @@ class HTMLAdapterClazz extends GradientProcessor {
 
     chunk.tags.forEach((tag) => {
       textBuilder.appendCharacter(
-        new CharacterBuilder(tag.character.trim() === "" ? "&nbsp;" : tag.character).withColor([`<span style="color: ${tag.color};">`, "</span>"])
+        new CharacterBuilder(tag.character.trim() === "" ? "&nbsp;" : tag.character).withColor(tag.color, [
+          `<span style="color: {color};">`,
+          "</span>",
+        ])
       );
     });
 

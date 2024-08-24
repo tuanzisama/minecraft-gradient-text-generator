@@ -32,24 +32,39 @@ export class TextBuilder {
 
 export class CharacterBuilder {
   public character: string;
-  public colorExpression: FormatExpression | null = null;
+  public colorExpression!: FormatExpression;
+  public colorValue!: string | HexColorString | null;
 
   constructor(character: string) {
     this.character = character;
   }
 
-  public withColor(colorExpression: FormatExpression | null) {
+  public withColor(value: string | HexColorString | null, colorExpression: FormatExpression = "{color}") {
     this.colorExpression = colorExpression;
+    this.colorValue = value;
     return this;
   }
 
   public build(template: string) {
     const char = template.replace("{text}", this.character);
-    if (Array.isArray(this.colorExpression)) {
-      return `${this.colorExpression[0]}${char}${this.colorExpression[1]}`;
-    } else if (!isEmpty(this.colorExpression)) {
-      return this.colorExpression + char;
+
+    if (this.colorValue !== null) {
+      const expression = this.colorConvert();
+
+      if (Array.isArray(expression)) {
+        return `${expression[0]}${char}${expression[1]}`;
+      } else {
+        return expression + char;
+      }
     }
     return char;
+  }
+
+  private colorConvert() {
+    if (Array.isArray(this.colorExpression)) {
+      return this.colorExpression.map((exp) => exp.replace("{color}", this.colorValue as string));
+    } else {
+      return this.colorExpression.replace("{color}", this.colorValue as string);
+    }
   }
 }

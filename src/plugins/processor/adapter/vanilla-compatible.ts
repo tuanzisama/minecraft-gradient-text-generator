@@ -23,7 +23,7 @@ class VanillaCompatibleAdapterClazz extends GradientProcessor {
           .reduce((acc, char) => `${acc}${this.vanillaCharCode}${char}`, "") as string;
       }
 
-      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(`${this.vanillaCharCode}x${color}`));
+      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(color, `${this.vanillaCharCode}x{color}`));
     });
 
     return textBuilder.build();

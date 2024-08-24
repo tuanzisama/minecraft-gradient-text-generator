@@ -1,6 +1,8 @@
 declare module "@editorjs/underline";
 declare module "@sotaproject/strikethrough";
 
+type ContainsString<T extends string> = `${string}${T}${string}`;
+
 /**
  * Representation of color in Hex format.
  */
@@ -35,7 +37,7 @@ interface GradientProcessAdapterOptions {
 type Formats = "bold" | "italic" | "underlined" | "strikethrough";
 type RichFormats = "reset" | "obfuscated";
 type FormatPresets = Record<Formats | RichFormats, FormatExpression>;
-type FormatExpression = string | [string, string];
+type FormatExpression = ContainsString<"{color}"> | string | [string, string];
 
 interface GradientPresetsRecord extends BaseGradientPresets {
   createTime: Date | null;

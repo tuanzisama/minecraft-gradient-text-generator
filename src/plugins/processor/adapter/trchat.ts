@@ -14,7 +14,7 @@ class TrChatAdapterClazz extends GradientProcessor {
     textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
 
     chunk.tags.forEach((tag) => {
-      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(`&{${tag.color}}`));
+      textBuilder.appendCharacter(new CharacterBuilder(tag.character).withColor(tag.color, `&{{color}}`));
     });
 
     return textBuilder.build();

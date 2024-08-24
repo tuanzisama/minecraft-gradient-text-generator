@@ -17,7 +17,7 @@ class VanillaAdapterClazz extends GradientProcessor {
       const characterBuilder = new CharacterBuilder(tag.character);
 
       if (tag.character !== "") {
-        characterBuilder.withColor(this.vanillaCharCode + tag.color);
+        characterBuilder.withColor(tag.color, `${this.vanillaCharCode}{color}`);
       }
 
       textBuilder.appendCharacter(characterBuilder);
