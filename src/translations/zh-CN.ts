@@ -3,7 +3,7 @@ export default {
     title: "Minecraft 渐变文字生成器",
     slogan: "支持超 {count} 款格式 / 混排样式 / 渐变预设",
     // timeago.js all locales: https://github.com/hustcc/timeago.js/tree/master/src/lang
-    timeago_locale: "zh-CN",
+    timeago_locale: "zh_CN",
   },
   common: {
     download_tip: "请留意浏览器下载提示",
