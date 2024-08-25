@@ -1,7 +1,7 @@
 import { colorToHex, isHexColor, isRGBColor } from "@/utils/color";
 import { isEmpty, isString } from "lodash-es";
 
-type ParserResult = HexColorString[] | null;
+type ParserResult = HexColorString[];
 
 export const hexColorRegExp = /&?#?[a-fA-F0-9]{6}/g;
 export const rgbColorRegExp =
@@ -9,24 +9,24 @@ export const rgbColorRegExp =
 
 export const parseText = (value: string): ParserResult => {
   const parsers = [JSONParser, CommaSeparatedParser, CSSParser];
-  return parsers.reduce<ParserResult>((prev, func) => (prev === null ? func(value.trim()) : prev), null);
+  return parsers.reduce<ParserResult>((prev, func) => (prev.length < 2 ? func(value.trim()) : prev), []);
 };
 
 function JSONParser(value: string): ParserResult {
   try {
-    const parsed = JSON.parse(value) as unknown[];
+    const parsed = JSON.parse(value) as string[];
     return parsed
       .filter((item: unknown) => isString(item))
-      .reduce((acc, value) => {
+      .reduce<HexColorString[]>((acc, value) => {
         if (isHexColor(value)) {
           return acc.concat(value as HexColorString);
         } else if (isRGBColor(value)) {
           return acc.concat(colorToHex(value));
         }
         return acc;
-      }, [] as HexColorString[]);
+      }, []);
   } catch {
-    return null;
+    return [];
   }
 }
 
@@ -40,9 +40,7 @@ function CSSParser(value: string): ParserResult {
 
   const rgbResult = rgbMatchResult.map((rgb) => colorToHex(rgb));
 
-  const finalResult = [...hexMatchResult, ...rgbResult];
-
-  return !isEmpty(finalResult) ? finalResult : null;
+  return [...hexMatchResult, ...rgbResult];
 }
 
 /**
@@ -53,5 +51,5 @@ function CommaSeparatedParser(value: string): ParserResult {
 
   const result = splited.filter((color) => isHexColor(color));
 
-  return isEmpty(result) || result.length !== splited.length ? null : (result as HexColorString[]);
+  return isEmpty(result) || result.length !== splited.length ? [] : (result as HexColorString[]);
 }

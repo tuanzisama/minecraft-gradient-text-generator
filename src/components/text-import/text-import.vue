@@ -1,7 +1,7 @@
 <template>
   <t-dialog v-model:visible="dialogVisible" :header="$t('picker.import.title')" width="600px"
-    :confirm-btn="$t('picker.import.confirm_button')" :cancel-btn="$t('common.close')" 
-    @confirm="onDialogConfirmHandler" destroy-on-close>
+    :confirm-btn="$t('picker.import.confirm_button')" :cancel-btn="$t('common.close')" @confirm="onDialogConfirmHandler"
+    destroy-on-close>
 
     <div class="dialog-container">
       <t-textarea v-model="textValue" :placeholder="$t('picker.import.placeholder')" name="description"
@@ -52,7 +52,7 @@ const onDialogConfirmHandler = () => {
   if (textValue.value.trim() !== '') {
     const result = parseText(textValue.value)
 
-    if (result === null) {
+    if (result.length < 2) {
       MessagePlugin.warning({ content: i18n.t("picker.import.import_failed") });
       return
     }
