@@ -7,10 +7,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, shallowRef } from "vue";
+import { onBeforeUnmount, onMounted, ref, shallowRef } from "vue";
 import { useColorStore } from "../../plugins/store/modules/color";
 import { rgbToHex } from "@/utils/color";
-import { throttle } from "lodash-es";
+import { debounce, throttle } from "lodash-es";
 
 const colorStore = useColorStore();
 const emit = defineEmits<ColorBarEmit>();
@@ -28,7 +28,13 @@ onMounted(() => {
 
     drawCanvas();
   }
+
+  window.addEventListener('resize', onWindowReszieHandler)
 });
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', onWindowReszieHandler)
+})
 
 const drawCanvas = () => {
   const width = colorbarRef.value!.offsetWidth;
@@ -62,6 +68,16 @@ const onColorStopClickHandler = () => {
   const colorStopHex = rgbToHex(colorStopRgb.value);
   emit("on-select", colorStopHex);
 };
+
+const onWindowReszieHandler = debounce(() => {
+  if (colorbarRef.value) {
+    colorbarRef.value.width = colorbarRef.value.parentElement!.offsetWidth;
+    colorbarRef.value.height = colorbarRef.value.parentElement!.offsetHeight;
+    colorbarCtx.value = colorbarRef.value?.getContext("2d");
+
+    drawCanvas();
+  }
+}, 100)
 
 defineExpose<ColorBarExpose>({ reDraw: drawCanvas });
 </script>
