@@ -29,7 +29,7 @@
         [广告] PlayerTitle × 一款有点好用的玩家称号插件
       </t-link> -->
     <p>{{ $t("common.not_affiliated_notice") }}</p>
-    <p v-if="i18n.locale.value !== 'zh_CN'">{{ $t("common.translate_by", { author: $t("$internel.author") }) }}</p>
+    <p v-if="i18n.locale.value !== 'zh-CN'">{{ $t("common.translate_by", { author: $t("$internel.author") }) }}</p>
   </footer>
 </template>
 
