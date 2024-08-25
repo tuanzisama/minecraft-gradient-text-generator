@@ -7,10 +7,15 @@ type ContainsString<T extends string> = `${string}${T}${string}`;
  * Representation of color in Hex format.
  */
 type HexColorString = `#${string}`;
+type RGBColorString = `rgb(${string}, ${string}, ${string})`;
+type RGBAColorString = `rgba(${string}, ${string}, ${string})`;
+
 /**
  * Representation of color in HSL (hue, saturation, value) format.
  */
 type HslColor = Record<"h" | "s" | "l", number>;
+type RGBColor = Record<"r" | "g" | "b", number>;
+type RGBAColor = RGBColor & { a: number };
 
 type GradientCSS = `linear-gradient${string}`;
 
