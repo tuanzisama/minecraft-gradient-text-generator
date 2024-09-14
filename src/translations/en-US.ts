@@ -122,6 +122,9 @@ export default {
       trchat: {
         label: "TrChat",
       },
+      chat_colors: {
+        label: "Chat Colors",
+      },
       motd: {
         label: "MOTD",
       },
