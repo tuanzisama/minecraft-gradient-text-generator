@@ -13,6 +13,7 @@ import { MotdAdapter } from "./adapter/motd";
 import { BBCodeAdapter } from "./adapter/bbcode";
 import { HTMLAdapter } from "./adapter/html";
 import { CSVAdapter } from "./adapter/csv";
+import { ChatColorsAdapter } from "./adapter/chat-colors";
 
 interface AdapterMapValue<T = any> {
   label: `processor.adapter.${string}.label`;
@@ -43,6 +44,7 @@ export const adapterMap = new Map<KeyOfAdapterMap, AdapterMapValue>([
     },
   ],
   ["trchat", { label: "processor.adapter.trchat.label", sample: "&{#RRGGBB}", adapter: TrChatAdapter }],
+  ["chat-colors", { label: "processor.adapter.chat_colors.label", sample: "[#RRGGBB]", adapter: ChatColorsAdapter }],
   ["motd", { label: "processor.adapter.motd.label", sample: "\\u00A7X", adapter: MotdAdapter }],
   ["bbcode", { label: "processor.adapter.bbcode.label", sample: "[color=#RRGGBB]", adapter: BBCodeAdapter }],
   [
@@ -68,6 +70,7 @@ export const adapterMapKey = [
   "minedown",
   "stringified-nbt",
   "trchat",
+  "chat-colors",
   "motd",
   "bbcode",
   "json",
