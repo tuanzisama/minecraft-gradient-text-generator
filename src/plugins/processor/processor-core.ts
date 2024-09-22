@@ -1,4 +1,5 @@
 import { genColorGradients, getTextShadowHex } from "@/utils/color";
+import { split } from "lodash-es";
 
 export abstract class GradientProcessor<T = string> {
   protected richTagChunk: RichTagChunk;
@@ -58,7 +59,7 @@ export abstract class GradientProcessor<T = string> {
         startIndex = startIndex + length;
 
         let index = -1;
-        const tags = richTag.text.split("").map((character) => {
+        const tags = split(richTag.text, "").map((character) => {
           if (character.trim() !== "") index += 1;
 
           const tag: Tag = {
