@@ -55,7 +55,7 @@ const chapters = computed(() => {
   position: absolute;
 
   padding: 20px;
-  font-family: "Minecraft";
+  font-family: "Minecraft", "Unifont";
   transition: 0.3s;
 
   background-image: url(@/assets/images/minecraft-screenshot.png);
