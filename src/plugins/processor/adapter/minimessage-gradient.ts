@@ -42,7 +42,7 @@ class MiniMessageGradientAdapterClazz extends GradientProcessor {
     }
 
     textBuilder.appendCharacter(characterBuilder);
-    return `<gradient:${colors}>${textBuilder.build()}</gradient>`;
+    return `<gradient:${colors.join(":")}>${textBuilder.build()}</gradient>`;
   }
 }
 
