@@ -18,7 +18,7 @@
 - [x] Support Vanilla color code
 - [x] Live preview
 - [x] Color picker & plate
-- [ ] Localization 
+- [x] Localization 
 
 # Self-hosted
 
