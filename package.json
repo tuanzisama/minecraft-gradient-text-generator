@@ -1,6 +1,6 @@
 {
   "name": "minecraft-color-gradient-generator",
-  "version": "2.6.6",
+  "version": "2.6.7",
   "license": "MIT",
   "scripts": {
     "dev": "vite --force --host",
