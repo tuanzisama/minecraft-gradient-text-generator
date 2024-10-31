@@ -4,6 +4,7 @@ import { I18nLoader } from "./plugins/i18n";
 
 import "reset.css";
 import "./styles/global.scss";
+import "./styles/theme.scss";
 import "tdesign-vue-next/es/style/index.css";
 import "./styles/responsive.scss";
 

@@ -1,6 +1,6 @@
 <template>
   <mcg-card class="text-input">
-    <div class="text-input__inner" ref="inputRef"></div>
+    <div class="text-input__inner dark" ref="inputRef"></div>
   </mcg-card>
 </template>
 

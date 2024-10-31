@@ -1,0 +1,27 @@
+@mixin mcg-theme-dark() {
+  --mcg-text-color: #e8e8e8;
+  --mcg-text-color-2: #c6c6c6;
+  --mcg-bg-color: var(--td-bg-color-container);
+  --mcg-bg-color-2: var(--td-gray-color-10);
+  --mcg-border-color: #343434;
+}
+
+html {
+  --mcg-text-color: #17233d;
+  --mcg-text-color-2: #909399;
+  --mcg-bg-color: #ffffff;
+  --mcg-bg-color-2: #f5f7fa;
+  --mcg-border-color: #dcdfe6;
+
+  background-color: var(--mcg-bg-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    @include mcg-theme-dark();
+  }
+}
+
+html[data-theme="dark"] {
+  @include mcg-theme-dark();
+}

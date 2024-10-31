@@ -30,10 +30,10 @@ export interface McgCardProps {
   position: relative;
   box-sizing: border-box;
   border-radius: var(--td-radius-medium);
-  background-color: var(--td-bg-color-container);
-  color: var(--td-text-color-primary);
+  background-color: var(--mcg-bg-color);
+  color: var(--mcg-text-color);
   transition: card-shadow 0.2s cubic-bezier(0.38, 0, 0.24, 1);
-  border: 1px solid var(--td-component-border);
+  border: 1px solid var(--mcg-border-color);
   display: flex;
   flex-direction: column;
 
@@ -41,7 +41,7 @@ export interface McgCardProps {
 
   &__header {
     padding: calc(var(--mcg-card-padding) / 2) var(--mcg-card-padding);
-    border-bottom: 1px solid var(--td-component-border);
+    border-bottom: 1px solid var(--mcg-border-color);
   }
 
   &__body {

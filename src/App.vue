@@ -16,8 +16,8 @@
     </mcg-body>
     <mcg-footer />
   </div>
-  <mcg-feedback />
-  <mcg-guide />
+  <!-- <mcg-feedback /> -->
+  <!-- <mcg-guide /> -->
 </template>
 
 <script lang="ts" setup>
@@ -33,15 +33,25 @@ import { McgGuide } from './components/mcg-guide'
 import { TextOutputExpose } from "./components/text-output/text-output.vue";
 import { useI18n } from "vue-i18n";
 import { adapterMapKey, KeyOfAdapterMap } from "./plugins/processor";
+import { useTheme } from "./compostable/theme";
 
 const appStore = useAppStore();
 const i18n = useI18n()
+const theme = useTheme()
 const textOutputRef = ref<TextOutputExpose>();
 
 onMounted(() => {
   document.title = i18n.t("app.title")
   detectSearchParamAdapter()
+  detectThemeChangeHandler()
 })
+
+const detectThemeChangeHandler = () => {
+  if (theme.isDarkmode()) {
+    theme.setTheme('dark')
+  }
+  theme.onChange((mode) => theme.setTheme(mode))
+}
 
 const detectSearchParamAdapter = () => {
   const params = new URLSearchParams(location.search);

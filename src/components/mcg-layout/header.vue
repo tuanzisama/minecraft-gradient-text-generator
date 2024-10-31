@@ -36,6 +36,7 @@ const modeText = computed(() => {
     font-size: 40px;
     font-weight: 700;
     text-align: center;
+    color: var(--mcg-text-color);
 
     &::after {
       content: "v" attr(data-version);
@@ -45,7 +46,8 @@ const modeText = computed(() => {
 
       padding: 2px 4px;
       border-radius: 5px;
-      background-color: #f0f2f5;
+      background-color: var(--mcg-bg-color-2);
+      color: var(--mcg-text-color);
       font-size: 12px;
       white-space: nowrap;
     }
@@ -60,9 +62,9 @@ const modeText = computed(() => {
     .header-tag {
       font-size: 14px;
       padding: 6px 10px;
-      background: #f5f7fa;
-      border: 1px solid #dcdfe6;
-      color: #909399;
+      background: var(--mcg-bg-color-2);
+      border: 1px solid var(--mcg-border-color);
+      color: var(--mcg-text-color-2);
       border-radius: 5px;
       display: inline-flex;
       align-items: center;
