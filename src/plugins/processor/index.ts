@@ -14,6 +14,7 @@ import { BBCodeAdapter } from "./adapter/bbcode";
 import { HTMLAdapter } from "./adapter/html";
 import { CSVAdapter } from "./adapter/csv";
 import { ChatColorsAdapter } from "./adapter/chat-colors";
+import { TerrariaAdapter } from "./adapter/Terraria";
 
 interface AdapterMapValue<T = any> {
   label: `processor.adapter.${string}.label`;
@@ -58,6 +59,7 @@ export const adapterMap = new Map<KeyOfAdapterMap, AdapterMapValue>([
   ],
   ["html", { label: "processor.adapter.html.label", sample: '<span style="color: #RRGGBB"/>', mimeType: "text/html", adapter: HTMLAdapter }],
   ["csv", { label: "processor.adapter.csv.label", sample: "#RRGGBB,T", mimeType: "text/csv", adapter: CSVAdapter }],
+  ["Terraria", {label: "processor.adapter.Terraria.label", sample: "[c/#RRGGBB:T]", adapter: TerrariaAdapter}],
 ]);
 
 export const adapterMapKey = [
@@ -76,6 +78,7 @@ export const adapterMapKey = [
   "json",
   "html",
   "csv",
+  "Terraria"
 ] as const;
 
 export type KeyOfAdapterMap = (typeof adapterMapKey)[number];
