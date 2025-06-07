@@ -137,6 +137,9 @@ export default {
       csv: {
         label: "CSV",
       },
+      Terraria:{
+        label: "Terraria"
+      }
     },
     toolbar: {
       vanilla_char_code: "字符格式",
