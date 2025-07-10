@@ -1,9 +1,13 @@
-import { isEmpty, isString } from "lodash-es";
+import { isString } from "lodash-es";
 
 export class TextBuilder {
   private formatPresets!: FormatPresets;
   private usingFormats: FormatExpression[] = [];
   private characters: CharacterBuilder[] = [];
+
+  public get availableFormats() {
+    return this.usingFormats;
+  }
 
   public appendCharacter(builder: CharacterBuilder) {
     this.characters.push(builder);
@@ -66,6 +70,6 @@ export class CharacterBuilder {
     } else if (isString(this.colorExpression)) {
       return this.colorExpression.replace("{color}", this.colorValue as string);
     }
-    return ""
+    return "";
   }
 }

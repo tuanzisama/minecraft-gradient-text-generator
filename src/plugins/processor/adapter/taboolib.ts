@@ -1,7 +1,15 @@
 import { CharacterBuilder, TextBuilder } from "../builder/text";
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
 
-class TrChatAdapterClazz extends GradientProcessor {
+/**
+ * TabooLib (include TrChat/TrMenu or )
+ *
+ * @see https://taboolib.feishu.cn/wiki/Gp8ywJfMEi7UIgkUFLZc1mi5nvh
+ * @see https://trchat.trixey.cc/guide/colors#hex%E9%A2%9C%E8%89%B2
+ *
+ * @example &{#FFFFFF}
+ */
+class TabooLibAdapterClazz extends GradientProcessor {
   constructor(tags: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
     super(tags, colors, options);
   }
@@ -21,4 +29,4 @@ class TrChatAdapterClazz extends GradientProcessor {
   }
 }
 
-export const TrChatAdapter: GradientProcessorConstructor = TrChatAdapterClazz;
+export const TabooLibAdapter: GradientProcessorConstructor = TabooLibAdapterClazz;

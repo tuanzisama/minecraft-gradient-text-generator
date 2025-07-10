@@ -120,7 +120,13 @@ export default {
         hint: "Needs update",
       },
       trchat: {
-        label: "TrChat",
+        label: "TrChat (Based on TabooLib)",
+      },
+      taboolib: {
+        label: "TabooLib",
+      },
+      taboolib_gradient: {
+        label: "TabooLib#Gradient",
       },
       chat_colors: {
         label: "Chat Colors",
@@ -140,9 +146,9 @@ export default {
       csv: {
         label: "CSV",
       },
-      Terraria:{
-        label: "Terraria"
-      }
+      terraria: {
+        label: "Terraria",
+      },
     },
     toolbar: {
       vanilla_char_code: "Vanilla character code",

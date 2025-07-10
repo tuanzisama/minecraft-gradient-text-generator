@@ -122,7 +122,13 @@ export default {
         hint: "改良が必要です",
       },
       trchat: {
-        label: "TrChat",
+        label: "TrChat (TabooLibに基づく)",
+      },
+      taboolib: {
+        label: "TabooLib",
+      },
+      taboolib_gradient: {
+        label: "TabooLib#Gradient",
       },
       chat_colors: {
         label: "Chat Colors",
@@ -142,9 +148,9 @@ export default {
       csv: {
         label: "CSV",
       },
-      Terraria:{
-        label: "Terraria"
-      }
+      terraria: {
+        label: "Terraria",
+      },
     },
     toolbar: {
       vanilla_char_code: "キャラクターフォーマット",

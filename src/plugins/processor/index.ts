@@ -8,7 +8,8 @@ import { MiniMessageAdapter } from "./adapter/minimessage";
 import { MiniMessageGradientAdapter } from "./adapter/minimessage-gradient";
 import { MineDownAdapter } from "./adapter/minedown";
 import { StringifiedNBTAdapter } from "./adapter/stringified-nbt";
-import { TrChatAdapter } from "./adapter/trchat";
+import { TabooLibAdapter } from "./adapter/taboolib";
+import { TabooLibGradientAdapter } from "./adapter/taboolib-gradient";
 import { MotdAdapter } from "./adapter/motd";
 import { BBCodeAdapter } from "./adapter/bbcode";
 import { HTMLAdapter } from "./adapter/html";
@@ -44,7 +45,12 @@ export const adapterMap = new Map<KeyOfAdapterMap, AdapterMapValue>([
       adapter: StringifiedNBTAdapter,
     },
   ],
-  ["trchat", { label: "processor.adapter.trchat.label", sample: "&{#RRGGBB}", adapter: TrChatAdapter }],
+  ["trchat", { label: "processor.adapter.trchat.label", sample: "&{#RRGGBB}", adapter: TabooLibAdapter }],
+  ["taboolib", { label: "processor.adapter.taboolib.label", sample: "&{#RRGGBB}", adapter: TabooLibAdapter }],
+  [
+    "taboolib-gradient",
+    { label: "processor.adapter.taboolib_gradient.label", sample: "[T](gradient=color1,color...)", adapter: TabooLibGradientAdapter },
+  ],
   ["chat-colors", { label: "processor.adapter.chat_colors.label", sample: "[#RRGGBB]", adapter: ChatColorsAdapter }],
   ["motd", { label: "processor.adapter.motd.label", sample: "\\u00A7X", adapter: MotdAdapter }],
   ["bbcode", { label: "processor.adapter.bbcode.label", sample: "[color=#RRGGBB]", adapter: BBCodeAdapter }],
@@ -59,7 +65,7 @@ export const adapterMap = new Map<KeyOfAdapterMap, AdapterMapValue>([
   ],
   ["html", { label: "processor.adapter.html.label", sample: '<span style="color: #RRGGBB"/>', mimeType: "text/html", adapter: HTMLAdapter }],
   ["csv", { label: "processor.adapter.csv.label", sample: "#RRGGBB,T", mimeType: "text/csv", adapter: CSVAdapter }],
-  ["Terraria", {label: "processor.adapter.Terraria.label", sample: "[c/#RRGGBB:T]", adapter: TerrariaAdapter}],
+  ["terraria", { label: "processor.adapter.terraria.label", sample: "[c/#RRGGBB:T]", adapter: TerrariaAdapter }],
 ]);
 
 export const adapterMapKey = [
@@ -72,13 +78,15 @@ export const adapterMapKey = [
   "minedown",
   "stringified-nbt",
   "trchat",
+  "taboolib",
+  "taboolib-gradient",
   "chat-colors",
   "motd",
   "bbcode",
   "json",
   "html",
   "csv",
-  "Terraria"
+  "terraria",
 ] as const;
 
 export type KeyOfAdapterMap = (typeof adapterMapKey)[number];
