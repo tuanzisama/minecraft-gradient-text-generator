@@ -153,6 +153,7 @@ export default {
       },
     },
     toolbar: {
+      process_simplify: "簡素化された処理",
       vanilla_char_code: "キャラクターフォーマット",
       copy: "コピー",
       download: "ダウンロード",

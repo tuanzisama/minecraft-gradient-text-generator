@@ -37,6 +37,7 @@ interface GradientProcessAdapterOptions {
   vanilla?: {
     charCode: "&" | "§";
   };
+  processSimplify?: boolean;
 }
 
 type Formats = "bold" | "italic" | "underlined" | "strikethrough";

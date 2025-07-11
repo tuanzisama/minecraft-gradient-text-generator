@@ -151,6 +151,7 @@ export default {
       },
     },
     toolbar: {
+      process_simplify: "Simplified processing",
       vanilla_char_code: "Vanilla character code",
       copy: "Copy",
       download: "Download",

@@ -147,6 +147,7 @@ export default {
       },
     },
     toolbar: {
+      process_simplify: "簡化處理",
       vanilla_char_code: "字元格式",
       copy: "複製",
       download: "下載",

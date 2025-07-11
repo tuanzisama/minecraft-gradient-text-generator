@@ -1,5 +1,5 @@
 import { genColorGradients, getTextShadowHex } from "@/utils/color";
-import { split } from "lodash-es";
+import { flattenDeep, split } from "lodash-es";
 
 export abstract class GradientProcessor<T = string> {
   protected richTagChunk: RichTagChunk;
@@ -44,10 +44,14 @@ export abstract class GradientProcessor<T = string> {
     return this.rawText.replace(/\t|\s|\r|\n/g, "");
   }
 
+  public get chunkSize(): number {
+    return flattenDeep(this.richTagChunk).length;
+  }
+
   /**
    * the processor.
    */
-  abstract processor(tag: Chunk): T;
+  abstract processor(tag: Chunk, chunkIndex: number): T;
 
   public get chapters(): Chapters {
     let startIndex = 0;
@@ -79,9 +83,11 @@ export abstract class GradientProcessor<T = string> {
   }
 
   public generate(): T[][] {
+    let chunkIndex = -1;
     return this.chapters.map<T[]>((chunks) => {
       const result = chunks.map<T>((chunk) => {
-        return this.processor(chunk);
+        chunkIndex += 1;
+        return this.processor(chunk, chunkIndex);
       });
       return result;
     });

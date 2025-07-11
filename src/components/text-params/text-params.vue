@@ -57,6 +57,7 @@ onMounted(() => {
 
 const switchToolbar = (val: KeyOfAdapterMap) => {
   toolBarRef.value?.toggleDisplay(ToolBarModule.VANILLA_CHAR_CODE, ["vanilla", "vanilla-compatible"].includes(val));
+  toolBarRef.value?.toggleDisplay(ToolBarModule.PROCESS_SIMPLIFY, ["minimessage-gradient", "taboolib-gradient"].includes(val));
 };
 
 const onProcessorSelectChangeHandler = (val: KeyOfAdapterMap) => {

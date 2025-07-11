@@ -148,6 +148,7 @@ export default {
       },
     },
     toolbar: {
+      process_simplify: "简化处理",
       vanilla_char_code: "字符格式",
       copy: "复制",
       download: "下载",

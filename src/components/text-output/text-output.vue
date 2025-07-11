@@ -54,6 +54,7 @@ const generateOutput = (tags: RichTagChunk | null, colors?: HexColorString[]) =>
   if (adapterConstructor) {
     textStore.adapter = new adapterConstructor($tags, $colors, {
       vanilla: { charCode: appStore.setting.format.vanillaCharCode },
+      processSimplify: appStore.setting.format.processSimplify,
     });
 
     // console.info('[adapter]', textStore.adapter);

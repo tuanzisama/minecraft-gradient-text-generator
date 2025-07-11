@@ -2,8 +2,13 @@
   <div class="toolbar-container">
     <template v-for="(item, index) in toolbars" :key="index">
       <t-popup v-if="item?.isDisplay ?? true" :content="$t(item.label)">
-        <t-button class="tool-button" shape="square" variant="outline"
-          :class="{ 'is-active': item.isActive, 'has-divider': item.divider }" @click="onToolbarItemClickHandler(item)">
+        <t-button
+          class="tool-button"
+          shape="square"
+          variant="outline"
+          :class="{ 'is-active': item.isActive, 'has-divider': item.divider }"
+          @click="onToolbarItemClickHandler(item)"
+        >
           <component :is="item.render(item)" />
         </t-button>
       </t-popup>
@@ -17,12 +22,12 @@ import { useAppStore } from "../../plugins/store/modules/app";
 import { MessagePlugin, NotifyPlugin } from "tdesign-vue-next";
 import { useTextStore } from "@/plugins/store/modules/text";
 import { saveAs } from "@/utils/file";
-import { PreviewPip, requestPreviewPip } from '../preview-pip'
+import { PreviewPip, requestPreviewPip } from "../preview-pip";
 import { useI18n } from "vue-i18n";
 
 const appStore = useAppStore();
 const textStore = useTextStore();
-const i18n = useI18n()
+const i18n = useI18n();
 
 const emit = defineEmits<ToolBarEmit>();
 type ToolBarItem = {
@@ -34,8 +39,14 @@ type ToolBarItem = {
   render: (item: ToolBarItem) => VNode;
 };
 
-const previewPip = ref<PreviewPip>()
+const previewPip = ref<PreviewPip>();
 const toolbars = reactive<ToolBarItem[]>([
+  {
+    key: ToolBarModule.PROCESS_SIMPLIFY,
+    label: "processor.toolbar.process_simplify",
+    isActive: false,
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "flash_on" : "flash_off"),
+  },
   {
     key: ToolBarModule.VANILLA_CHAR_CODE,
     label: "processor.toolbar.vanilla_char_code",
@@ -52,18 +63,18 @@ const toolbars = reactive<ToolBarItem[]>([
     key: ToolBarModule.PREVIEW,
     label: "processor.toolbar.preview",
     isActive: true,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "preview" : "preview_off")
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "preview" : "preview_off"),
   },
   {
     key: ToolBarModule.PREVIEW_PIP,
     label: "processor.toolbar.preview_pip",
     isDisplay: false,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "picture_in_picture_alt" : "pip")
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "picture_in_picture_alt" : "pip"),
   },
   {
     key: ToolBarModule.DOWNLOAD,
     label: "processor.toolbar.download",
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "download")
+    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "download"),
   },
   {
     key: ToolBarModule.COPY,
@@ -78,7 +89,7 @@ onMounted(() => {
     const key = element.key;
 
     if (key === ToolBarModule.VANILLA_CHAR_CODE) {
-      element.isActive = appStore.setting.format.vanillaCharCode === '§';
+      element.isActive = appStore.setting.format.vanillaCharCode === "§";
     }
 
     if (key === ToolBarModule.PREVIEW) {
@@ -86,7 +97,11 @@ onMounted(() => {
     }
 
     if (key === ToolBarModule.PREVIEW_PIP) {
-      element.isDisplay = window.hasOwnProperty('documentPictureInPicture')
+      element.isDisplay = window.hasOwnProperty("documentPictureInPicture");
+    }
+
+    if (key === ToolBarModule.PROCESS_SIMPLIFY) {
+      element.isActive = appStore.setting.format.processSimplify;
     }
   }
 });
@@ -105,24 +120,29 @@ const onToolbarItemClickHandler = async (item: ToolBarItem) => {
       onDownloadClickHandler();
       break;
     case "preview":
-      item.isActive = !item.isActive
-      appStore.setSimulateMode(item.isActive ? "chat" : "default")
+      item.isActive = !item.isActive;
+      appStore.setSimulateMode(item.isActive ? "chat" : "default");
       break;
     case "share":
-      copyAdapterURL()
+      copyAdapterURL();
       break;
     case "preview_pip":
       if (item.isActive) {
-        item.isActive = false
-        previewPip.value?.close?.()
+        item.isActive = false;
+        previewPip.value?.close?.();
       } else {
-        item.isActive = true
+        item.isActive = true;
         previewPip.value = await requestPreviewPip({
           onClose: () => {
-            item.isActive = false
-          }
-        })
+            item.isActive = false;
+          },
+        });
       }
+      break;
+    case "process_simplify":
+      item.isActive = !item.isActive;
+      appStore.setProcessSimplify(item.isActive);
+      emit("on-format-change");
       break;
   }
 };
@@ -149,9 +169,9 @@ const copyProcessText = () => {
 };
 
 const copyAdapterURL = () => {
-  const url = new URL(location.href)
+  const url = new URL(location.href);
   if (appStore.setting.usingAdapterKey) {
-    url.searchParams.set("adapter", appStore.setting.usingAdapterKey)
+    url.searchParams.set("adapter", appStore.setting.usingAdapterKey);
   }
   navigator.clipboard
     .writeText(url.toString())
@@ -160,7 +180,7 @@ const copyAdapterURL = () => {
       MessagePlugin.error({ content: i18n.t("output.copy_failed") });
       console.error(err);
     });
-}
+};
 
 const toggleDisplay = (key: ToolBarModule, flag?: boolean) => {
   const tool = toolbars.find((el) => el.key === key);
@@ -182,7 +202,7 @@ const onDownloadClickHandler = () => {
     return;
   }
 
-  const mimeType = appStore.usingAdapter?.mimeType ?? 'text/plain'
+  const mimeType = appStore.usingAdapter?.mimeType ?? "text/plain";
   const blob = new Blob([result], { type: `${mimeType}; charset=utf-8` });
 
   const time = new Date().toLocaleString().replace(/\\/g, "-").replace(" ", "_");
@@ -190,10 +210,10 @@ const onDownloadClickHandler = () => {
 
   saveAs(blob, fileName).then(() => {
     NotifyPlugin.success({
-      title: i18n.t('output.download_success'),
-      content: i18n.t('common.download_tip'),
+      title: i18n.t("output.download_success"),
+      content: i18n.t("common.download_tip"),
     });
-  })
+  });
 };
 
 defineExpose<ToolBarExpose>({ toggleDisplay });
@@ -203,6 +223,7 @@ defineExpose<ToolBarExpose>({ toggleDisplay });
 export enum ToolBarModule {
   SHARE = "share",
   VANILLA_CHAR_CODE = "vanillaCharCode",
+  PROCESS_SIMPLIFY = "process_simplify",
   COPY = "copy",
   DOWNLOAD = "download",
   PREVIEW = "preview",

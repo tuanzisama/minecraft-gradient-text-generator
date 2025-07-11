@@ -13,6 +13,10 @@ export interface AppStoreState {
        * 字符模式
        */
       vanillaCharCode: "&" | "§";
+      /**
+       * 过程简化
+       */
+      processSimplify: boolean;
     };
     usingAdapterKey: KeyOfAdapterMap;
   };
@@ -26,6 +30,7 @@ export const useAppStore = defineStore("app", {
       simulateMode: "chat",
       format: {
         vanillaCharCode: "&",
+        processSimplify: false,
       },
       usingAdapterKey: "vanilla",
     },
@@ -42,6 +47,9 @@ export const useAppStore = defineStore("app", {
     },
     setSimulateMode(mode: AppStoreState["setting"]["simulateMode"]) {
       this.setting.simulateMode = mode;
+    },
+    setProcessSimplify(status: AppStoreState["setting"]['format']['processSimplify']) {
+      this.setting.format.processSimplify = status;
     },
   },
   persist: {

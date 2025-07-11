@@ -1,5 +1,6 @@
-import { CharacterBuilder, TextBuilder } from "../builder/text";
+import { TextBuilder } from "../builder/text";
 import { GradientProcessor, GradientProcessorConstructor } from "../processor-core";
+import { genColorGradients } from "@/utils/color";
 
 /**
  * TabooLib Gradient
@@ -8,8 +9,14 @@ import { GradientProcessor, GradientProcessorConstructor } from "../processor-co
  * @example [||||||||||||||||||||](gradient=#f6d365,#fda085)
  */
 class TabooLibGradientAdapterClazz extends GradientProcessor {
+  private simplifyColors: HexColorString[] = [];
+
   constructor(tags: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
     super(tags, colors, options);
+
+    if (options?.processSimplify) {
+      this.simplifyColors = genColorGradients(colors, this.chunkSize);
+    }
   }
 
   override get format(): FormatPresets {
@@ -23,26 +30,37 @@ class TabooLibGradientAdapterClazz extends GradientProcessor {
     };
   }
 
-  processor(chunk: Chunk): string {
+  processor(chunk: Chunk, chunkIndex: number): string {
     const textBuilder = new TextBuilder();
     textBuilder.withFormat(chunk.format?.bold, this.format.bold);
     textBuilder.withFormat(chunk.format?.italic, this.format.italic);
     textBuilder.withFormat(chunk.format?.underlined, this.format.underlined);
     textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
 
-    const colors: HexColorString[] = [];
+    let pcolors: HexColorString[] = [];
     const texts: string[] = [];
+    
+    if (this.options?.processSimplify) {
+      pcolors = [
+        this.simplifyColors[chunkIndex],
+        this.simplifyColors[chunkIndex + 1] || this.simplifyColors[0]
+      ];
 
-    chunk.tags.forEach((tag) => {
-      if (tag.color !== null) {
-        colors.push(tag.color);
-      }
-      texts.push(tag.character);
-    });
+      chunk.tags.forEach((tag) => {
+        texts.push(tag.character);
+      });
+    } else {
+      chunk.tags.forEach((tag) => {
+        if (tag.color !== null) {
+          pcolors.push(tag.color);
+        }
+        texts.push(tag.character);
+      });
+    }
 
     const formats = textBuilder.availableFormats.length === 0 ? "" : ";" + textBuilder.availableFormats.join(";");
 
-    return `[${texts.join("")}](gradient=${colors.join(",")}${formats})`;
+    return `[${texts.join("")}](gradient=${pcolors.join(",")}${formats})`;
   }
 }
 
