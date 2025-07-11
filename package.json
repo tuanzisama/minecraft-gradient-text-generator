@@ -1,6 +1,6 @@
 {
   "name": "minecraft-gradient-text-generator",
-  "version": "2.6.8",
+  "version": "2.7.0",
   "license": "MIT",
   "scripts": {
     "dev": "vite --force --host",
