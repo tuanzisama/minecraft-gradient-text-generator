@@ -16,6 +16,7 @@ import { HTMLAdapter } from "./adapter/html";
 import { CSVAdapter } from "./adapter/csv";
 import { ChatColorsAdapter } from "./adapter/chat-colors";
 import { TerrariaAdapter } from "./adapter/Terraria";
+import { RoseGardenGradientAdapter } from "./adapter/rosegarden-gradient";
 
 interface AdapterMapValue<T = any> {
   label: `processor.adapter.${string}.label`;
@@ -51,6 +52,10 @@ export const adapterMap = new Map<KeyOfAdapterMap, AdapterMapValue>([
     "taboolib-gradient",
     { label: "processor.adapter.taboolib_gradient.label", sample: "[T](gradient=color1,color...)", adapter: TabooLibGradientAdapter },
   ],
+  [
+    "rosegarden-gradient",
+    { label: "processor.adapter.rosegarden_gradient.label", sample: "<g:color1:color...>T", adapter: RoseGardenGradientAdapter },
+  ],
   ["chat-colors", { label: "processor.adapter.chat_colors.label", sample: "[#RRGGBB]", adapter: ChatColorsAdapter }],
   ["motd", { label: "processor.adapter.motd.label", sample: "\\u00A7X", adapter: MotdAdapter }],
   ["bbcode", { label: "processor.adapter.bbcode.label", sample: "[color=#RRGGBB]", adapter: BBCodeAdapter }],
@@ -80,6 +85,7 @@ export const adapterMapKey = [
   "trchat",
   "taboolib",
   "taboolib-gradient",
+  "rosegarden-gradient",
   "chat-colors",
   "motd",
   "bbcode",

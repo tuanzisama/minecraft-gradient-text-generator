@@ -125,6 +125,9 @@ export default {
       taboolib_gradient: {
         label: "TabooLib#Gradient",
       },
+      rosegarden_gradient: {
+        label: "RoseGarden#Gradient",
+      },
       chat_colors: {
         label: "Chat Colors",
       },
