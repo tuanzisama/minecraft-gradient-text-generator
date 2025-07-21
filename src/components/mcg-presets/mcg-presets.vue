@@ -14,6 +14,12 @@
         </template>
         {{ $t('picker.presets.button.export') }}
       </t-button>
+      <t-button theme="primary" variant="outline" @click="onDownloadPresetsTemplateClickHandler">
+        <template #icon>
+          <span class="material-symbols-outlined">file_save</span>
+        </template>
+        {{ $t('picker.presets.button.download_template') }}
+      </t-button>
       <t-popconfirm :content="$t('picker.presets.clear_confirm')" placement="left-top" theme="danger"
         @confirm="onClearPresetsClickHandler">
         <t-button theme="danger" variant="outline">
@@ -37,7 +43,7 @@ import { pick } from 'lodash-es';
 import { saveAs } from '@/utils/file';
 import { randomString } from '@/utils/random';
 import { isHexColor } from '@/utils/color';
-import { useColorStore } from '@/plugins/store/modules/color';
+import { PRESET_COLORS, useColorStore } from '@/plugins/store/modules/color';
 import { format as timeAgoFormat } from 'timeago.js';
 import { useI18n } from 'vue-i18n';
 
@@ -168,6 +174,20 @@ const onExportPresetsClickHandler = () => {
 const onClearPresetsClickHandler = () => {
   colorStore.resetPresetsColorList()
   MessagePlugin.success({ content: i18n.t('picker.presets.clear_success') });
+}
+
+const onDownloadPresetsTemplateClickHandler = () => {
+  const exportData = PRESET_COLORS.map(item => pick(item, ['name', 'colors']))
+  const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: `application/json; charset=utf-8` });
+
+  const fileName = `mcg-userdata-template`;
+
+  saveAs(blob, fileName).then(() => {
+    NotifyPlugin.success({
+      title: i18n.t('picker.presets.download_template_success'),
+      content: i18n.t('common.download_tip'),
+    });
+  })
 }
 </script>
 

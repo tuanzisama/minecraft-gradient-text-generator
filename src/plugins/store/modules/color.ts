@@ -11,7 +11,8 @@ export interface ColorState {
   presetsColorList: GradientPresetsRecord[];
 }
 
-const PRESET_COLOR: GradientPresetsRecord = { name: "默认渐变色", colors: ["#d9afd9", "#97d9e1"], createTime: null };
+export const PRESET_COLOR: GradientPresetsRecord = { name: "默认渐变色", colors: ["#d9afd9", "#97d9e1"], createTime: null };
+export const PRESET_COLORS: GradientPresetsRecord[] = [PRESET_COLOR];
 
 export const useColorStore = defineStore("color", {
   state: (): ColorState => ({
