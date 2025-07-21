@@ -54,7 +54,9 @@ export const useColorStore = defineStore("color", {
           this.selectedIndex = this.selectColorList.length - 2;
         }
         this.selectColorList.splice(index, 1);
+        return true;
       }
+      return false;
     },
     appendToSelectColorList(color?: HexColorString) {
       this.selectColorList.push(color ?? randomColor());
