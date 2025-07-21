@@ -31,7 +31,7 @@ class I18nLoader {
     }
 
     return createI18n({
-      locale: this.getBrowserLanguage(),
+      locale: I18nLoader.getBrowserLanguage(),
       fallbackLocale: "en-US",
       legacy: false,
       messages: translations,
@@ -51,7 +51,7 @@ class I18nLoader {
     }
   }
 
-  private getBrowserLanguage() {
+  public static getBrowserLanguage() {
     const searchParams = new URLSearchParams(location.search);
     let locale = "en_US";
     let fallbackLocale = "en_US";

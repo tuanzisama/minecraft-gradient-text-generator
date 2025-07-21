@@ -46,6 +46,7 @@ import { isHexColor } from '@/utils/color';
 import { PRESET_COLORS, useColorStore } from '@/plugins/store/modules/color';
 import { format as timeAgoFormat } from 'timeago.js';
 import { useI18n } from 'vue-i18n';
+import { I18nLoader } from '@/plugins/i18n';
 
 const props = withDefaults(defineProps<McgPresetsProps>(), {});
 const emit = defineEmits<McgPresetsEmit>();
@@ -83,7 +84,7 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
       }
 
       const date = new Date(props.row.createTime);
-      return h(Tooltip, { content: date.toLocaleString(), theme: 'light' }, {
+      return h(Tooltip, { content: date.toLocaleString(I18nLoader.getBrowserLanguage()), theme: 'light' }, {
         default: () => [h('span', null, timeAgoFormat(date, i18n.t('app.timeago_locale')))]
       })
     }
