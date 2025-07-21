@@ -4,7 +4,7 @@ import { genColorGradients } from "@/utils/color";
 
 /**
  * RoseGarden by Rosewood-Development
- * 
+ *
  * @see https://github.com/Rosewood-Development/RoseGarden
  * @see https://wiki.rosewooddev.io/RoseChat/features/
  * @example <g:#000000:#FFFFFF>Text
@@ -16,7 +16,11 @@ class RoseGardenGradientAdapterClazz extends GradientProcessor {
     super(tags, colors, options);
 
     if (options?.processSimplify) {
-      this.simplifyColors = genColorGradients(colors, this.chunkSize);
+      if (colors.length === 2 && this.chunkSize === 1) {
+        this.simplifyColors = colors;
+      } else {
+        this.simplifyColors = genColorGradients(colors, this.chunkSize);
+      }
     }
   }
 
@@ -42,10 +46,7 @@ class RoseGardenGradientAdapterClazz extends GradientProcessor {
     const texts: string[] = [];
 
     if (this.options?.processSimplify) {
-      pcolors = [
-        this.simplifyColors[chunkIndex],
-        this.simplifyColors[chunkIndex + 1] || this.simplifyColors[0]
-      ];
+      pcolors = [this.simplifyColors[chunkIndex], this.simplifyColors[chunkIndex + 1] || this.simplifyColors[0]];
 
       chunk.tags.forEach((tag) => {
         texts.push(tag.character);
