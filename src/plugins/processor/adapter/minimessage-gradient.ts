@@ -9,7 +9,11 @@ class MiniMessageGradientAdapterClazz extends GradientProcessor {
     super(tags, colors, options);
 
     if (options?.processSimplify) {
-      this.simplifyColors = genColorGradients(colors, this.chunkSize);
+      if (colors.length === 2 && this.chunkSize === 1) {
+        this.simplifyColors = colors;
+      } else {
+        this.simplifyColors = genColorGradients(colors, this.chunkSize);
+      }
     }
   }
 
@@ -35,11 +39,9 @@ class MiniMessageGradientAdapterClazz extends GradientProcessor {
     const texts: string[] = [];
 
     if (this.options?.processSimplify) {
-      pcolors = [
-        this.simplifyColors[chunkIndex],
-        this.simplifyColors[chunkIndex + 1] || this.simplifyColors[0]
-      ];
+      pcolors = [this.simplifyColors[chunkIndex], this.simplifyColors[chunkIndex + 1] || this.simplifyColors[0]];
 
+      console.info(this.simplifyColors, pcolors);
       chunk.tags.forEach((tag) => {
         texts.push(tag.character);
       });

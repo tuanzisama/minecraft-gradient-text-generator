@@ -50,6 +50,7 @@ export default {
         import: "匯入",
         export: "匯出",
         clear: "清空",
+        download_template: "下載模板",
       },
       table: {
         column: {
@@ -66,6 +67,7 @@ export default {
       import_success: "已匯入 {count} 條漸層色預設",
       import_failed: "無法識別此文件，請重試或聯絡開發者",
       export_success: "預設匯出成功",
+      download_template_success: "模板下載成功",
     },
     import: {
       title: "匯入漸層色",

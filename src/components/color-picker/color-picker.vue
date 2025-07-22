@@ -4,41 +4,57 @@
       <color-bar ref="colorBarRef" @on-select="onColorBarSelectHandler" />
     </div>
     <div class="color-picker-body">
-      <picker ref="pickerRef" v-if="colorStore.selectColorList.length !== 0"
-        v-model="colorStore.selectColorList[colorStore.selectedIndex]" @on-change="onPickerChangeHandler">
+      <picker
+        ref="pickerRef"
+        v-if="colorStore.selectColorList.length !== 0"
+        v-model="colorStore.selectColorList[colorStore.selectedIndex]"
+        @on-change="onPickerChangeHandler"
+      >
       </picker>
       <div class="color-list-wrapper">
-        <draggable ref="draggableRef" v-model="colorStore.selectColorList" handle=".color-cell" tag="ul" row-key="index"
-          item-key="item" class="color-list" :delay="100" :delay-on-touch-only="true" :touch-start-threshold="35"
-          filter='input,select,textarea,label,button,fieldset,legend,datalist,output,option,optgroup'
-          :prevent-on-filter="false" @change="onDraggableChangeHandler">
+        <draggable
+          ref="draggableRef"
+          v-model="colorStore.selectColorList"
+          handle=".color-cell"
+          tag="ul"
+          row-key="index"
+          item-key="item"
+          class="color-list"
+          :delay="100"
+          :delay-on-touch-only="true"
+          :touch-start-threshold="35"
+          filter="input,select,textarea,label,button,fieldset,legend,datalist,output,option,optgroup"
+          :prevent-on-filter="false"
+          @change="onDraggableChangeHandler"
+        >
           <template #item="{ element, index }">
-            <li class="color-cell" :style="`--color-hex: ${element}`" :data-index="index + 1"
+            <li
+              class="color-cell"
+              :style="`--color-hex: ${element}`"
+              :data-index="index + 1"
               :class="{ 'color-cell--active': colorStore.selectedIndex === index }"
-              @click="onColorCellClickHandler(element, index)">
+              @click="onColorCellClickHandler(element, index)"
+            >
               <div class="color-cell__cube"></div>
-              <hex-input v-model="colorStore.selectColorList[index]" style="width: 80px"
-                @on-change="onHexInputChangeHandler" theme="ghost" />
+              <hex-input v-model="colorStore.selectColorList[index]" style="width: 80px" @on-change="onHexInputChangeHandler" theme="ghost" />
               <span class="color-cell__delete" @click.stop="onColorCellDeleteHandler(element, index)">×</span>
             </li>
           </template>
         </draggable>
         <div class="color-operator">
           <t-button theme="success" size="small" @click="onAddColorClickHandler">
-            <span class="material-symbols-outlined" style="font-size: 18px;line-height: normal;margin-right: 2px;"
-              slot="icon">
-              casino
-            </span>
-            {{ $t('picker.button.feeling_lucky') }}
+            <span class="material-symbols-outlined" style="font-size: 18px; line-height: normal; margin-right: 2px" slot="icon"> casino </span>
+            {{ $t("picker.button.feeling_lucky") }}
           </t-button>
-          <t-popconfirm :content="$t('picker.reset_confirm')" placement="bottom" theme="warning"
-            @confirm="onResetClickHandler">
-            <t-button theme="danger" size="small" variant="outline">{{ $t('picker.button.reset') }}</t-button>
+          <t-popconfirm :content="$t('picker.reset_confirm')" placement="bottom" theme="warning" @confirm="onResetClickHandler">
+            <t-button theme="danger" size="small" variant="outline">{{ $t("picker.button.reset") }}</t-button>
           </t-popconfirm>
           <t-button theme="primary" size="small" variant="outline" @click="isMcgPresetsDialogVisible = true">{{
-            $t('picker.button.presets') }}</t-button>
+            $t("picker.button.presets")
+          }}</t-button>
           <t-button theme="warning" size="small" variant="outline" @click="isTextImportDialogVisible = true">{{
-            $t('picker.button.import') }}</t-button>
+            $t("picker.button.import")
+          }}</t-button>
         </div>
       </div>
     </div>
@@ -66,10 +82,10 @@ const colorBarRef = ref<ColorBarExpose>();
 const pickerRef = ref<PickerExpose>();
 const draggableRef = ref<typeof draggable>();
 const colorStore = useColorStore();
-const i18n = useI18n()
+const i18n = useI18n();
 
-const isTextImportDialogVisible = ref<boolean>(false)
-const isMcgPresetsDialogVisible = ref<boolean>(false)
+const isTextImportDialogVisible = ref<boolean>(false);
+const isMcgPresetsDialogVisible = ref<boolean>(false);
 
 onMounted(() => {
   colorStore.resetSelectColorList();
@@ -92,8 +108,10 @@ const onColorCellClickHandler = (hexColor: HexColorString, index: number) => {
 
 const onColorCellDeleteHandler = (hexColor: HexColorString, index: number) => {
   if (colorAssertion(hexColor)) {
-    colorStore.pullSelectColorListAt(index);
-    pickerChangeBroadcaster();
+    const status = colorStore.pullSelectColorListAt(index);
+    if (status) {
+      pickerChangeBroadcaster();
+    }
   }
 };
 
@@ -134,40 +152,39 @@ const onColorBarSelectHandler = (colorStopHex: HexColorString) => {
     setTimeout(() => {
       const ulElement = draggableRef.value?.$el as HTMLUListElement;
       if (ulElement) {
-        ulElement.scrollTo({ top: ulElement.scrollHeight, behavior: "smooth", });
+        ulElement.scrollTo({ top: ulElement.scrollHeight, behavior: "smooth" });
       }
     }, 100);
     pickerChangeBroadcaster();
   }
 };
 
-
 const onResetClickHandler = () => {
   colorStore.resetSelectColorList();
-  colorStore.setSelectColorIndex(0)
-  pickerRef.value?.setColor(colorStore.getCurrentColor)
+  colorStore.setSelectColorIndex(0);
+  pickerRef.value?.setColor(colorStore.getCurrentColor);
   pickerChangeBroadcaster();
 };
 
 const onTextImportChangeHandler = (hexColors: HexColorString[]) => {
-  colorStore.setSelectColorList(hexColors)
+  colorStore.setSelectColorList(hexColors);
   pickerChangeBroadcaster();
-}
+};
 
 const onMcgPresetsApplyHandler = (hexColors: HexColorString[]) => {
-  colorStore.setSelectColorList(hexColors)
-  isMcgPresetsDialogVisible.value = false
-  colorStore.setSelectColorIndex(0)
-  pickerRef.value?.setColor(colorStore.getCurrentColor)
+  colorStore.setSelectColorList(hexColors);
+  isMcgPresetsDialogVisible.value = false;
+  colorStore.setSelectColorIndex(0);
+  pickerRef.value?.setColor(colorStore.getCurrentColor);
   pickerChangeBroadcaster();
-}
+};
 
 const colorAssertion = (hexColor: HexColorString) => {
   const flag = isHexColor(hexColor);
   if (!flag) {
     MessagePlugin.warning({ content: i18n.t("picker.color_incorrect") });
   }
-  return flag
+  return flag;
 };
 
 const pickerChangeBroadcaster = () => {
@@ -240,7 +257,7 @@ export interface ColorPickerEmit {
     padding: 6px 10px 6px 10px;
     @include flex-center;
     transition: all 0.3s;
-    border: 1px solid #EEEEEE;
+    border: 1px solid #eeeeee;
     position: relative;
 
     &.sortable-ghost {
