@@ -168,6 +168,23 @@ export default {
     download_success: "匯出成功",
     download_failed: "匯出失敗，請聯絡開發者",
   },
+  mobile: {
+    tab: {
+      editor: "編輯",
+      color: "顏色",
+      preview: "預覽",
+      settings: "設定",
+    },
+  },
+  settings: {
+    format: "格式",
+    display: "顯示",
+    adapter: "生成器",
+    simulate_mode: "模擬模式",
+    mode_default: "預設",
+    mode_chat: "聊天",
+    language: "語言",
+  },
   guide: {
     previous_button: "上一步",
     next_button: "下一步",

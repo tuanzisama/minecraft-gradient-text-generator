@@ -14,6 +14,6 @@ export const useTextStore = defineStore("text", {
   }),
   getters: {},
   persist: {
-    paths: [],
+    pick: [],
   },
 });

@@ -90,9 +90,10 @@ export interface HexInputEmit {
     padding-left: 20px;
     transition: all .3s;
     background: transparent;
+    color: var(--td-text-color-primary);
 
     &::selection {
-      background: #212121;
+      background: var(--td-brand-color);
       color: #ffffff;
     }
   }
@@ -105,21 +106,21 @@ export interface HexInputEmit {
     left: 7px;
     top: 50%;
     transform: translateY(-50%);
-    color: gray;
+    color: var(--td-text-color-placeholder);
   }
 
   &[data-theme="dashed"] {
     .hex-input__inner {
-      border: 2px dashed #E0E0E0;
+      border: 2px dashed var(--td-component-border);
       border-radius: 5px;
       outline: none;
 
       &:hover {
-        border-color: #9E9E9E;
+        border-color: var(--td-text-color-secondary);
       }
 
       &:focus {
-        border-color: #212121;
+        border-color: var(--td-text-color-primary);
       }
     }
 

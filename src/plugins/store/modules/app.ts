@@ -53,6 +53,6 @@ export const useAppStore = defineStore("app", {
     },
   },
   persist: {
-    paths: ["setting"],
+    pick: ["setting"],
   },
 });

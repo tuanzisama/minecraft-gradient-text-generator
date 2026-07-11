@@ -1,6 +1,6 @@
 {
   "name": "minecraft-gradient-text-generator",
-  "version": "2.7.4",
+  "version": "2.8.0",
   "license": "MIT",
   "scripts": {
     "preinstall": "npx only-allow pnpm",

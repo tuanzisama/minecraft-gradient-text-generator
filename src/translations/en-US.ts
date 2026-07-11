@@ -172,6 +172,23 @@ export default {
     download_success: "Export successful.",
     download_failed: "Export failed. Try to contact the developer.",
   },
+  mobile: {
+    tab: {
+      editor: "Editor",
+      color: "Color",
+      preview: "Preview",
+      settings: "Settings",
+    },
+  },
+  settings: {
+    format: "Format",
+    display: "Display",
+    adapter: "Adapter",
+    simulate_mode: "Simulate Mode",
+    mode_default: "Default",
+    mode_chat: "Chat",
+    language: "Language",
+  },
   guide: {
     previous_button: "Previous",
     next_button: "Next",

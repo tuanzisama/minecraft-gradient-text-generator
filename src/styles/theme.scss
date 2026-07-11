@@ -1,0 +1,97 @@
+// 青色主题 — 覆盖 TDesign 默认蓝紫色板
+:root {
+  --td-bg-color-page: #ffffff;
+  --td-bg-color-container: #ffffff;
+  --td-bg-color-container-hover: #f5f5f5;
+  --td-bg-color-container-active: #eeeeee;
+
+  // 主色
+  --td-brand-color: #14B8A6;
+  --td-brand-color-hover: #2DD4BF;
+  --td-brand-color-focus: #0D9488;
+  --td-brand-color-active: #0F766E;
+  --td-brand-color-disabled: #99F6E4;
+  --td-brand-color-light: #F0FDFA;
+
+  // 品牌色梯度
+  --td-brand-color-1: #F0FDFA;
+  --td-brand-color-2: #CCFBF1;
+  --td-brand-color-3: #99F6E4;
+  --td-brand-color-4: #5EEAD4;
+  --td-brand-color-5: #2DD4BF;
+  --td-brand-color-6: #14B8A6;
+  --td-brand-color-7: #0D9488;
+  --td-brand-color-8: #0F766E;
+  --td-brand-color-9: #115E59;
+  --td-brand-color-10: #134E4A;
+
+  // 文本色（浅色模式）
+  --td-text-color-primary: #17233d;
+  --td-text-color-secondary: #606266;
+  --td-text-color-placeholder: #909399;
+
+  // 边框色（浅色模式）
+  --td-component-border: #e4e7ed;
+
+  // 链接色
+  --td-link-color: #14B8A6;
+  --td-link-hover-color: #2DD4BF;
+  --td-link-active-color: #0F766E;
+  --td-link-focus-color: #0D9488;
+  --td-link-disabled-color: #99F6E4;
+
+  // 布局变量
+  --layout-max-width: 1440px;
+  --layout-padding-x: 24px;
+  --layout-padding-x-responsive: 16px;
+
+  // Footer 变量（浅色模式）
+  --td-text-color-footer: #666;
+  --td-text-color-footer-link: #14B8A6;
+  --td-text-color-footer-link-hover: #0D9488;
+
+  // 主题切换过渡
+  --theme-transition: 0.3s ease;
+}
+
+// 暗色模式
+html.dark {
+  // 背景色
+  --td-bg-color-page: #1a1a1a;
+  --td-bg-color-container: #242424;
+  --td-bg-color-container-hover: #2a2a2a;
+  --td-bg-color-container-active: #303030;
+
+  // 文本色
+  --td-text-color-primary: #e5e5e5;
+  --td-text-color-secondary: #a0a0a0;
+  --td-text-color-placeholder: #666;
+
+  // 边框色
+  --td-component-border: #3a3a3a;
+
+  // 阴影
+  --td-shadow-1: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --td-shadow-2: 0 4px 16px rgba(0, 0, 0, 0.4);
+
+  // Footer 变量（暗色模式）
+  --td-text-color-footer: #888;
+  --td-text-color-footer-link: #2DD4BF;
+  --td-text-color-footer-link-hover: #14B8A6;
+}
+
+// 主题切换过渡动画
+html {
+  transition: background-color var(--theme-transition), color var(--theme-transition);
+}
+
+body {
+  transition: background-color var(--theme-transition), color var(--theme-transition);
+}
+
+// 响应式布局变量
+@media (max-width: 768px) {
+  :root {
+    --layout-padding-x: var(--layout-padding-x-responsive);
+  }
+}

@@ -1,66 +1,28 @@
-@media screen and (max-width: 600px) {
-  .cg-container {
-    height: auto !important;
-  }
-
-  .cg-header {
-    width: 96% !important;
-    height: auto !important;
-    margin: 60px auto 20px auto;
-    &__title {
-      font-size: 28px !important;
-      &::after {
-        top: -22px !important;
-        left: auto !important;
-        right: 0;
-      }
-    }
-  }
-
+// 平板端 (768-1023px)
+@media screen and (min-width: 768px) and (max-width: 1023px) {
   .cg-body {
-    flex-direction: column;
-    gap: 10px;
-    min-height: auto !important;
     &__input {
-      width: 100% !important;
-      height: 400px !important;
-    }
-    .color-picker-body {
-      height: auto !important;
-      align-items: center;
-      flex-direction: column;
-      .picker-container {
-        margin-bottom: 20px !important;
-        .picker {
-          margin-right: 0 !important;
-        }
-      }
-      .color-list-wrapper {
-        width: 80%;
-        .color-list {
-          width: 100% !important;
-          height: auto !important;
-          min-height: 200px;
-          max-height: 300px;
-        }
-      }
+      width: 40% !important;
     }
   }
 
   .text-output-wrapper {
-    height: 600px !important;
     .text-params {
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
+
       .tool-bar-wrapper {
         margin-left: 0 !important;
       }
     }
   }
+}
 
-  .mcg-presets-dialog {
-    .t-dialog {
-      width: 100% !important;
+// 桌面端小屏幕微调 (1024-1200px)
+@media screen and (min-width: 1024px) and (max-width: 1200px) {
+  .cg-body {
+    &__input {
+      width: 38% !important;
     }
   }
 }

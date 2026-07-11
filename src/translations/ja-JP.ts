@@ -174,6 +174,23 @@ export default {
     download_success: "エクスポート成功",
     download_failed: "エクスポートに失敗しました。開発者に連絡してください",
   },
+  mobile: {
+    tab: {
+      editor: "編集",
+      color: "カラー",
+      preview: "プレビュー",
+      settings: "設定",
+    },
+  },
+  settings: {
+    format: "フォーマット",
+    display: "表示",
+    adapter: "アダプター",
+    simulate_mode: "シミュレーションモード",
+    mode_default: "デフォルト",
+    mode_chat: "チャット",
+    language: "言語",
+  },
   guide: {
     previous_button: "前へ",
     next_button: "次へ",

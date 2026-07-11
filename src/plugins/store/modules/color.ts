@@ -103,6 +103,6 @@ export const useColorStore = defineStore("color", {
     },
   },
   persist: {
-    paths: ["presetsColorList"],
+    pick: ["presetsColorList"],
   },
 });

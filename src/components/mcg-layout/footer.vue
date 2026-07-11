@@ -44,11 +44,22 @@ const i18n = useI18n()
 .cg-footer {
   font-size: 12px;
   text-align: center;
-  padding: 40px 0;
-  background: #ffffff;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 16px var(--layout-padding-x);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  color: var(--td-text-color-footer);
+  border-top: 1px solid var(--td-component-border);
+
+  :deep(.t-link) {
+    color: var(--td-text-color-footer-link);
+
+    &:hover {
+      color: var(--td-text-color-footer-link-hover);
+    }
+  }
 }
 
 .badge-tag {

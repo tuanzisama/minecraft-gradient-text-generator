@@ -222,6 +222,7 @@ export interface ColorPickerEmit {
     width: 100%;
     height: 240px;
     display: flex;
+    gap: 12px;
   }
 }
 
@@ -257,11 +258,11 @@ export interface ColorPickerEmit {
     padding: 6px 10px 6px 10px;
     @include flex-center;
     transition: all 0.3s;
-    border: 1px solid #eeeeee;
+    border: 1px solid var(--td-component-border);
     position: relative;
 
     &.sortable-ghost {
-      background-color: #dbdcdd;
+      background-color: var(--td-bg-color-container-hover);
     }
 
     &:last-child {
@@ -284,7 +285,7 @@ export interface ColorPickerEmit {
       font-size: 35px;
       font-family: "Barlow";
       font-weight: 700;
-      color: #f0f1f2;
+      color: var(--td-text-color-placeholder);
       user-select: none;
       pointer-events: none;
       transition: color 0.3s;
@@ -297,27 +298,27 @@ export interface ColorPickerEmit {
       display: block;
       width: 95%;
       height: 1px;
-      background-color: #ebeef5;
+      background-color: var(--td-component-border);
       left: 50%;
       bottom: 0;
       transform: translateX(-50%);
     }
 
     &--active {
-      background: #f0f1f2;
-      border: 1px solid #d9dcdf;
+      background: var(--td-bg-color-container);
+      border: 1px solid var(--td-component-border);
 
       .color-cell__cube {
-        border: 3px solid #ffffff;
-        outline: 2px solid #17233d;
+        border: 3px solid var(--td-bg-color-container);
+        outline: 2px solid var(--td-text-color-primary);
       }
 
       .color-cell__delete {
-        color: #a7aeb9;
+        color: var(--td-text-color-secondary);
       }
 
       &::before {
-        color: #ffffff;
+        color: var(--td-text-color-primary);
       }
     }
 
@@ -329,7 +330,7 @@ export interface ColorPickerEmit {
       cursor: pointer;
       margin-right: 15px;
       flex-shrink: 0;
-      border: 3px solid #e4e7ed;
+      border: 3px solid var(--td-component-border);
       outline: 2px solid transparent;
       transition: all 0.3s;
     }
@@ -341,7 +342,7 @@ export interface ColorPickerEmit {
     }
 
     &__delete {
-      color: #dfe1e6;
+      color: var(--td-text-color-placeholder);
       cursor: pointer;
       font-weight: 700;
       font-size: 30px;
@@ -352,7 +353,7 @@ export interface ColorPickerEmit {
       transform: translateY(-2px);
 
       &:hover {
-        color: #17233d;
+        color: var(--td-text-color-primary);
       }
     }
   }

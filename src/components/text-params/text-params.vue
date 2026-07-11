@@ -84,10 +84,6 @@ export interface TextParamsProps {
 
 .processor-select {
   width: auto;
-
-  &:deep(.t-input__wrap.t-input--auto-width) {
-    min-width: 250px;
-  }
 }
 
 .text-output-action {

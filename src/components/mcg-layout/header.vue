@@ -1,14 +1,23 @@
 <template>
   <header class="cg-header">
-    <p class="cg-header__title" :data-version="pkgVersion + modeText">{{ $t('app.title') }}</p>
-    <p class="cg-header__summary">
-      <span class="header-tag">{{ $t("app.slogan", { count: processorCount }) }}</span>
-    </p>
+    <div class="cg-header__brand">
+      <p class="cg-header__title">{{ $t('app.title') }}</p>
+      <span class="cg-header__version">v{{ pkgVersion }}{{ modeText }}</span>
+    </div>
+    <div class="cg-header__right">
+      <span class="cg-header__slogan">{{ $t("app.slogan", { count: processorCount }) }}</span>
+      <button class="cg-header__theme-btn" @click="toggleTheme" :title="isDark ? 'dark' : 'light'">
+        <span class="material-symbols-outlined">{{ getThemeIcon() }}</span>
+      </button>
+    </div>
   </header>
 </template>
 <script lang="ts" setup>
 import { adapterMap } from "@/plugins/processor";
 import { computed } from "vue";
+import { useTheme } from "@/composables/use-theme";
+
+const { isDark, toggleTheme, getThemeIcon } = useTheme();
 
 const processorCount = computed(() => {
   return adapterMap.size;
@@ -25,50 +34,64 @@ const modeText = computed(() => {
 
 <style lang="scss" scoped>
 .cg-header {
-  height: 140px;
+  height: 64px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  justify-content: space-between;
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: 0 var(--layout-padding-x);
 
-  &__title {
-    position: relative;
-    font-size: 40px;
-    font-weight: 700;
-    text-align: center;
-
-    &::after {
-      content: "v" attr(data-version);
-      position: absolute;
-      top: 0;
-      left: calc(100% + 5px);
-
-      padding: 2px 4px;
-      border-radius: 5px;
-      background-color: #f0f2f5;
-      font-size: 12px;
-      white-space: nowrap;
-    }
+  &__brand {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
   }
 
-  &__summary {
+  &__title {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  &__version {
+    font-size: 12px;
+    color: var(--td-text-color-placeholder);
+    background: var(--td-bg-color-container);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  &__right {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin: 15px 0;
+    gap: 16px;
+  }
 
-    .header-tag {
-      font-size: 14px;
-      padding: 6px 10px;
-      background: #f5f7fa;
-      border: 1px solid #dcdfe6;
-      color: #909399;
-      border-radius: 5px;
-      display: inline-flex;
-      align-items: center;
-      overflow: hidden;
-      user-select: none;
-      line-height: 18px;
+  &__slogan {
+    font-size: 13px;
+    color: var(--td-text-color-placeholder);
+    user-select: none;
+  }
+
+  &__theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--td-text-color-primary);
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+
+    &:hover {
+      background: var(--td-bg-color-container-hover);
+    }
+
+    :deep(.material-symbols-outlined) {
+      font-size: 22px;
     }
   }
 }

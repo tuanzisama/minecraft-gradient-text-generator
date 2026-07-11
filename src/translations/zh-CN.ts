@@ -169,6 +169,23 @@ export default {
     download_success: "导出成功",
     download_failed: "导出失败，请联系开发者",
   },
+  mobile: {
+    tab: {
+      editor: "编辑",
+      color: "颜色",
+      preview: "预览",
+      settings: "设置",
+    },
+  },
+  settings: {
+    format: "格式",
+    display: "显示",
+    adapter: "生成器",
+    simulate_mode: "模拟模式",
+    mode_default: "默认",
+    mode_chat: "聊天",
+    language: "语言",
+  },
   guide: {
     previous_button: "上一步",
     next_button: "下一步",
