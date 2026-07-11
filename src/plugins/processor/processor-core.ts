@@ -8,6 +8,7 @@ export abstract class GradientProcessor<T = string> {
   protected gradientColors: HexColorString[];
   protected vanillaCharCode: string;
   private className: string;
+  private _chaptersCache: Chapters | null = null;
 
   constructor(richTagChunk: RichTagChunk, colors: HexColorString[], options?: GradientProcessAdapterOptions) {
     this.richTagChunk = richTagChunk;
@@ -54,6 +55,8 @@ export abstract class GradientProcessor<T = string> {
   abstract processor(tag: Chunk, chunkIndex: number): T;
 
   public get chapters(): Chapters {
+    if (this._chaptersCache) return this._chaptersCache;
+
     let startIndex = 0;
 
     const chapters = this.richTagChunk.map<Chunks>((chapter) => {
@@ -79,6 +82,8 @@ export abstract class GradientProcessor<T = string> {
       });
       return chunks;
     });
+
+    this._chaptersCache = chapters;
     return chapters;
   }
 
@@ -107,8 +112,6 @@ export abstract class GradientProcessor<T = string> {
   }
 
   public generateAsHTML(): string {
-    let startIndex = 0;
-
     const doc = document.createElement("p");
     this.chapters.forEach((chunks) => {
       const chapterEl = document.createElement("p");
