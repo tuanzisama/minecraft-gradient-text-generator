@@ -129,46 +129,7 @@ export interface TextOutputExpose {
 
   &:deep(span) {
     color: var(--text-color);
-
-    &.is-bold {
-      font-weight: bold;
-    }
-
-    &.is-italic {
-      font-style: italic;
-    }
-
-    &.is-underlined {
-      display: inline-block;
-      position: relative;
-
-      &:after {
-        content: "";
-        position: absolute;
-        bottom: calc(0px - 2px);
-        left: 0;
-        display: inline-block;
-        width: 100%;
-        height: 2px;
-        background: var(--text-color);
-      }
-    }
-
-    &.is-strikethrough {
-      display: inline-block;
-      position: relative;
-
-      &::before {
-        content: "";
-        position: absolute;
-        top: calc(50% - 2px);
-        left: 0;
-        display: inline-block;
-        width: 100%;
-        height: 2px;
-        background: var(--text-color);
-      }
-    }
+    @include preview-text-format;
   }
 }
 
