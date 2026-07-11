@@ -15,8 +15,8 @@ class MotdAdapterClazz extends GradientProcessor {
       italic: `${this.charCode}o`,
       underlined: `${this.charCode}n`,
       strikethrough: `${this.charCode}m`,
-      obfuscated: `${this.charCode}m`,
-      reset: `${this.charCode}m`,
+      obfuscated: `${this.charCode}k`,
+      reset: `${this.charCode}r`,
     };
   }
 
