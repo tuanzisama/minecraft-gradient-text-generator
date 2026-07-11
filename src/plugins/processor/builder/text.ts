@@ -30,7 +30,7 @@ export class TextBuilder {
 
     let text = this.characters.reduce((acc, builder) => acc.concat(builder.build(formatTemplate)), "");
 
-    return text + (options?.withReset ? this.formatPresets.reset : "");
+    return text + (options?.withReset ? this.formatPresets?.reset ?? "" : "");
   }
 }
 
