@@ -21,7 +21,7 @@ import { useColorStore } from "../../plugins/store/modules/color";
 import { adapterMap } from "../../plugins/processor";
 import { useEventBus } from "../../plugins/eventbus";
 import TextParams from "../text-params/text-params.vue";
-import { isEmpty } from "lodash-es";
+import { flatten, isEmpty } from "lodash-es";
 import { McgCard } from "../mcg-card";
 import { Preview } from "../preview-pip";
 
@@ -51,7 +51,7 @@ const generateOutput = (tags: RichTagChunk | null, colors?: HexColorString[]) =>
   const $tags = tags ?? appStore.processTags;
   const $colors = (colors ?? colorStore.selectColorList) as HexColorString[];
 
-  if (isEmpty($tags) || isEmpty($colors)) {
+  if (!$tags?.length || !$tags.some((chunk) => chunk.length > 0) || isEmpty($colors)) {
     return;
   }
 
