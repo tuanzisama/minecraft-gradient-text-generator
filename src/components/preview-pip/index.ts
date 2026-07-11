@@ -1,6 +1,6 @@
 import { Component, createApp, h } from "vue";
 import Preview from "./preview.vue";
-import { useTextStore } from "@/plugins/store/modules/text";
+import pinia from "@/plugins/store";
 
 interface PreviewPipOptions {
   onClose?: (event: PageTransitionEvent) => void;
@@ -11,12 +11,12 @@ export interface PreviewPip {
 }
 
 export async function requestPreviewPip(options?: PreviewPipOptions): Promise<PreviewPip> {
-  const textStore = useTextStore();
-
   const wrapperEl = document.createElement("div");
   const app = createApp({
-    render: () => h(Preview as Component, { adapter: textStore.adapter }),
+    render: () => h(Preview as Component),
   });
+
+  app.use(pinia);
 
   app.mount(wrapperEl);
 
@@ -38,6 +38,7 @@ export async function requestPreviewPip(options?: PreviewPipOptions): Promise<Pr
   });
 
   pipWindow.addEventListener("pagehide", (event: PageTransitionEvent) => {
+    app.unmount();
     options?.onClose?.(event);
   });
 
