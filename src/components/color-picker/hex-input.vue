@@ -40,7 +40,7 @@ const onInputPasteHandler = (event: ClipboardEvent) => {
     return;
   }
 
-  privateValue.value = pasteValue.replace(/#|&/g, "") as HexColorString;
+  privateValue.value = pasteValue.replace(/#|&/g, "");
 };
 
 const onInputChangeHandler = () => {
