@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useAppStore } from "../../plugins/store/modules/app";
 import { useTextStore } from "../../plugins/store/modules/text";
 import { useColorStore } from "../../plugins/store/modules/color";
@@ -35,8 +35,16 @@ const htmlResult = ref('')
 
 const usageTime = ref<number>(0)
 
+const onGenerateInvoke = ({ tags, colors }: { tags: RichTagChunk | null; colors?: HexColorString[] }) => {
+  generateOutput(tags, colors);
+};
+
 onMounted(() => {
-  eventBus.on("generate:invoke", ({ tags, colors }) => generateOutput(tags, colors));
+  eventBus.on("generate:invoke", onGenerateInvoke);
+});
+
+onUnmounted(() => {
+  eventBus.off("generate:invoke", onGenerateInvoke);
 });
 
 const generateOutput = (tags: RichTagChunk | null, colors?: HexColorString[]) => {
