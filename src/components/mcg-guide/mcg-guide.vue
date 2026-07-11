@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 import { computed, createVNode, onMounted, ref } from 'vue';
-import { useSearchParams } from '@/compostable/search-params';
+import { useSearchParams } from '@/composables/search-params.js';
 import GuideBody from './guide-body.vue'
 import { GuideProps } from 'tdesign-vue-next';
 import { useI18n } from 'vue-i18n';
