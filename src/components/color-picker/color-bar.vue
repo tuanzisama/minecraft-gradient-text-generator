@@ -29,11 +29,11 @@ onMounted(() => {
     drawCanvas();
   }
 
-  window.addEventListener('resize', onWindowReszieHandler)
+  window.addEventListener('resize', onWindowResizeHandler)
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onWindowReszieHandler)
+  window.removeEventListener('resize', onWindowResizeHandler)
 })
 
 const drawCanvas = () => {
@@ -69,7 +69,7 @@ const onColorStopClickHandler = () => {
   emit("on-select", colorStopHex);
 };
 
-const onWindowReszieHandler = debounce(() => {
+const onWindowResizeHandler = debounce(() => {
   if (colorbarRef.value) {
     colorbarRef.value.width = colorbarRef.value.parentElement!.offsetWidth;
     colorbarRef.value.height = colorbarRef.value.parentElement!.offsetHeight;
