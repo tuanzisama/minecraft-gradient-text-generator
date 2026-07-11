@@ -26,7 +26,6 @@ import TextInput from "../text-input/text-input.vue";
 import ColorPicker from "../color-picker/color-picker.vue";
 import TextOutput from "../text-output/text-output.vue";
 import McgSettings from "../mcg-settings/mcg-settings.vue";
-import type { HexColorString } from "@/types/base";
 
 type TabKey = "editor" | "color" | "preview" | "settings";
 

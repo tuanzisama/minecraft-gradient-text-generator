@@ -18,7 +18,7 @@
           handle=".color-cell"
           tag="ul"
           row-key="index"
-          item-key="item"
+          :item-key="(item: string) => item"
           class="color-list"
           :delay="100"
           :delay-on-touch-only="true"
@@ -27,6 +27,7 @@
           :prevent-on-filter="false"
           @change="onDraggableChangeHandler"
         >
+          <!-- @vue-ignore -->
           <template #item="{ element, index }">
             <li
               class="color-cell"

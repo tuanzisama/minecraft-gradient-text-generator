@@ -23,11 +23,19 @@ export default defineConfig({
         entryFileNames: `static/entry/[name]-[hash].js`,
         chunkFileNames: `static/chunk/[name]-[hash].js`,
         assetFileNames: `static/file/[name]-[hash].[ext]`,
-        manualChunks: {
-          vue: ["vue"],
-          lodash: ["lodash-es"],
-          vuedraggable: ["vuedraggable-es"],
-          tdesign: ["tdesign-vue-next"],
+        manualChunks(id) {
+          if (id.includes("node_modules/vue/") || id.includes("node_modules/@vue/")) {
+            return "vue";
+          }
+          if (id.includes("node_modules/lodash-es")) {
+            return "lodash";
+          }
+          if (id.includes("node_modules/vuedraggable-es")) {
+            return "vuedraggable";
+          }
+          if (id.includes("node_modules/tdesign-vue-next")) {
+            return "tdesign";
+          }
         },
       },
     },
@@ -38,6 +46,7 @@ export default defineConfig({
         additionalData: `
             @import "@/styles/mixins.scss";
         `,
+        silenceDeprecations: ["import", "global-builtin", "color-functions"],
       },
     },
   },

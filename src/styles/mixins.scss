@@ -96,7 +96,7 @@
   }
 }
 
-@mixin custom-scrollbar($size: 8px, $radius: 8px, $bgColor: #cdd0d6) {
+@mixin custom-scrollbar($size: 8px, $radius: 8px, $bgColor: #cdd0d6, $hoverColor: #b8bcc3) {
   &::-webkit-scrollbar {
     background-color: transparent;
     width: $size;
@@ -109,7 +109,7 @@
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background-color: darken($bgColor, 5%);
+    background-color: $hoverColor;
   }
 
   &::-webkit-scrollbar-button {

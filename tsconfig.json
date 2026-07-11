@@ -3,27 +3,24 @@
     "target": "esnext",
     "useDefineForClassFields": true,
     "module": "esnext",
-    "moduleResolution": "node",
     "removeComments": false,
     "strict": true,
     "jsx": "preserve",
     "sourceMap": false,
-    "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "isolatedModules": true,
-    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src/**/*.d.ts",
-    "node_modules/tdesign-vue-next/global.d.ts",
-    "src/types/*.d.ts"
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.vue",
+    "./src/**/*.d.ts",
+    "./node_modules/tdesign-vue-next/global.d.ts",
+    "./src/types/*.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["./node_modules"]
 }
