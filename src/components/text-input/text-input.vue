@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, shallowRef } from "vue";
+import { computed, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import EditorJS from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
 import Strikethrough from '@sotaproject/strikethrough';
@@ -106,6 +106,10 @@ onMounted(() => {
     }
   })
   editorInstance.value = instance
+})
+
+onUnmounted(() => {
+  editorInstance.value?.destroy()
 })
 
 const nodeNameParser = (nodes: ChildNode[]) => {
