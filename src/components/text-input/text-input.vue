@@ -203,10 +203,6 @@ interface NodeRecursionRecord {
         user-select: none;
         text-align: center;
 
-        .material-symbols-outlined {
-          line-height: 45px;
-        }
-
         &:hover {
           background: rgb(245, 245, 245);
         }

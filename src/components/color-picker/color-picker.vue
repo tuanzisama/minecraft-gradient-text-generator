@@ -44,7 +44,7 @@
         </draggable>
         <div class="color-operator">
           <t-button theme="success" size="small" @click="onAddColorClickHandler">
-            <span class="material-symbols-outlined" style="font-size: 18px; line-height: normal; margin-right: 2px" slot="icon"> casino </span>
+            <i-material-symbols-casino style="font-size: 18px; line-height: normal; margin-right: 2px" slot="icon" />
             {{ $t("picker.button.feeling_lucky") }}
           </t-button>
           <t-popconfirm :content="$t('picker.reset_confirm')" placement="bottom" theme="warning" @confirm="onResetClickHandler">

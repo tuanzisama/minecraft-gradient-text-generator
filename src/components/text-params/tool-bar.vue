@@ -25,6 +25,15 @@ import { saveAs } from "@/utils/file";
 import { PreviewPip, requestPreviewPip } from "../preview-pip";
 import { useI18n } from "vue-i18n";
 import { I18nLoader } from "@/plugins/i18n";
+import IconFlashOn from "~icons/material-symbols/flash-on";
+import IconFlashOff from "~icons/material-symbols/flash-off";
+import IconShareWindows from "~icons/material-symbols/share-windows";
+import IconPreview from "~icons/material-symbols/preview";
+import IconPreviewOff from "~icons/material-symbols/preview-off";
+import IconPipAlt from "~icons/material-symbols/picture-in-picture-alt";
+import IconPip from "~icons/material-symbols/pip";
+import IconDownload from "~icons/material-symbols/download";
+import IconContentCopy from "~icons/material-symbols/content-copy";
 
 const appStore = useAppStore();
 const textStore = useTextStore();
@@ -46,7 +55,7 @@ const toolbars = reactive<ToolBarItem[]>([
     key: ToolBarModule.PROCESS_SIMPLIFY,
     label: "processor.toolbar.process_simplify",
     isActive: false,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "flash_on" : "flash_off"),
+    render: (item: ToolBarItem) => item.isActive ? h(IconFlashOn) : h(IconFlashOff),
   },
   {
     key: ToolBarModule.VANILLA_CHAR_CODE,
@@ -58,29 +67,29 @@ const toolbars = reactive<ToolBarItem[]>([
     key: ToolBarModule.SHARE,
     label: "processor.toolbar.share",
     isActive: false,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "share_windows"),
+    render: () => h(IconShareWindows),
   },
   {
     key: ToolBarModule.PREVIEW,
     label: "processor.toolbar.preview",
     isActive: true,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "preview" : "preview_off"),
+    render: (item: ToolBarItem) => item.isActive ? h(IconPreview) : h(IconPreviewOff),
   },
   {
     key: ToolBarModule.PREVIEW_PIP,
     label: "processor.toolbar.preview_pip",
     isDisplay: false,
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, item.isActive ? "picture_in_picture_alt" : "pip"),
+    render: (item: ToolBarItem) => item.isActive ? h(IconPipAlt) : h(IconPip),
   },
   {
     key: ToolBarModule.DOWNLOAD,
     label: "processor.toolbar.download",
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined" }, "download"),
+    render: () => h(IconDownload),
   },
   {
     key: ToolBarModule.COPY,
     label: "processor.toolbar.copy",
-    render: (item: ToolBarItem) => h("span", { class: "material-symbols-outlined small-icon" }, "content_copy"),
+    render: () => h(IconContentCopy, { class: "small-icon" }),
   },
 ]);
 
@@ -247,7 +256,7 @@ export interface ToolBarExpose {
 }
 
 .tool-button {
-  .material-symbols-outlined {
+  svg {
     font-size: 22px;
 
     &.small-icon {

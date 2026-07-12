@@ -8,7 +8,7 @@
       <t-link href="https://github.com/tuanzisama/minecraft-gradient-text-generator" target="_blank" theme="primary"
         style="font-weight: bold">
         Code source
-        <span class="material-symbols-outlined" style="font-size: 16px; margin-left: 5px;">open_in_new</span>
+        <i-material-symbols-open-in-new style="font-size: 16px; margin-left: 5px" />
       </t-link>
     </div>
 

@@ -5,6 +5,8 @@ import version from "vite-plugin-package-version";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { TDesignResolver } from "unplugin-vue-components/resolvers";
+import Icons from "unplugin-icons/vite";
+import IconsResolver from "unplugin-icons/resolver";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,7 +14,13 @@ export default defineConfig({
     vue(),
     version(),
     AutoImport({ resolvers: [TDesignResolver({ library: "vue-next" })] }),
-    Components({ resolvers: [TDesignResolver({ library: "vue-next" })] }),
+    Components({
+      resolvers: [
+        TDesignResolver({ library: "vue-next" }),
+        IconsResolver({ enabledCollections: ["material-symbols"] }),
+      ],
+    }),
+    Icons({ compiler: "vue3" }),
   ],
   resolve: {
     alias: [{ find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) }],

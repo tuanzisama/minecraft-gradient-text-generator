@@ -4,19 +4,19 @@
     <div class="button-group">
       <t-button theme="primary" variant="outline" @click="onImportPresetsClickHandler">
         <template #icon>
-          <span class="material-symbols-outlined">download</span>
+          <i-material-symbols-download />
         </template>
         {{ $t('picker.presets.button.import') }}
       </t-button>
       <t-button theme="primary" variant="outline" @click="onExportPresetsClickHandler">
         <template #icon>
-          <span class="material-symbols-outlined">upload</span>
+          <i-material-symbols-upload />
         </template>
         {{ $t('picker.presets.button.export') }}
       </t-button>
       <t-button theme="primary" variant="outline" @click="onDownloadPresetsTemplateClickHandler">
         <template #icon>
-          <span class="material-symbols-outlined">file_save</span>
+          <i-material-symbols-file-save />
         </template>
         {{ $t('picker.presets.button.download_template') }}
       </t-button>
@@ -24,7 +24,7 @@
         @confirm="onClearPresetsClickHandler">
         <t-button theme="danger" variant="outline">
           <template #icon>
-            <span class="material-symbols-outlined">delete_forever</span>
+            <i-material-symbols-delete-forever />
           </template>
           {{ $t('picker.presets.button.clear') }}
         </t-button>
@@ -47,6 +47,8 @@ import { PRESET_COLORS, useColorStore } from '@/plugins/store/modules/color';
 import { format as timeAgoFormat } from 'timeago.js';
 import { useI18n } from 'vue-i18n';
 import { I18nLoader } from '@/plugins/i18n';
+import IconCheck from '~icons/material-symbols/check';
+import IconDelete from '~icons/material-symbols/delete';
 
 const props = withDefaults(defineProps<McgPresetsProps>(), {});
 const emit = defineEmits<McgPresetsEmit>();
@@ -98,12 +100,12 @@ const tableColumns = ref<BaseTableCol<GradientPresetsRecord>[]>([
         default: () => [h(Space, { size: 6 }, {
           default: () => [
             h(Button, { shape: "square", variant: "text", class: cssModule['table-operate-button'], onClick: () => onApplyClickHandler(props) }, {
-              icon: () => h('span', { class: ['material-symbols-outlined', cssModule['table-operate-button-icon']] }, 'check')
+              icon: () => h(IconCheck, { class: cssModule['table-operate-button-icon'] })
             }),
             h(Popconfirm, { content: i18n.t("picker.presets.table.delete_confirm"), theme: "danger", onConfirm: () => onDeleteClickHandler(props) }, {
               default: () => [
                 h(Button, { shape: "square", variant: "text", disabled: props.row.isLocked, class: cssModule['table-operate-button'] }, {
-                  icon: () => h('span', { class: ['material-symbols-outlined', cssModule['table-operate-button-icon']] }, 'delete')
+                  icon: () => h(IconDelete, { class: cssModule['table-operate-button-icon'] })
                 })
               ]
             })
@@ -249,11 +251,6 @@ export interface McgPresetsEmit {
 }
 
 .table-operate-button-icon {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 300,
-    'GRAD' 0,
-    'opsz' 24;
   font-size: 20px;
 }
 </style>

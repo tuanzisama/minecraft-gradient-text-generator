@@ -7,7 +7,8 @@
     <div class="cg-header__right">
       <span class="cg-header__slogan">{{ $t("app.slogan", { count: processorCount }) }}</span>
       <button class="cg-header__theme-btn" @click="toggleTheme" :title="isDark ? 'dark' : 'light'">
-        <span class="material-symbols-outlined">{{ getThemeIcon() }}</span>
+        <i-material-symbols-dark-mode v-if="isDark" />
+        <i-material-symbols-light-mode v-else />
       </button>
     </div>
   </header>
@@ -17,7 +18,7 @@ import { adapterMap } from "@/plugins/processor";
 import { computed } from "vue";
 import { useTheme } from "@/composables/use-theme";
 
-const { isDark, toggleTheme, getThemeIcon } = useTheme();
+const { isDark, toggleTheme } = useTheme();
 
 const processorCount = computed(() => {
   return adapterMap.size;
@@ -90,7 +91,7 @@ const modeText = computed(() => {
       background: var(--td-bg-color-container-hover);
     }
 
-    :deep(.material-symbols-outlined) {
+    :deep(svg) {
       font-size: 22px;
     }
   }

@@ -13,7 +13,7 @@
         :class="{ 'tab-item--active': activeTab === tab.key }"
         @click="activeTab = tab.key"
       >
-        <span class="material-symbols-outlined tab-item__icon">{{ tab.icon }}</span>
+        <component :is="tab.icon" class="tab-item__icon" />
         <span class="tab-item__label">{{ $t(tab.labelKey) }}</span>
       </button>
     </nav>
@@ -26,6 +26,10 @@ import TextInput from "../text-input/text-input.vue";
 import ColorPicker from "../color-picker/color-picker.vue";
 import TextOutput from "../text-output/text-output.vue";
 import McgSettings from "../mcg-settings/mcg-settings.vue";
+import IconEditNote from "~icons/material-symbols/edit-note";
+import IconPalette from "~icons/material-symbols/palette";
+import IconVisibility from "~icons/material-symbols/visibility";
+import IconSettings from "~icons/material-symbols/settings";
 
 type TabKey = "editor" | "color" | "preview" | "settings";
 
@@ -41,11 +45,11 @@ const emit = defineEmits<{
 
 const activeTab = ref<TabKey>("editor");
 
-const tabs: { key: TabKey; icon: string; labelKey: string }[] = [
-  { key: "editor", icon: "edit_note", labelKey: "mobile.tab.editor" },
-  { key: "color", icon: "palette", labelKey: "mobile.tab.color" },
-  { key: "preview", icon: "visibility", labelKey: "mobile.tab.preview" },
-  { key: "settings", icon: "settings", labelKey: "mobile.tab.settings" },
+const tabs: { key: TabKey; icon: unknown; labelKey: string }[] = [
+  { key: "editor", icon: markRaw(IconEditNote), labelKey: "mobile.tab.editor" },
+  { key: "color", icon: markRaw(IconPalette), labelKey: "mobile.tab.color" },
+  { key: "preview", icon: markRaw(IconVisibility), labelKey: "mobile.tab.preview" },
+  { key: "settings", icon: markRaw(IconSettings), labelKey: "mobile.tab.settings" },
 ];
 
 const panelComponents: Record<TabKey, unknown> = {
