@@ -4,10 +4,10 @@
     <template v-if="!isMobile">
       <mcg-body>
         <template #colorplate>
-          <color-picker class="picker-box" @on-change="onColorPickerChangeHandler" />
+          <color-picker @on-change="onColorPickerChangeHandler" />
         </template>
         <template #input>
-          <text-input class="text-input-box" v-model="appStore.processTags" @on-change="onTextInputChangeHandler" />
+          <text-input v-model="appStore.processTags" @on-change="onTextInputChangeHandler" />
         </template>
         <template #output>
           <text-output />

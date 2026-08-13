@@ -40,8 +40,8 @@ interface GradientProcessAdapterOptions {
   processSimplify?: boolean;
 }
 
-type Formats = "bold" | "italic" | "underlined" | "strikethrough";
-type RichFormats = "reset" | "obfuscated";
+type Formats = "bold" | "italic" | "underlined" | "strikethrough" | "obfuscated";
+type RichFormats = "reset";
 type FormatPresets = Record<Formats | RichFormats, FormatExpression>;
 type FormatExpression = ContainsString<"{color}"> | string | [string, string];
 

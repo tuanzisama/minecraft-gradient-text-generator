@@ -10,9 +10,10 @@ class CSVAdapterClazz extends GradientProcessor {
     const italic = !!chunk.format?.italic;
     const underlined = !!chunk.format?.underlined;
     const strikethrough = !!chunk.format?.strikethrough;
+    const obfuscated = !!chunk.format?.obfuscated;
 
     const result = chunk.tags.map((tag) => {
-      return [tag.color, tag.character, bold, italic, underlined, strikethrough].join(",");
+      return [tag.color, tag.character, bold, italic, underlined, strikethrough, obfuscated].join(",");
     });
 
     return result.join("\n");
@@ -21,7 +22,7 @@ class CSVAdapterClazz extends GradientProcessor {
   override generateAsString(): string {
     return this.generate().reduce((acc, cur) => {
       return `${acc}${cur.join("\n")}\n`;
-    }, "color,char,bold,italic,underlined,strikethrough\n");
+    }, "color,char,bold,italic,underlined,strikethrough,obfuscated\n");
   }
 }
 

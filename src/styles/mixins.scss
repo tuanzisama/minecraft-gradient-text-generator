@@ -94,6 +94,24 @@
       background: var(--text-color);
     }
   }
+
+  &.is-obfuscated {
+    display: inline-block;
+    min-width: 0.6em;
+    text-align: center;
+
+    &[data-obfuscated-preview] {
+      position: relative;
+      color: transparent;
+
+      &::after {
+        content: attr(data-obfuscated-preview);
+        position: absolute;
+        inset: 0;
+        color: var(--text-color);
+      }
+    }
+  }
 }
 
 @mixin custom-scrollbar($size: 8px, $radius: 8px, $bgColor: #cdd0d6, $hoverColor: #b8bcc3) {

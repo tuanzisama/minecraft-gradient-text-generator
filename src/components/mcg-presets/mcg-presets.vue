@@ -31,7 +31,7 @@
       </t-popconfirm>
     </div>
 
-    <t-table class="mcg-presets-table" :data="colorStore.presetsColorList" :columns="tableColumns" :loading="isLoading"
+    <t-table class="mcg-presets-table" row-key="name" :data="colorStore.presetsColorList" :columns="tableColumns" :loading="isLoading"
       height="450px" lazy-load hover />
   </t-dialog>
 </template>

@@ -34,6 +34,7 @@ class MiniMessageGradientAdapterClazz extends GradientProcessor {
     textBuilder.withFormat(chunk.format?.italic, this.format.italic);
     textBuilder.withFormat(chunk.format?.underlined, this.format.underlined);
     textBuilder.withFormat(chunk.format?.strikethrough, this.format.strikethrough);
+    textBuilder.withFormat(chunk.format?.obfuscated, this.format.obfuscated);
 
     let pcolors: HexColorString[] = [];
     const texts: string[] = [];
