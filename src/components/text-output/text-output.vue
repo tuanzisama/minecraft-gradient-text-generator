@@ -45,6 +45,10 @@ const onGenerateInvoke = ({ tags, colors }: { tags: RichTagChunk | null; colors?
 onMounted(() => {
   eventBus.on("generate:invoke", onGenerateInvoke);
   obfuscatedPreviewTimer = window.setInterval(updateObfuscatedPreview, 90);
+  // The preview panel may mount after the last "generate:invoke" event
+  // (e.g. when the mobile preview tab is opened for the first time).
+  // Generate immediately from the current store state.
+  generateOutput(null);
 });
 
 onUnmounted(() => {

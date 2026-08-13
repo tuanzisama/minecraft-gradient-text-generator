@@ -16,10 +16,10 @@ export const PRESET_COLORS: GradientPresetsRecord[] = [PRESET_COLOR];
 
 export const useColorStore = defineStore("color", {
   state: (): ColorState => ({
-    selectColorList: [],
+    selectColorList: [...PRESET_COLOR.colors],
     selectedIndex: 0,
     cacheColorList: [],
-    presetsColorList: [],
+    presetsColorList: [{ ...PRESET_COLOR, isLocked: true }],
   }),
   getters: {
     selectColorGradientCss: (state) => {

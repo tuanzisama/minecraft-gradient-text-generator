@@ -26,12 +26,12 @@ export default {
       strikethrough: "Strikethrough",
       obfuscated: "Obfuscated",
       add: "Add",
-      filter: "Filter",
       toggler: {
         tune: "Click to tune",
-        drag: "or drag to move",
+        drag_to_move: "or drag to move",
       },
       tune: {
+        filter: "Filter",
         delete: "Delete",
         delete_confirm: "Click to delete",
         move_up: "Move up",

@@ -22,7 +22,8 @@ const inputRef = ref<HTMLDivElement>();
 
 const editorInstance = shallowRef();
 let obfuscatedPreviewTimer: number | null = null;
-let editorSyncTimer: number | null = null;
+let domMutationObserver: MutationObserver | null = null;
+let syncDebounceTimer: number | null = null;
 let isSyncingEditor = false;
 let lastSavedText = "";
 
@@ -33,6 +34,14 @@ const privateValue = computed({
   get: () => props.modelValue,
   set: (val) => emit("update:modelValue", val),
 });
+
+const scheduleSync = () => {
+  if (syncDebounceTimer !== null) return;
+  syncDebounceTimer = window.setTimeout(() => {
+    syncDebounceTimer = null;
+    syncEditorValue();
+  }, 150);
+};
 
 onMounted(() => {
   const instance = new EditorJS({
@@ -45,6 +54,9 @@ onMounted(() => {
       obfuscated: {
         class: ObfuscatedTool,
         shortcut: "CMD+K",
+        config: {
+          onChange: () => syncEditorValue(),
+        },
       }
     },
     i18n: {
@@ -91,7 +103,17 @@ onMounted(() => {
   })
   editorInstance.value = instance
   obfuscatedPreviewTimer = window.setInterval(updateObfuscatedPreview, 90);
-  editorSyncTimer = window.setInterval(() => syncEditorValue(), 250);
+
+  // EditorJS's own onChange can stop firing after custom inline tool operations.
+  // Observe the editor DOM directly and sync on real content changes instead.
+  // Attribute-only mutations (e.g. the obfuscated preview animation) are ignored.
+  domMutationObserver = new MutationObserver((mutations) => {
+    const hasContentMutation = mutations.some((mutation) => mutation.type !== "attributes");
+    if (hasContentMutation) scheduleSync();
+  });
+  if (inputRef.value) {
+    domMutationObserver.observe(inputRef.value, { childList: true, subtree: true, characterData: true });
+  }
 })
 
 onUnmounted(() => {
@@ -99,9 +121,10 @@ onUnmounted(() => {
   if (obfuscatedPreviewTimer !== null) {
     window.clearInterval(obfuscatedPreviewTimer);
   }
-  if (editorSyncTimer !== null) {
-    window.clearInterval(editorSyncTimer);
+  if (syncDebounceTimer !== null) {
+    window.clearTimeout(syncDebounceTimer);
   }
+  domMutationObserver?.disconnect();
 })
 
 const updateObfuscatedPreview = () => {
@@ -111,20 +134,34 @@ const updateObfuscatedPreview = () => {
   });
 }
 
+const stripVolatileAttributes = (html: string) => html.replace(/\sdata-obfuscated-preview="[^"]*"/g, "");
+
 const syncEditorValue = async (api?: { saver: { save: () => Promise<EditorSaveResult> } }) => {
-  if (isSyncingEditor) return;
+  if (isSyncingEditor) {
+    // A sync is already in flight, ensure a follow-up run captures latest DOM.
+    scheduleSync();
+    return;
+  }
+
+  const editor = editorInstance.value;
+  if (!editor) return;
+
   isSyncingEditor = true;
 
   try {
-    const saved = (api ? await api.saver.save() : await editorInstance.value?.save()) as EditorSaveResult | undefined;
+    const saved = (api ? await api.saver.save() : await editor.save()) as EditorSaveResult | undefined;
     if (!saved) return;
 
     const { blocks } = saved;
-    const savedText = JSON.stringify(blocks.map((block) => block.data.text));
+    const normalizedBlocks = blocks.map((block) => ({
+      ...block,
+      data: { ...block.data, text: stripVolatileAttributes(block.data.text) },
+    }));
+    const savedText = JSON.stringify(normalizedBlocks.map((block) => block.data.text));
     if (savedText === lastSavedText) return;
 
     lastSavedText = savedText;
-    const richTagChunk = parseBlocks(blocks);
+    const richTagChunk = parseBlocks(normalizedBlocks);
 
     privateValue.value = richTagChunk
     emit('on-change', richTagChunk)

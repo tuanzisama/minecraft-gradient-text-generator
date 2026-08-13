@@ -4,11 +4,13 @@ const OBFUSCATED_DATA_KEY = "mcgObfuscated";
 
 export default class ObfuscatedTool {
   private api: any;
+  private onChange?: () => void;
   private button: HTMLButtonElement | null = null;
   private iconClasses: { base: string; active: string };
 
-  constructor({ api }: { api: any }) {
+  constructor({ api, config }: { api: any; config?: { onChange?: () => void } }) {
     this.api = api;
+    this.onChange = config?.onChange;
     this.iconClasses = {
       base: this.api.styles.inlineToolButton,
       active: this.api.styles.inlineToolButtonActive,
@@ -51,13 +53,13 @@ export default class ObfuscatedTool {
 
     if (selectedTag) {
       this.unwrapInsideTag(selectedTag, range);
-      this.dispatchInput();
+      this.notifyChange();
       return;
     }
 
     if (this.rangeHasObfuscated(range)) {
       this.unwrapFragmentRange(range);
-      this.dispatchInput();
+      this.notifyChange();
       return;
     }
 
@@ -67,7 +69,7 @@ export default class ObfuscatedTool {
     wrapper.append(range.extractContents());
     range.insertNode(wrapper);
     this.api.selection.expandToTag(wrapper);
-    this.dispatchInput();
+    this.notifyChange();
   }
 
   checkState() {
@@ -176,7 +178,7 @@ export default class ObfuscatedTool {
     return wrapper;
   }
 
-  private dispatchInput() {
-    this.button?.closest(".codex-editor")?.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  private notifyChange() {
+    this.onChange?.();
   }
 }
