@@ -1,4 +1,5 @@
 import { genColorGradients, getTextShadowHex } from "@/utils/color";
+import { randomObfuscatedCharacter } from "@/utils/obfuscated";
 import { flattenDeep, split } from "lodash-es";
 
 export abstract class GradientProcessor<T = string> {
@@ -125,11 +126,15 @@ export abstract class GradientProcessor<T = string> {
             chunk.format?.italic && spanEl.classList.add("is-italic");
             chunk.format?.underlined && spanEl.classList.add("is-underlined");
             chunk.format?.strikethrough && spanEl.classList.add("is-strikethrough");
-
+            chunk.format?.obfuscated && spanEl.classList.add("is-obfuscated");
             spanEl.style.setProperty("--text-color", tag.color);
             spanEl.style.setProperty("--text-shadow-color", getTextShadowHex(tag.color as HexColorString));
           }
 
+          if (chunk.format?.obfuscated && tag.character.trim() !== "") {
+            spanEl.dataset.obfuscatedSource = tag.character;
+            spanEl.dataset.obfuscatedPreview = randomObfuscatedCharacter();
+          }
           spanEl.textContent = tag.character;
           chapterEl.append(spanEl);
         });

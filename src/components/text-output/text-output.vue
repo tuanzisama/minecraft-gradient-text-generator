@@ -3,7 +3,7 @@
     <template #header>
       <text-params :usage-time="usageTime" />
     </template>
-    <div class="preview-content">
+    <div class="preview-content" ref="previewContentRef">
       <div v-if="appStore.setting.simulateMode === 'default'" v-html="htmlResult"></div>
       <preview v-if="appStore.setting.simulateMode === 'chat'" />
     </div>
@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { useAppStore } from "../../plugins/store/modules/app";
 import { useTextStore } from "../../plugins/store/modules/text";
 import { useColorStore } from "../../plugins/store/modules/color";
@@ -24,6 +24,7 @@ import TextParams from "../text-params/text-params.vue";
 import { flatten, isEmpty } from "lodash-es";
 import { McgCard } from "../mcg-card";
 import { Preview } from "../preview-pip";
+import { randomObfuscatedCharacter } from "@/utils/obfuscated";
 
 const appStore = useAppStore();
 const textStore = useTextStore();
@@ -32,6 +33,8 @@ const eventBus = useEventBus();
 
 const mcResult = ref('')
 const htmlResult = ref('')
+const previewContentRef = ref<HTMLDivElement>();
+let obfuscatedPreviewTimer: number | null = null;
 
 const usageTime = ref<number>(0)
 
@@ -41,11 +44,28 @@ const onGenerateInvoke = ({ tags, colors }: { tags: RichTagChunk | null; colors?
 
 onMounted(() => {
   eventBus.on("generate:invoke", onGenerateInvoke);
+  obfuscatedPreviewTimer = window.setInterval(updateObfuscatedPreview, 90);
 });
 
 onUnmounted(() => {
   eventBus.off("generate:invoke", onGenerateInvoke);
+  if (obfuscatedPreviewTimer !== null) {
+    window.clearInterval(obfuscatedPreviewTimer);
+  }
 });
+
+watch(htmlResult, () => {
+  nextTick(updateObfuscatedPreview);
+});
+
+const updateObfuscatedPreview = () => {
+  const previewContent = previewContentRef.value;
+  if (!previewContent || appStore.setting.simulateMode !== "default") return;
+
+  previewContent.querySelectorAll<HTMLElement>(".is-obfuscated[data-obfuscated-source]").forEach((element) => {
+    element.dataset.obfuscatedPreview = randomObfuscatedCharacter();
+  });
+};
 
 const generateOutput = (tags: RichTagChunk | null, colors?: HexColorString[]) => {
   const $tags = tags ?? appStore.processTags;

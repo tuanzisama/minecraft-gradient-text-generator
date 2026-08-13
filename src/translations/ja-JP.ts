@@ -27,6 +27,7 @@ export default {
       italic: "斜体",
       underline: "下線",
       strikethrough: "取り消し線",
+      obfuscated: "難読化",
       add: "追加",
       toggler: {
         tune: "操作",

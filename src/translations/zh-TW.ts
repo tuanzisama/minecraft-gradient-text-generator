@@ -20,6 +20,7 @@ export default {
       italic: "斜體",
       underline: "底線",
       strikethrough: "刪除線",
+      obfuscated: "亂碼",
       add: "新增",
       toggler: {
         tune: "操作",

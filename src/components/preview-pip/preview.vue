@@ -13,9 +13,10 @@
                 'is-italic': words.format?.italic,
                 'is-underlined': words.format?.underlined,
                 'is-strikethrough': words.format?.strikethrough,
+                'is-obfuscated': words.format?.obfuscated,
                 'is-space': word.character.trim() === '',
               }">
-                {{ word.character.trim() === '' ? '&nbsp;' : word.character }}
+                {{ displayCharacter(word.character, words.format?.obfuscated) }}
               </span>
             </template>
           </template>
@@ -26,15 +27,38 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { getTextShadowHex } from "@/utils/color";
 import { useTextStore } from "../../plugins/store/modules/text";
+import { randomObfuscatedCharacter } from "@/utils/obfuscated";
 
 const textStore = useTextStore()
+const obfuscatedTick = ref(0);
+let obfuscatedPreviewTimer: number | null = null;
 
 const chapters = computed(() => {
   return textStore.adapter?.chapters ?? []
 })
+
+onMounted(() => {
+  obfuscatedPreviewTimer = window.setInterval(() => {
+    obfuscatedTick.value += 1;
+  }, 90);
+});
+
+onUnmounted(() => {
+  if (obfuscatedPreviewTimer !== null) {
+    window.clearInterval(obfuscatedPreviewTimer);
+  }
+});
+
+const displayCharacter = (character: string, obfuscated?: boolean) => {
+  if (character.trim() === "") return " ";
+  if (!obfuscated) return character;
+
+  obfuscatedTick.value;
+  return randomObfuscatedCharacter();
+};
 </script>
 
 <style lang="scss" scoped>

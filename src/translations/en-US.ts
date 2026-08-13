@@ -24,6 +24,7 @@ export default {
       italic: "Italic",
       underline: "Underline",
       strikethrough: "Strikethrough",
+      obfuscated: "Obfuscated",
       add: "Add",
       filter: "Filter",
       toggler: {

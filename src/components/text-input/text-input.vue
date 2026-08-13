@@ -9,8 +9,10 @@ import { computed, onMounted, onUnmounted, ref, shallowRef } from "vue";
 import EditorJS from '@editorjs/editorjs';
 import Underline from '@editorjs/underline';
 import Strikethrough from '@sotaproject/strikethrough';
+import ObfuscatedTool from "./obfuscated-tool";
 import { isEmpty } from "lodash-es";
 import { useI18n } from "vue-i18n";
+import { randomObfuscatedText } from "@/utils/obfuscated";
 
 const i18n = useI18n()
 
@@ -19,6 +21,13 @@ const emit = defineEmits<TextInputEmit>();
 const inputRef = ref<HTMLDivElement>();
 
 const editorInstance = shallowRef();
+let obfuscatedPreviewTimer: number | null = null;
+let editorSyncTimer: number | null = null;
+let isSyncingEditor = false;
+let lastSavedText = "";
+
+type EditorSavedBlock = { data: { text: string } };
+type EditorSaveResult = { blocks: EditorSavedBlock[] };
 
 const privateValue = computed({
   get: () => props.modelValue,
@@ -29,10 +38,14 @@ onMounted(() => {
   const instance = new EditorJS({
     holder: inputRef.value,
     placeholder: i18n.t("input.placeholder"),
-    inlineToolbar: ['bold', 'italic', 'underline', 'strikethrough'],
+    inlineToolbar: ['bold', 'italic', 'underline', 'strikethrough', 'obfuscated'],
     tools: {
       underline: Underline,
-      strikethrough: Strikethrough
+      strikethrough: Strikethrough,
+      obfuscated: {
+        class: ObfuscatedTool,
+        shortcut: "CMD+K",
+      }
     },
     i18n: {
       messages: {
@@ -42,6 +55,7 @@ onMounted(() => {
           "Italic": i18n.t("input.editor.italic"),
           "Underline": i18n.t("input.editor.underline"),
           "Strikethrough": i18n.t("input.editor.strikethrough"),
+          "Obfuscated": i18n.t("input.editor.obfuscated"),
         },
         ui: {
           "blockTunes": {
@@ -73,44 +87,78 @@ onMounted(() => {
         }
       },
     },
-    onChange: async (api) => {
-      const { blocks } = await api.saver.save();
-
-      const richTagChunk = blocks.map<RichTag[]>((block) => {
-        const parser = new DOMParser()
-        const doc = parser.parseFromString(block.data.text, "text/html")
-
-        const nodes = Object.values(doc.body.childNodes).reduce((acc, node) => {
-          if (node.nodeType === 3) {
-            return acc.concat({ textNode: node, parentNodes: [] });
-          } else {
-            return acc.concat(textElementRecursion(node, [node]));
-          }
-        }, [] as NodeRecursionRecord[]);
-
-        const chunks = nodes.map<RichTag>(record => {
-          const textContent = record.textNode?.textContent;
-          let richTag = { text: textContent } as RichTag
-
-          const format = nodeNameParser(record.parentNodes);
-          if (!isEmpty(format)) richTag.format = format
-
-          return richTag;
-        })
-
-        return chunks
-      })
-
-      privateValue.value = richTagChunk
-      emit('on-change', richTagChunk)
-    }
+    onChange: (api) => syncEditorValue(api)
   })
   editorInstance.value = instance
+  obfuscatedPreviewTimer = window.setInterval(updateObfuscatedPreview, 90);
+  editorSyncTimer = window.setInterval(() => syncEditorValue(), 250);
 })
 
 onUnmounted(() => {
   editorInstance.value?.destroy()
+  if (obfuscatedPreviewTimer !== null) {
+    window.clearInterval(obfuscatedPreviewTimer);
+  }
+  if (editorSyncTimer !== null) {
+    window.clearInterval(editorSyncTimer);
+  }
 })
+
+const updateObfuscatedPreview = () => {
+  inputRef.value?.querySelectorAll<HTMLElement>(".mcg-obfuscated").forEach((element) => {
+    const length = element.textContent?.length ?? 0;
+    element.dataset.obfuscatedPreview = randomObfuscatedText(length);
+  });
+}
+
+const syncEditorValue = async (api?: { saver: { save: () => Promise<EditorSaveResult> } }) => {
+  if (isSyncingEditor) return;
+  isSyncingEditor = true;
+
+  try {
+    const saved = (api ? await api.saver.save() : await editorInstance.value?.save()) as EditorSaveResult | undefined;
+    if (!saved) return;
+
+    const { blocks } = saved;
+    const savedText = JSON.stringify(blocks.map((block) => block.data.text));
+    if (savedText === lastSavedText) return;
+
+    lastSavedText = savedText;
+    const richTagChunk = parseBlocks(blocks);
+
+    privateValue.value = richTagChunk
+    emit('on-change', richTagChunk)
+  } finally {
+    isSyncingEditor = false;
+  }
+}
+
+const parseBlocks = (blocks: EditorSavedBlock[]) => {
+  return blocks.map<RichTag[]>((block) => {
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(block.data.text, "text/html")
+
+    const nodes = Object.values(doc.body.childNodes).reduce((acc, node) => {
+      if (node.nodeType === 3) {
+        return acc.concat({ textNode: node, parentNodes: [] });
+      } else {
+        return acc.concat(textElementRecursion(node, [node]));
+      }
+    }, [] as NodeRecursionRecord[]);
+
+    const chunks = nodes.map<RichTag>(record => {
+      const textContent = record.textNode?.textContent;
+      let richTag = { text: textContent } as RichTag
+
+      const format = nodeNameParser(record.parentNodes);
+      if (!isEmpty(format)) richTag.format = format
+
+      return richTag;
+    })
+
+    return chunks
+  })
+}
 
 const nodeNameParser = (nodes: ChildNode[]) => {
   const nodeNames = nodes.map(node => node.nodeName)
@@ -127,7 +175,15 @@ const nodeNameParser = (nodes: ChildNode[]) => {
   if (nodeNames.includes('S')) {
     format.strikethrough = true
   }
+  if (nodes.some(isObfuscatedElement)) {
+    format.obfuscated = true
+  }
   return format as RichTag['format']
+}
+
+const isObfuscatedElement = (node: ChildNode) => {
+  return node instanceof HTMLElement
+    && (node.classList.contains('mcg-obfuscated') || node.dataset.mcgObfuscated === 'true')
 }
 
 const textElementRecursion = (node: ChildNode, parentNodes: ChildNode[] = []): NodeRecursionRecord[] => {
@@ -183,6 +239,21 @@ interface NodeRecursionRecord {
     &:deep(.codex-editor) {
       width: calc(100% - 5px);
       height: 100%;
+    }
+
+    &:deep(.mcg-obfuscated) {
+      position: relative;
+      color: transparent;
+      caret-color: var(--td-text-color-primary, CanvasText);
+
+      &::after {
+        content: attr(data-obfuscated-preview);
+        position: absolute;
+        inset: 0 auto auto 0;
+        color: var(--td-text-color-primary, CanvasText);
+        white-space: pre;
+        pointer-events: none;
+      }
     }
   }
 

@@ -21,6 +21,7 @@ export default {
       italic: "斜体",
       underline: "下划线",
       strikethrough: "删除线",
+      obfuscated: "乱码",
       add: "新增",
       toggler: {
         tune: "操作",
